@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SAQES — Constructor Visual Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Raleway:wght@400;600;700;800&family=Bebas+Neue&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -10,9 +10,12 @@
 /* ═══════════════════════════════════════════
    RESET + TOKENS
 ═══════════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:14px;-webkit-text-size-adjust:none}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0F14;overflow:hidden;height:100dvh;display:flex;flex-direction:column;color:#E2E8F0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:14px;-webkit-text-size-adjust:none;overflow-x:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0F14;overflow:hidden;height:100dvh;display:flex;flex-direction:column;color:#E2E8F0;overscroll-behavior:none}
+/* Prevent iOS input zoom */
+input,textarea,select{font-size:16px!important;touch-action:manipulation}
+button{touch-action:manipulation}
 
 :root{
   /* Editor Chrome — Dark */
@@ -436,38 +439,132 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0F14;overflow:hidd
 
 /* ════ BOTTOM NAV (mobile) ════ */
 #editor-bottom{
-  height:52px;background:var(--ui-surface);border-top:1px solid var(--ui-border);
-  display:none;align-items:center;justify-content:space-around;padding:0 4px;flex-shrink:0;z-index:200;
+  height:58px;background:var(--ui-surface);border-top:1px solid var(--ui-border);
+  display:none;align-items:center;justify-content:space-around;padding:0 2px;flex-shrink:0;z-index:200;
 }
 @media(max-width:900px){#editor-bottom{display:flex}}
 .bn-btn{
-  display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;
-  cursor:pointer;color:var(--ui-text3);font-size:.6rem;font-weight:600;
-  border:none;background:transparent;border-radius:var(--radius-sm);transition:all var(--fast);min-width:56px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px;
+  cursor:pointer;color:var(--ui-text3);font-size:.55rem;font-weight:600;
+  border:none;background:transparent;border-radius:var(--radius-sm);transition:all var(--fast);min-width:46px;
+  letter-spacing:.03em;text-transform:uppercase;
 }
 .bn-btn:hover,.bn-btn.active{color:var(--accent)}
-.bn-icon{font-size:1.1rem;line-height:1}
+.bn-btn.active{background:var(--accent-dim)}
+.bn-icon{font-size:1.05rem;line-height:1}
 .bn-add{
-  width:42px;height:42px;background:var(--accent);border-radius:50%;border:none;
-  color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 12px rgba(99,102,241,.4);transition:all var(--fast);
+  width:46px;height:46px;background:var(--accent);border-radius:50%;border:none;
+  color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(99,102,241,.5);transition:all var(--fast);flex-shrink:0;
 }
-.bn-add:hover{transform:scale(1.05);background:var(--accent-hover)}
+.bn-add:active{transform:scale(.92);background:var(--accent-hover)}
 
 /* ════ BOTTOM SHEET ════ */
 #bottom-sheet{
-  position:fixed;bottom:52px;left:0;right:0;z-index:500;background:var(--ui-surface);
-  border-radius:16px 16px 0 0;border-top:1px solid var(--ui-border);
-  max-height:65dvh;display:none;flex-direction:column;box-shadow:0 -4px 30px rgba(0,0,0,.4);
+  position:fixed;bottom:58px;left:0;right:0;z-index:500;background:var(--ui-surface);
+  border-radius:20px 20px 0 0;border-top:1px solid var(--ui-border);
+  max-height:75dvh;display:none;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.6);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
 }
 #bottom-sheet.open{display:flex}
-.bs-handle{width:32px;height:3px;background:var(--ui-border2);border-radius:2px;margin:8px auto 4px;flex-shrink:0}
+.bs-handle{width:36px;height:4px;background:var(--ui-border2);border-radius:3px;margin:10px auto 6px;flex-shrink:0}
 .bs-title{
-  padding:8px 14px;font-size:.8rem;font-weight:700;color:var(--ui-text);
-  border-bottom:1px solid var(--ui-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px 10px;font-size:.82rem;font-weight:700;color:var(--ui-text);
+  border-bottom:1px solid var(--ui-border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.bs-close{border:none;background:none;color:var(--ui-text3);font-size:1rem;cursor:pointer;padding:0 4px}
-.bs-body{flex:1;overflow-y:auto;padding:10px 14px}
+.bs-close{border:none;background:var(--ui-surface2);color:var(--ui-text3);font-size:.8rem;cursor:pointer;
+  padding:4px 10px;border-radius:20px;font-weight:600}
+.bs-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+
+/* Mobile section content editor cards */
+.mob-sec-card{
+  background:var(--ui-surface2);border:1px solid var(--ui-border);
+  border-radius:10px;padding:14px;margin-bottom:10px;
+  cursor:pointer;transition:border-color var(--fast);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.mob-sec-card:active{border-color:var(--accent)}
+.mob-sec-card-left{display:flex;align-items:center;gap:10px;min-width:0}
+.mob-sec-card-icon{font-size:1.1rem;flex-shrink:0}
+.mob-sec-card-name{font-size:.8rem;font-weight:600;color:var(--ui-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mob-sec-card-type{font-size:.64rem;color:var(--ui-text3);margin-top:2px}
+.mob-sec-card-actions{display:flex;gap:6px;flex-shrink:0}
+.mob-sec-action-btn{
+  width:32px;height:32px;border:1px solid var(--ui-border2);background:var(--ui-surface3);
+  border-radius:8px;color:var(--ui-text2);font-size:.78rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all var(--fast);
+}
+.mob-sec-action-btn:active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+/* Mobile inline text editor overlay */
+#mob-edit-overlay{
+  position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.7);
+  display:none;flex-direction:column;align-items:center;justify-content:flex-end;
+}
+#mob-edit-overlay.open{display:flex}
+.mob-edit-sheet{
+  width:100%;background:var(--ui-surface);border-radius:20px 20px 0 0;
+  padding:20px 16px 32px;border-top:1px solid var(--ui-border);
+  box-shadow:0 -8px 40px rgba(0,0,0,.6);
+}
+.mob-edit-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--ui-text3);margin-bottom:8px}
+.mob-edit-input{
+  width:100%;padding:12px 14px;background:var(--ui-surface2);
+  border:1.5px solid var(--ui-border2);border-radius:10px;
+  color:var(--ui-text);font-size:16px;font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;resize:none;line-height:1.5;
+}
+.mob-edit-input:focus{border-color:var(--accent)}
+.mob-edit-actions{display:flex;gap:8px;margin-top:12px}
+.mob-edit-save{flex:1;padding:13px;background:var(--accent);border:none;color:#fff;
+  border-radius:10px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit}
+.mob-edit-cancel{padding:13px 18px;background:var(--ui-surface2);border:1px solid var(--ui-border2);
+  color:var(--ui-text2);border-radius:10px;font-size:.82rem;cursor:pointer;font-family:inherit}
+
+/* Mobile design panel quick row */
+.mob-design-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.mob-color-chip{
+  width:36px;height:36px;border-radius:8px;border:2px solid transparent;
+  cursor:pointer;transition:transform .15s,border-color .15s;flex-shrink:0;
+}
+.mob-color-chip:active{transform:scale(1.12);border-color:white}
+.mob-section-select-btn{
+  width:100%;padding:13px 16px;background:var(--ui-surface2);border:1.5px solid var(--ui-border2);
+  border-radius:10px;color:var(--ui-text);font-size:.82rem;text-align:left;
+  cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;
+}
+.mob-section-select-btn:active{border-color:var(--accent)}
+.mob-global-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.mob-global-btn{
+  padding:12px;background:var(--ui-surface2);border:1px solid var(--ui-border);
+  border-radius:10px;text-align:center;cursor:pointer;transition:all var(--fast);
+}
+.mob-global-btn:active{border-color:var(--accent);background:var(--accent-dim)}
+.mob-global-btn-icon{font-size:1.3rem;display:block;margin-bottom:4px}
+.mob-global-btn-label{font-size:.62rem;font-weight:600;color:var(--ui-text2);text-transform:uppercase;letter-spacing:.04em}
+
+/* Canvas sections mobile — show edit icon on tap */
+@media(max-width:900px){
+  .canvas-sec-wrap{position:relative}
+  .canvas-sec-wrap::after{
+    content:'✏ Toca para editar';
+    position:absolute;top:8px;right:8px;
+    background:rgba(99,102,241,.9);color:#fff;
+    font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;
+    opacity:0;transition:opacity .2s;pointer-events:none;
+    font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.03em;
+  }
+  .canvas-sec-wrap.selected::after{opacity:1}
+  /* Topbar scroll on mobile */
+  #editor-top{overflow-x:auto;gap:4px;padding:0 8px;scrollbar-width:none}
+  #editor-top::-webkit-scrollbar{display:none}
+  /* Enlarge touch targets on canvas controls */
+  .resize-handle{height:20px!important}
+}
+
 
 /* ════ ADD SECTION MODAL ════ */
 #add-sec-modal{
@@ -1274,20 +1371,32 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0F14;overflow:hidd
 
 <!-- BOTTOM NAV (mobile) -->
 <nav id="editor-bottom">
-  <button class="bn-btn" onclick="openBottomSheet('secciones')">
-    <span class="bn-icon">☰</span>Secciones
+  <button class="bn-btn" id="bn-secciones" onclick="openBottomSheet('secciones',this)">
+    <span class="bn-icon">☰</span>Capas
   </button>
-  <button class="bn-btn" onclick="openBottomSheet('diseño')">
+  <button class="bn-btn" id="bn-contenido" onclick="openBottomSheet('contenido',this)">
+    <span class="bn-icon">✏️</span>Editar
+  </button>
+  <button class="bn-add" onclick="openAddSec()" title="Añadir sección">＋</button>
+  <button class="bn-btn" id="bn-diseño" onclick="openBottomSheet('diseño',this)">
     <span class="bn-icon">🎨</span>Diseño
   </button>
-  <button class="bn-add" onclick="openAddSec()">＋</button>
-  <button class="bn-btn" onclick="openBottomSheet('estilos')">
-    <span class="bn-icon">✨</span>Global
-  </button>
-  <button class="bn-btn" onclick="openPreview()">
-    <span class="bn-icon">👁</span>Preview
+  <button class="bn-btn" id="bn-global" onclick="openBottomSheet('global',this)">
+    <span class="bn-icon">⚙️</span>Global
   </button>
 </nav>
+
+<!-- MOBILE INLINE TEXT EDITOR -->
+<div id="mob-edit-overlay">
+  <div class="mob-edit-sheet">
+    <div class="mob-edit-label" id="mob-edit-label">Editar texto</div>
+    <textarea class="mob-edit-input" id="mob-edit-input" rows="3" placeholder="Escribe aquí..."></textarea>
+    <div class="mob-edit-actions">
+      <button class="mob-edit-cancel" onclick="closeMobEdit()">Cancelar</button>
+      <button class="mob-edit-save" onclick="saveMobEdit()">✓ Guardar</button>
+    </div>
+  </div>
+</div>
 
 <!-- BOTTOM SHEET (mobile) -->
 <div id="bottom-sheet">
@@ -2358,6 +2467,14 @@ function selectSection(id){
   // Scroll section into view in canvas
   const el=$('cs_'+id);
   if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // On mobile: auto-open content bottom sheet on selection
+  if(window.innerWidth<=900){
+    const bs=$('bottom-sheet');
+    const activeTab=bs.dataset.tab;
+    if(bs.classList.contains('open') && (activeTab==='contenido'||activeTab==='diseño')){
+      openBottomSheet(activeTab, document.getElementById('bn-'+activeTab));
+    }
+  }
 }
 
 function moveSec(id,dir){
@@ -3152,24 +3269,409 @@ function closeAddSec(){$('add-sec-modal').classList.remove('open');insertAfterId
 /* ═══════════════════════════════════════════════════
    BOTTOM SHEET (mobile)
 ═══════════════════════════════════════════════════ */
-function openBottomSheet(tab){
-  const bs=$('bottom-sheet'),body=$('bs-body');
-  rpTab=tab==='secciones'?'contenido':tab==='estilos'?'estilos':'diseño';
-  if(tab==='secciones'){
-    $('bs-title-text').textContent='☰ Secciones';
-    body.innerHTML=page().sections.map(sec=>`
-      <div class="sec-list-item${selectedSec===sec.id?' active':''}" onclick="selectSection('${sec.id}');closeBottomSheet()">
-        <span class="sli-icon">${SEC_META[sec.type]?.icon||'◻'}</span>
-        <span class="sli-name">${sec.name}</span>
-        <button class="sli-btn del" onclick="event.stopPropagation();delSec('${sec.id}')">✕</button>
-      </div>`).join('')+`<button style="width:100%;padding:10px;border:1.5px dashed var(--ui-border2);background:transparent;border-radius:6px;font-size:.78rem;cursor:pointer;color:var(--ui-text2);margin-top:6px;font-family:inherit" onclick="openAddSec()">＋ Añadir sección</button>`;
-  }else{
-    $('bs-title-text').textContent=tab==='estilos'?'✨ Estilos globales':'🎨 Diseño';
-    renderPanelTarget(body);
+/* ─────────────────────────────────────────
+   MOBILE BOTTOM SHEET  
+───────────────────────────────────────── */
+function openBottomSheet(tab, btnEl){
+  const bs=$('bottom-sheet'), body=$('bs-body');
+
+  // Highlight active nav btn
+  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+  if(btnEl)btnEl.classList.add('active');
+
+  // Toggle: close if same tab already open
+  if(bs.classList.contains('open') && bs.dataset.tab===tab){
+    closeBottomSheet();
+    return;
   }
+  bs.dataset.tab=tab;
+
+  if(tab==='secciones'){
+    $('bs-title-text').textContent='☰ Capas de página';
+    body.innerHTML=page().sections.map((sec,i)=>`
+      <div class="mob-sec-card${selectedSec===sec.id?' active':''}" onclick="selectSection('${sec.id}');refreshBsContent()">
+        <div class="mob-sec-card-left">
+          <span class="mob-sec-card-icon">${SEC_META[sec.type]?.icon||'◻'}</span>
+          <div>
+            <div class="mob-sec-card-name">${sec.name}</div>
+            <div class="mob-sec-card-type">${SEC_META[sec.type]?.label||sec.type} · Capa ${i+1}${sec.hidden?' · Oculta':''}</div>
+          </div>
+        </div>
+        <div class="mob-sec-card-actions">
+          <button class="mob-sec-action-btn" onclick="event.stopPropagation();moveSec('${sec.id}',-1);openBottomSheet('secciones',document.getElementById('bn-secciones'))" ${i===0?'disabled':''} title="Subir">↑</button>
+          <button class="mob-sec-action-btn" onclick="event.stopPropagation();moveSec('${sec.id}',1);openBottomSheet('secciones',document.getElementById('bn-secciones'))" ${i===page().sections.length-1?'disabled':''} title="Bajar">↓</button>
+          <button class="mob-sec-action-btn" onclick="event.stopPropagation();toggleSecVis('${sec.id}');openBottomSheet('secciones',document.getElementById('bn-secciones'))" title="${sec.hidden?'Mostrar':'Ocultar'}">${sec.hidden?'🙈':'👁'}</button>
+          <button class="mob-sec-action-btn" style="border-color:rgba(239,68,68,.3);color:var(--danger)" onclick="event.stopPropagation();if(confirm('¿Eliminar sección?'))delSec('${sec.id}')" title="Eliminar">✕</button>
+        </div>
+      </div>`).join('')
+    +`<button style="width:100%;padding:12px;border:1.5px dashed rgba(99,102,241,.4);background:var(--accent-dim);border-radius:10px;font-size:.78rem;cursor:pointer;color:var(--accent);margin-top:4px;font-family:inherit;font-weight:700" onclick="openAddSec();closeBottomSheet()">＋ Añadir sección</button>`;
+
+  } else if(tab==='contenido'){
+    // Content editing tab — shows fields of selected section
+    if(!selectedSec){
+      $('bs-title-text').textContent='✏️ Editar Contenido';
+      body.innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--ui-text3)">
+        <div style="font-size:2.5rem;margin-bottom:12px">👆</div>
+        <div style="font-size:.82rem;line-height:1.6">Toca una sección en el canvas para seleccionarla, luego regresa aquí para editar su contenido</div>
+        <div style="margin-top:16px;display:grid;gap:8px">
+          ${page().sections.slice(0,4).map(s=>`
+            <button class="mob-section-select-btn" onclick="selectSection('${s.id}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">
+              <span>${SEC_META[s.type]?.icon||'◻'} ${s.name}</span><span style="color:var(--accent)">→</span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+    } else {
+      const sec=secById(selectedSec);
+      $('bs-title-text').textContent=`✏️ ${sec?.name||'Sección'}`;
+      body.innerHTML=buildMobContentEditor(sec);
+    }
+
+  } else if(tab==='diseño'){
+    if(!selectedSec){
+      $('bs-title-text').textContent='🎨 Diseño';
+      body.innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--ui-text3)">
+        <div style="font-size:2.5rem;margin-bottom:12px">🎨</div>
+        <div style="font-size:.82rem;line-height:1.6">Selecciona una sección para cambiar su fondo, colores y espaciado</div>
+        <div style="margin-top:16px;display:grid;gap:8px">
+          ${page().sections.slice(0,4).map(s=>`
+            <button class="mob-section-select-btn" onclick="selectSection('${s.id}');openBottomSheet('diseño',document.getElementById('bn-diseño'))">
+              <span>${SEC_META[s.type]?.icon||'◻'} ${s.name}</span><span style="color:var(--accent)">→</span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+    } else {
+      const sec=secById(selectedSec);
+      $('bs-title-text').textContent=`🎨 Diseño — ${sec?.name}`;
+      body.innerHTML=buildMobDesignEditor(sec);
+    }
+
+  } else if(tab==='global'){
+    $('bs-title-text').textContent='⚙️ Global';
+    const G=site.global;
+    body.innerHTML=`
+      <div style="margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Temas rápidos</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          ${[{n:'Índigo',p:'#6366F1',a:'#EC4899',b:'#fff',t:'#111827'},
+             {n:'Dark',p:'#A78BFA',a:'#34D399',b:'#0F172A',t:'#F8FAFC'},
+             {n:'Rosa',p:'#EC4899',a:'#8B5CF6',b:'#fff',t:'#111827'},
+             {n:'Verde',p:'#10B981',a:'#3B82F6',b:'#fff',t:'#111827'}].map(th=>`
+            <div onclick="applyTheme(${JSON.stringify({primaryColor:th.p,accentColor:th.a,bgColor:th.b,textColor:th.t})});openBottomSheet('global',document.getElementById('bn-global'))"
+              style="padding:8px 4px;background:var(--ui-surface2);border:1.5px solid var(--ui-border);border-radius:8px;text-align:center;cursor:pointer">
+              <div style="display:flex;justify-content:center;gap:3px;margin-bottom:4px">
+                <div style="width:10px;height:10px;border-radius:50%;background:${th.p}"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:${th.a}"></div>
+              </div>
+              <div style="font-size:.58rem;color:var(--ui-text2);font-weight:600">${th.n}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Color primario</div>
+        <div class="mob-design-row">
+          ${['#6366F1','#EC4899','#10B981','#F59E0B','#EF4444','#8B5CF6','#111827','#ffffff'].map(c=>`
+            <div class="mob-color-chip" style="background:${c};${G.primaryColor===c?'outline:2px solid var(--accent);outline-offset:2px':''}"
+              onclick="site.global.primaryColor='${c}';mu();renderCanvas();openBottomSheet('global',document.getElementById('bn-global'))"></div>`).join('')}
+          <div style="display:flex;align-items:center;gap:6px;flex:1">
+            <input type="color" value="${G.primaryColor||'#6366F1'}" style="width:36px;height:36px;border:none;background:none;cursor:pointer;border-radius:8px"
+              oninput="site.global.primaryColor=this.value;mu();renderCanvas()">
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Fondo del sitio</div>
+        <div class="mob-design-row">
+          ${['#ffffff','#F9FAFB','#111827','#0F172A','#1E293B','#0a0a0a'].map(c=>`
+            <div class="mob-color-chip" style="background:${c};border:1px solid rgba(255,255,255,.15);${G.bgColor===c?'outline:2px solid var(--accent);outline-offset:2px':''}"
+              onclick="site.global.bgColor='${c}';mu();renderCanvas();applyGlobalToCanvas()"></div>`).join('')}
+          <input type="color" value="${G.bgColor||'#ffffff'}" style="width:36px;height:36px;border:none;background:none;cursor:pointer;border-radius:8px"
+            oninput="site.global.bgColor=this.value;mu();renderCanvas();applyGlobalToCanvas()">
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Radio de bordes</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${[['0','■'],['4','▪'],['8','▫'],['12','◉'],['20','⬭'],['50','●']].map(([v,ic])=>`
+            <div onclick="site.global.radius='${v}';mu();renderCanvas()" style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1.5px solid ${G.radius===v?'var(--accent)':'var(--ui-border)'};background:${G.radius===v?'var(--accent-dim)':'var(--ui-surface2)'};border-radius:${v}px;cursor:pointer;font-size:1rem">${ic}</div>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Acciones</div>
+        <div class="mob-global-row">
+          <div class="mob-global-btn" onclick="saveData();closeBottomSheet()">
+            <span class="mob-global-btn-icon">💾</span>
+            <span class="mob-global-btn-label">Guardar</span>
+          </div>
+          <div class="mob-global-btn" onclick="openPreview();closeBottomSheet()">
+            <span class="mob-global-btn-icon">👁</span>
+            <span class="mob-global-btn-label">Preview</span>
+          </div>
+          <div class="mob-global-btn" onclick="openAdminPanel();closeBottomSheet()">
+            <span class="mob-global-btn-icon">⚙️</span>
+            <span class="mob-global-btn-label">Admin</span>
+          </div>
+          <div class="mob-global-btn" onclick="exportHTML();closeBottomSheet()">
+            <span class="mob-global-btn-icon">⬇</span>
+            <span class="mob-global-btn-label">Exportar</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
   bs.classList.add('open');
 }
-function closeBottomSheet(){$('bottom-sheet').classList.remove('open');}
+
+function refreshBsContent(){
+  const bs=$('bottom-sheet');
+  if(!bs.classList.contains('open'))return;
+  const tab=bs.dataset.tab;
+  if(tab)openBottomSheet(tab, document.getElementById('bn-'+tab));
+}
+
+function closeBottomSheet(){
+  $('bottom-sheet').classList.remove('open');
+  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+}
+
+/* ─── Mobile Content Editor builder ─── */
+function buildMobContentEditor(sec){
+  if(!sec)return'';
+  const c=sec.content;
+  let html='';
+
+  const mobField=(label,val,key,isTextarea=false)=>`
+    <div style="margin-bottom:12px">
+      <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:6px">${label}</div>
+      ${isTextarea
+        ?`<textarea class="mob-edit-input" rows="3" oninput="secById('${sec.id}').content['${key}']=this.value;mu();renderCanvas()">${val||''}</textarea>`
+        :`<input type="text" class="mob-edit-input" style="display:block" value="${(val||'').replace(/"/g,'&quot;')}" oninput="secById('${sec.id}').content['${key}']=this.value;mu();renderCanvas()">`
+      }
+    </div>`;
+
+  const mobToggle=(label,val,key)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:10px 12px;background:var(--ui-surface2);border-radius:8px">
+      <span style="font-size:.78rem;font-weight:600">${label}</span>
+      <label class="toggle-switch">
+        <input type="checkbox" ${val?'checked':''} onchange="secById('${sec.id}').content['${key}']=this.checked;mu();renderCanvas()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>`;
+
+  switch(sec.type){
+    case 'hero':
+      html+=mobField('Título principal',c.h1,'h1');
+      html+=mobField('Subtítulo',c.sub,'sub',true);
+      html+=mobField('Texto del botón',c.btnText,'btnText');
+      html+=`<div style="margin-bottom:12px">
+        <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:6px">Color del botón</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" value="${c.btnColor||'#6366F1'}" style="width:44px;height:44px;border:none;border-radius:8px;cursor:pointer"
+            oninput="secById('${sec.id}').content.btnColor=this.value;mu();renderCanvas()">
+          <span style="font-size:.78rem;color:var(--ui-text2)">${c.btnColor||'#6366F1'}</span>
+        </div>
+      </div>`;
+      break;
+    case 'sobre_mi':
+      html+=mobField('Título',c.title,'title');
+      html+=mobField('Descripción',c.text,'text',true);
+      break;
+    case 'servicios':
+      html+=mobField('Título de sección',c.title,'title');
+      html+=mobField('Descripción',c.desc,'desc',true);
+      if(c.items){
+        html+=`<div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Servicios</div>`;
+        c.items.forEach((item,i)=>{
+          html+=`<div style="background:var(--ui-surface2);border-radius:8px;padding:12px;margin-bottom:8px">
+            <div style="font-size:.7rem;color:var(--accent);font-weight:700;margin-bottom:6px">Servicio ${i+1}</div>
+            <input type="text" class="mob-edit-input" style="display:block;margin-bottom:6px" value="${(item.title||'').replace(/"/g,'&quot;')}" 
+              placeholder="Nombre" oninput="secById('${sec.id}').content.items[${i}].title=this.value;mu();renderCanvas()">
+            <textarea class="mob-edit-input" rows="2" placeholder="Descripción"
+              oninput="secById('${sec.id}').content.items[${i}].desc=this.value;mu();renderCanvas()">${item.desc||''}</textarea>
+          </div>`;
+        });
+      }
+      break;
+    case 'contacto':
+      html+=mobField('Título',c.title,'title');
+      html+=mobField('Email',c.email,'email');
+      html+=mobField('Teléfono',c.phone,'phone');
+      html+=mobField('Dirección',c.address,'address');
+      html+=mobField('Texto del botón',c.btnText,'btnText');
+      break;
+    case 'texto':
+      html+=mobField('Título',c.title,'title');
+      html+=mobField('Contenido',c.text,'text',true);
+      break;
+    case 'cta':
+      html+=mobField('Título',c.title,'title');
+      html+=mobField('Subtítulo',c.sub,'sub',true);
+      html+=mobField('Texto del botón',c.btnText,'btnText');
+      break;
+    case 'faq':
+      html+=mobField('Título de sección',c.title,'title');
+      if(c.items){
+        html+=`<div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Preguntas</div>`;
+        c.items.forEach((item,i)=>{
+          html+=`<div style="background:var(--ui-surface2);border-radius:8px;padding:12px;margin-bottom:8px">
+            <input type="text" class="mob-edit-input" style="display:block;margin-bottom:6px" value="${(item.q||'').replace(/"/g,'&quot;')}" 
+              placeholder="Pregunta" oninput="secById('${sec.id}').content.items[${i}].q=this.value;mu();renderCanvas()">
+            <textarea class="mob-edit-input" rows="2" placeholder="Respuesta"
+              oninput="secById('${sec.id}').content.items[${i}].a=this.value;mu();renderCanvas()">${item.a||''}</textarea>
+          </div>`;
+        });
+      }
+      break;
+    case 'newsletter':
+      html+=mobField('Título',c.title,'title');
+      html+=mobField('Descripción',c.desc,'desc',true);
+      html+=mobField('Placeholder del input',c.placeholder,'placeholder');
+      html+=mobField('Texto del botón',c.btnText,'btnText');
+      break;
+    case 'stats':
+      html+=mobField('Título de sección',c.title,'title');
+      if(c.items){
+        c.items.forEach((item,i)=>{
+          html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+            <input type="text" class="mob-edit-input" value="${(item.num||'').replace(/"/g,'&quot;')}" placeholder="Número"
+              oninput="secById('${sec.id}').content.items[${i}].num=this.value;mu();renderCanvas()">
+            <input type="text" class="mob-edit-input" value="${(item.label||'').replace(/"/g,'&quot;')}" placeholder="Etiqueta"
+              oninput="secById('${sec.id}').content.items[${i}].label=this.value;mu();renderCanvas()">
+          </div>`;
+        });
+      }
+      break;
+    default:
+      html+=`<div style="text-align:center;padding:30px;color:var(--ui-text3)">
+        <div style="font-size:2rem;margin-bottom:10px">${SEC_META[sec.type]?.icon||'◻'}</div>
+        <div style="font-size:.8rem;margin-bottom:16px">Usa el panel lateral en escritorio para editar todos los campos de esta sección</div>
+        <button style="padding:10px 20px;background:var(--accent);border:none;color:white;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="closeBottomSheet()">Entendido</button>
+      </div>`;
+  }
+
+  html+=`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--ui-border);display:flex;gap:8px">
+    <button style="flex:1;padding:11px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="saveData();showToastMob('✅ Guardado')">💾 Guardar</button>
+    <button style="flex:1;padding:11px;background:var(--ui-surface2);border:1px solid var(--ui-border2);color:var(--ui-text2);border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit" onclick="openBottomSheet('diseño',document.getElementById('bn-diseño'))">🎨 Diseño</button>
+  </div>`;
+
+  return html;
+}
+
+/* ─── Mobile Design Editor ─── */
+function buildMobDesignEditor(sec){
+  if(!sec)return'';
+  const bg=sec.bg||{};
+  const sid=sec.id;
+  let html='';
+
+  html+=`<div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Tipo de fondo</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+    ${[['color','🎨 Color'],['gradient','🌈 Gradiente'],['image','📸 Imagen'],['dark','🌑 Oscuro']].map(([v,l])=>`
+      <button onclick="setBg('${sid}','type','${v}');openBottomSheet('diseño',document.getElementById('bn-diseño'))"
+        style="padding:8px 12px;border:1.5px solid ${(bg.type||'color')===v?'var(--accent)':'var(--ui-border)'};
+        background:${(bg.type||'color')===v?'var(--accent-dim)':'var(--ui-surface2)'};
+        color:${(bg.type||'color')===v?'var(--accent)':'var(--ui-text2)'};
+        border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit">${l}</button>`).join('')}
+  </div>`;
+
+  if(!bg.type||bg.type==='color'){
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Color de fondo</div>
+      <div class="mob-design-row">
+        ${['#ffffff','#F9FAFB','#111827','#0F172A','#1E293B','#4b0082','#0a3d62','#1a472a'].map(c=>`
+          <div class="mob-color-chip" style="background:${c};border:1px solid rgba(255,255,255,.12);${bg.color===c?'outline:2px solid var(--accent);outline-offset:2px':''}"
+            onclick="setBg('${sid}','color','${c}')"></div>`).join('')}
+        <input type="color" value="${bg.color||'#ffffff'}" style="width:36px;height:36px;border:none;border-radius:8px;cursor:pointer"
+          oninput="setBg('${sid}','color',this.value)">
+      </div>
+    </div>`;
+  }
+
+  if(bg.type==='gradient'){
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Gradientes rápidos</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+        ${[['#6366F1','#EC4899'],['#3B82F6','#06B6D4'],['#10B981','#3B82F6'],['#111827','#374151'],
+           ['#4b0082','#EC4899'],['#F59E0B','#EF4444'],['#8B5CF6','#EC4899'],['#064E3B','#065F46']].map(([a,b])=>`
+          <div onclick="setBg('${sid}','gradA','${a}');setBg('${sid}','gradB','${b}')"
+            style="height:36px;border-radius:8px;background:linear-gradient(135deg,${a},${b});cursor:pointer;border:2px solid transparent;transition:.15s"
+            onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'"></div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="color" value="${bg.gradA||'#6366F1'}" style="width:44px;height:44px;border:none;border-radius:8px;cursor:pointer;flex-shrink:0"
+          oninput="setBg('${sid}','gradA',this.value)">
+        <div style="flex:1;height:40px;border-radius:8px;background:linear-gradient(135deg,${bg.gradA||'#6366F1'},${bg.gradB||'#EC4899'})"></div>
+        <input type="color" value="${bg.gradB||'#EC4899'}" style="width:44px;height:44px;border:none;border-radius:8px;cursor:pointer;flex-shrink:0"
+          oninput="setBg('${sid}','gradB',this.value)">
+      </div>
+    </div>`;
+  }
+
+  if(bg.type==='image'){
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Imagen de fondo</div>
+      ${bg.img?`<div style="width:100%;height:80px;border-radius:8px;background:url('${bg.img}') center/cover;margin-bottom:8px;border:1px solid var(--ui-border)"></div>`:''}
+      <button style="width:100%;padding:12px;background:var(--ui-surface2);border:1.5px dashed var(--ui-border2);border-radius:8px;color:var(--ui-text2);font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:600"
+        onclick="requestImgUpload(url=>{setBg('${sid}','img',url)})">📸 ${bg.img?'Cambiar imagen':'Subir imagen'}</button>
+    </div>`;
+  }
+
+  // Text color quick
+  html+=`<div style="margin-bottom:14px">
+    <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Color del texto</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${['#111827','#ffffff','#F9FAFB','#1E293B'].map(c=>`
+        <button onclick="setSecProp('${sid}','textColor','${c}');mu();renderCanvas()"
+          style="padding:8px 14px;background:${c};color:${c==='#111827'||c==='#1E293B'?'#fff':'#111'};border:2px solid ${sec.textColor===c?'var(--accent)':'rgba(255,255,255,.15)'};border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer">
+          ${c==='#111827'?'Oscuro':c==='#ffffff'?'Blanco':c==='#F9FAFB'?'Gris':'Slate'}
+        </button>`).join('')}
+      <input type="color" value="${sec.textColor||'#111827'}" style="width:42px;height:38px;border:none;border-radius:8px;cursor:pointer"
+        oninput="setSecProp('${sid}','textColor',this.value);mu();renderCanvas()">
+    </div>
+  </div>`;
+
+  // Padding
+  html+=`<div style="margin-bottom:14px">
+    <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Espaciado</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${[['sm','S'],['md','M'],['lg','L'],['xl','XL'],['none','Sin']].map(([v,l])=>`
+        <button onclick="setSecProp('${sid}','padding','${v}');mu();renderCanvas()"
+          style="padding:8px 14px;border:1.5px solid ${sec.padding===v?'var(--accent)':'var(--ui-border)'};background:${sec.padding===v?'var(--accent-dim)':'var(--ui-surface2)'};color:${sec.padding===v?'var(--accent)':'var(--ui-text2)'};border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit">${l}</button>`).join('')}
+    </div>
+  </div>`;
+
+  html+=`<div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--ui-border)">
+    <button style="flex:1;padding:11px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="saveData()">💾 Guardar</button>
+    <button style="flex:1;padding:11px;background:var(--ui-surface2);border:1px solid var(--ui-border2);color:var(--ui-text2);border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit" onclick="openBottomSheet('contenido',document.getElementById('bn-contenido'))">✏️ Contenido</button>
+  </div>`;
+
+  return html;
+}
+
+function showToastMob(msg){toast(msg,'success',2000);}
+
+/* Mobile inline edit overlay helpers */
+let _mobEditCallback=null;
+function openMobEdit(label,currentVal,callback){
+  $('mob-edit-label').textContent=label;
+  $('mob-edit-input').value=currentVal||'';
+  _mobEditCallback=callback;
+  $('mob-edit-overlay').classList.add('open');
+  setTimeout(()=>$('mob-edit-input').focus(),300);
+}
+function saveMobEdit(){
+  if(_mobEditCallback)_mobEditCallback($('mob-edit-input').value);
+  closeMobEdit();
+}
+function closeMobEdit(){
+  $('mob-edit-overlay').classList.remove('open');
+  _mobEditCallback=null;
+}
+
+function closeBottomSheet(){
+  $('bottom-sheet').classList.remove('open');
+  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+}
+
 
 /* ═══════════════════════════════════════════════════
    SHARED HTML BUILDER (preview + export)
@@ -3414,7 +3916,7 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
   if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='z'))){e.preventDefault();redo();}
   if((e.ctrlKey||e.metaKey)&&e.key==='p'){e.preventDefault();openPreview();}
-  if(e.key==='Escape'){closeBottomSheet();closeAddSec();closePreview();closeShortcuts();hideCtxMenu();}
+  if(e.key==='Escape'){closeBottomSheet();closeMobEdit();closeAddSec();closePreview();closeShortcuts();hideCtxMenu();}
   // Copy/paste/duplicate sections
   if(!e.target.closest('[contenteditable]')&&!e.target.closest('input')&&!e.target.closest('textarea')){
     if((e.ctrlKey||e.metaKey)&&e.key==='c'&&selectedSec){e.preventDefault();copySec(selectedSec);}
