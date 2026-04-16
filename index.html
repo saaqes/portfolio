@@ -29,7 +29,6 @@ body{background:var(--black);color:var(--white);font-family:'Space Mono',monospa
 .hero::before{content:'';position:absolute;inset:0;background:url('https://www.transparenttextures.com/patterns/stardust.png');opacity:.4}
 .graffiti-text{font-family:'Rock Salt',cursive;font-size:clamp(4rem,15vw,8rem);color:var(--purple);filter:drop-shadow(8px 8px 0px var(--neon-pink));transform:rotate(-3deg);margin-bottom:20px;animation:glitch 4s infinite;position:relative}
 @keyframes glitch{0%,92%,100%{transform:rotate(-3deg) skew(0);filter:drop-shadow(8px 8px 0px var(--neon-pink))}93%{transform:rotate(-3deg) skew(3deg);filter:drop-shadow(-8px 8px 0px var(--neon-cyan))}95%{transform:rotate(-3deg) skew(-2deg);filter:drop-shadow(8px -8px 0px var(--neon-pink))}97%{transform:rotate(-3deg) skew(1deg);filter:drop-shadow(-4px 4px 0px #ff6b00)}}
-.hero-sub{font-family:'Rock Salt',cursive;font-size:clamp(.6rem,2vw,1rem);color:#aaa;margin-bottom:40px;position:relative}
 
 /* ── BUTTON ANIMATIONS ── */
 .btn-cta{
@@ -134,145 +133,85 @@ body{background:var(--black);color:var(--white);font-family:'Space Mono',monospa
 .repo-empty{text-align:center;padding:60px;color:#444;font-size:.84rem}
 .repo-empty-icon{font-size:3rem;display:block;margin-bottom:14px;opacity:.25}
 
-.hero-banner-section{
-  padding:0 4% 60px;margin-top:-40px;position:relative;z-index:2;
-}
-.hero-banner-card{
-  width:100%;max-width:1100px;margin:0 auto;
-  background:linear-gradient(135deg,#d4d0e8 0%,#c5c0dc 40%,#b8b2d4 100%);
-  border-radius:28px;
-  position:relative;overflow:hidden;
-  min-height:220px;
-  display:flex;align-items:stretch;
-  box-shadow:0 20px 80px rgba(138,43,226,.3),0 0 0 1px rgba(255,255,255,.1);
-}
 
-/* Background pattern dots like reference */
-.hbc-bg-pattern{
-  position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle,rgba(138,43,226,.08) 1px,transparent 1px),
-    radial-gradient(circle,rgba(255,0,255,.05) 1px,transparent 1px);
-  background-size:20px 20px,40px 40px;
-  background-position:0 0,10px 10px;
+/* ════ HERO CLEO BANNER ════ */
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.45),var(--black));position:relative;overflow:hidden;gap:28px;padding:0 4%}
+.hero-cleo-wrap{
+  position:relative;
+  width:100%;max-width:960px;
+  margin:0 auto;
 }
-/* Big decorative letter/shadow background */
-.hbc-bg-text{
-  position:absolute;right:-20px;top:-30px;
-  font-family:'Bungee Shade',cursive;
-  font-size:clamp(100px,18vw,200px);
-  color:rgba(80,60,120,.12);
-  letter-spacing:-10px;
-  line-height:1;
-  user-select:none;
-  pointer-events:none;
+/* The banner card itself */
+.hcb-card{
+  width:100%;
+  height:clamp(180px,28vw,260px);
+  background:linear-gradient(128deg,#d8d4ec 0%,#cbc5e3 40%,#bbb3d8 80%,#c2bade 100%);
+  border-radius:26px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 24px 80px rgba(80,40,180,.22),
+    0 0 0 1.5px rgba(255,255,255,.25) inset,
+    0 0 0 1px rgba(138,43,226,.18);
+  display:flex;align-items:stretch;
+}
+/* Subtle dot grid */
+.hcb-dot-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(120,80,220,.09) 1.2px,transparent 1.2px);
+  background-size:22px 22px;
   z-index:0;
 }
-
-/* Left info block */
-.hbc-left{
-  position:relative;z-index:2;
-  padding:36px 24px 36px 36px;
-  display:flex;flex-direction:column;justify-content:center;
-  min-width:200px;flex-shrink:0;
-}
-.hbc-logo-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(0,0,0,.85);color:white;
-  padding:4px 10px;border-radius:4px;
-  font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  margin-bottom:16px;width:fit-content;
-  border-left:3px solid var(--neon-pink);
-}
-.hbc-info-line{
-  font-family:'Bungee',cursive;
-  font-size:clamp(.6rem,.9vw,.85rem);
-  color:#2a1a4a;letter-spacing:1px;
-  margin-bottom:4px;text-transform:uppercase;
-}
-
-/* Center big name */
-.hbc-center{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  position:relative;z-index:2;
-  padding:20px;
-}
-.hbc-big-name{
-  font-family:'Bungee Shade',cursive;
-  font-size:clamp(3rem,9vw,7rem);
-  color:#1a0a30;
-  letter-spacing:-4px;
-  line-height:.9;
-  filter:drop-shadow(4px 4px 0px rgba(138,43,226,.3));
-  position:relative;
-}
-.hbc-badge-supreme{
-  position:absolute;top:-12px;right:-20px;
-  background:#cc0000;color:white;
-  font-family:'Bungee',cursive;font-size:.65rem;
-  padding:3px 10px;border-radius:2px;
-  letter-spacing:1px;
-  box-shadow:0 2px 8px rgba(200,0,0,.4);
-  transform:rotate(-2deg);
-}
-
-/* Right: photo area + decorative shapes */
-.hbc-right{
-  position:relative;z-index:2;
-  width:clamp(140px,22%,240px);
-  flex-shrink:0;
-  display:flex;align-items:flex-end;justify-content:center;
-  overflow:hidden;
-}
-.hbc-person-art{
-  width:100%;height:100%;
-  background:linear-gradient(to bottom,transparent 0%,rgba(138,43,226,.08) 100%);
-  display:flex;align-items:flex-end;justify-content:center;
-  font-size:clamp(5rem,12vw,9rem);
-  padding-bottom:0;
-  line-height:1;
-  filter:drop-shadow(0 -8px 20px rgba(138,43,226,.2));
-}
-
-/* Bottom-left pill avatar outside card */
-.hbc-avatar-outer{
-  position:absolute;
-  left:clamp(20px,4%,52px);
-  bottom:-50px;
-  z-index:10;
-}
-.hbc-avatar-pill{
-  display:inline-flex;align-items:center;gap:12px;
-  background:rgba(255,255,255,.92);
-  backdrop-filter:blur(20px);
-  border-radius:60px;
-  padding:8px 18px 8px 8px;
-  box-shadow:0 8px 32px rgba(138,43,226,.25),0 0 0 2px rgba(138,43,226,.15);
-}
-.hbc-avatar-img{
-  width:52px;height:52px;border-radius:50%;
-  object-fit:cover;background:var(--dark-purple);
+/* Image slot — fills the whole card */
+.hcb-img-slot{
+  position:absolute;inset:0;z-index:1;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.4rem;flex-shrink:0;overflow:hidden;
-  border:2px solid var(--neon-pink);
-  box-shadow:0 0 12px rgba(255,0,255,.3);
+  overflow:hidden;border-radius:26px;
 }
-.hbc-avatar-info{display:flex;flex-direction:column;gap:1px}
-.hbc-avatar-name{font-family:'Bungee',cursive;font-size:.78rem;color:#1a0a30}
-.hbc-avatar-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(138,43,226,.1);border:1px solid rgba(138,43,226,.3);
-  padding:2px 8px;border-radius:20px;font-size:.58rem;color:var(--purple);
-  width:fit-content;
+.hcb-img-slot img{
+  width:100%;height:100%;object-fit:cover;border-radius:26px;
+  display:block;
+}
+/* Decorative corner marks like CLEO */
+.hcb-deco{
+  position:absolute;font-size:.85rem;
+  color:rgba(80,50,150,.25);pointer-events:none;user-select:none;z-index:2;
 }
 
-/* Plus-sign decorations like reference */
-.hbc-plus{
-  position:absolute;font-size:.9rem;color:rgba(80,60,120,.4);
-  font-weight:300;pointer-events:none;user-select:none;
+/* Profile photo — overlapping bottom-left of card */
+.hcb-avatar-wrap{
+  position:absolute;
+  left:clamp(16px,3.5%,40px);
+  bottom:-44px;
+  z-index:20;
+}
+.hcb-avatar-circle{
+  width:clamp(72px,10vw,96px);
+  height:clamp(72px,10vw,96px);
+  border-radius:50%;
+  background:linear-gradient(135deg,#1a0a30,#2d1060);
+  border:3px solid var(--neon-pink);
+  box-shadow:
+    0 0 0 4px rgba(0,0,0,.6),
+    0 0 20px rgba(255,0,255,.35),
+    0 8px 28px rgba(0,0,0,.5);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.hcb-avatar-circle img{
+  width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;
+}
+
+/* Responsive */
+@media(max-width:640px){
+  .hcb-card{height:clamp(150px,42vw,200px);border-radius:18px}
+  .hcb-avatar-wrap{bottom:-36px;left:14px}
 }
 
 /* ════ mobile profile controls ════ */
+
 .profile-mobile-fab{
   display:none;
   position:fixed;bottom:24px;right:20px;z-index:800;
@@ -319,15 +258,6 @@ body{background:var(--black);color:var(--white);font-family:'Space Mono',monospa
   .profile-body{padding-top:140px;padding-left:4%;padding-right:4%}
   .profile-meta-row{justify-content:center}
   .stats-banner{flex-direction:column;align-items:center;gap:30px}
-  /* Banner card mobile */
-  .hbc-right{width:100px}
-  .hbc-left{padding:20px 16px 20px 20px;min-width:120px}
-  .hbc-center{padding:10px}
-  .hero-banner-card{min-height:160px}
-  .hbc-avatar-outer{bottom:-42px}
-  .hbc-avatar-pill{padding:6px 14px 6px 6px}
-  .hbc-avatar-img{width:42px;height:42px;font-size:1.1rem}
-  .hero-banner-section{padding:0 3% 50px}
   /* No transforms on tap */
   .btn-cta:active{background:var(--neon-pink);transform:none}
   .btn-nav:active{background:var(--purple)}
@@ -619,65 +549,52 @@ body{background:var(--black);color:var(--white);font-family:'Space Mono',monospa
 <div id="view-home" class="view active">
 
   <header class="hero">
-    <h1 class="graffiti-text" id="hero-title">SAQES</h1>
-    <p class="hero-sub" id="hero-sub">Creative Digital Tagging</p>
+
+    <!-- ══════════════════════════════════════════════
+         BANNER ESTILO CLEO
+    ══════════════════════════════════════════════ -->
+    <div class="hero-cleo-wrap">
+
+      <!-- ╔══════════════════════════════════════╗
+           ║        BANNER — imagen interna       ║
+           ╚══════════════════════════════════════╝
+           Para agregar imagen al banner, coloca dentro
+           de .hcb-img-slot:
+             <img src="tu-banner.jpg" alt="Banner">
+      -->
+      <div class="hcb-card">
+        <div class="hcb-dot-bg"></div>
+
+        <!-- ▼ SLOT IMAGEN BANNER ▼ -->
+        <div class="hcb-img-slot">
+          <!-- <img src="tu-banner.jpg" alt="Banner"> -->
+        </div>
+
+        <!-- Decorative marks -->
+        <span class="hcb-deco" style="top:18%;left:10%">✦ ✦</span>
+        <span class="hcb-deco" style="top:62%;left:8%">+</span>
+        <span class="hcb-deco" style="top:22%;right:10%">+</span>
+        <span class="hcb-deco" style="bottom:20%;right:8%">✦</span>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗
+           ║      FOTO DE PERFIL (superpuesta)    ║
+           ╚══════════════════════════════════════╝
+           Para agregar tu foto de perfil, coloca
+           dentro de .hcb-avatar-circle:
+             <img src="tu-foto.jpg" alt="Perfil">
+      -->
+      <div class="hcb-avatar-wrap">
+        <div class="hcb-avatar-circle">
+          <!-- <img src="tu-foto.jpg" alt="Perfil"> -->
+        </div>
+      </div>
+
+    </div>
+    <!-- ══════════════════════════════════════════ -->
+
     <a class="btn-cta" id="hero-cta-btn" href="builder.html">CREA TU PÁGINA</a>
   </header>
-
-  <!-- ════ HERO BANNER CARD (estilo referencia CLEO) ════ -->
-  <div class="hero-banner-section zoom-in" id="hero-banner">
-    <div class="hero-banner-card" id="hbc">
-      <!-- bg elements -->
-      <div class="hbc-bg-pattern"></div>
-      <div class="hbc-bg-text" id="hbc-bg-text">SAQES</div>
-
-      <!-- Decorative plus signs like reference -->
-      <div class="hbc-plus" style="top:18%;left:28%;font-size:1.2rem">✦</div>
-      <div class="hbc-plus" style="top:60%;left:24%;font-size:.9rem">+</div>
-      <div class="hbc-plus" style="top:25%;left:35%;font-size:.7rem">+</div>
-      <div class="hbc-plus" style="top:70%;left:38%;font-size:1.1rem">✦</div>
-      <div class="hbc-plus" style="top:15%;right:28%;font-size:.8rem">+</div>
-      <div class="hbc-plus" style="top:55%;right:24%;font-size:1rem">✦</div>
-
-      <!-- Left info -->
-      <div class="hbc-left">
-        <div class="hbc-logo-badge">
-          <span>SAQES</span><span style="color:var(--neon-pink)">◆</span>
-        </div>
-        <div class="hbc-info-line" id="hbc-line1">CREATIVE DIGITAL</div>
-        <div class="hbc-info-line" id="hbc-line2">URBAN DESIGN</div>
-        <div class="hbc-info-line" id="hbc-line3">BUILDER PLATFORM</div>
-      </div>
-
-      <!-- Center: big name -->
-      <div class="hbc-center">
-        <div class="hbc-big-name">
-          <span id="hbc-main-name">SAQES</span>
-          <div class="hbc-badge-supreme" id="hbc-badge">◆ PRO</div>
-        </div>
-      </div>
-
-      <!-- Right: emoji/art -->
-      <div class="hbc-right">
-        <div class="hbc-person-art" id="hbc-art">🎨</div>
-      </div>
-
-      <!-- Pill avatar bottom-left -->
-      <div class="hbc-avatar-outer">
-        <div class="hbc-avatar-pill">
-          <div class="hbc-avatar-img" id="hbc-avatar-img">🎯</div>
-          <div class="hbc-avatar-info">
-            <div class="hbc-avatar-name" id="hbc-avatar-name">SAQES</div>
-            <div class="hbc-avatar-badge">✦ Builder</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Divider line like reference -->
-      <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
-        width:60px;height:2px;background:rgba(80,60,120,.3);border-radius:2px"></div>
-    </div>
-  </div>
 
   <!-- STATS -->
   <div class="stats-banner zoom-in" id="stats-banner">
@@ -1529,8 +1446,9 @@ function applyHeroChanges(){
   const t=$id('admin-hero-title').value.trim();
   const s=$id('admin-hero-sub').value.trim();
   const c=$id('admin-cta-text').value.trim();
-  if(t){st.heroText.title=t;$id('hero-title').textContent=t;}
-  if(s){st.heroText.sub=s;$id('hero-sub').textContent=s;}
+  const _ht=$id('hero-title');const _hs=$id('hero-sub');
+  if(t){st.heroText.title=t;if(_ht)_ht.textContent=t;}
+  if(s){st.heroText.sub=s;if(_hs)_hs.textContent=s;}
   if(c){st.heroText.cta=c;$id('hero-cta-btn').textContent=c;}
   saveSt();showToast('✓ Hero actualizado');
 }
@@ -1594,8 +1512,9 @@ if(st.siteColors){
 }
 // Apply saved hero text
 if(st.heroText){
-  if(st.heroText.title)$id('hero-title').textContent=st.heroText.title;
-  if(st.heroText.sub)$id('hero-sub').textContent=st.heroText.sub;
+  const _ht=$id('hero-title');const _hs=$id('hero-sub');
+  if(st.heroText.title&&_ht)_ht.textContent=st.heroText.title;
+  if(st.heroText.sub&&_hs)_hs.textContent=st.heroText.sub;
   if(st.heroText.cta)$id('hero-cta-btn').textContent=st.heroText.cta;
 }
 // Restore session
@@ -1686,18 +1605,23 @@ function logout(){
 // ══════════ HERO BANNER UPDATE ══════════
 function updateHeroBanner(){
   const u=curUser();
+  if(!u)return;
+  // Update new CLEO avatar circle with user photo if available
+  const newAvatarCircle=document.querySelector('.hcb-avatar-circle');
+  if(newAvatarCircle&&u.avatar){
+    newAvatarCircle.innerHTML=`<img src="${u.avatar}" alt="${u.username}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`;
+  }
+  // Legacy null-safe refs (elements may not exist)
   const nameEl=$id('hbc-main-name');
   const bgTextEl=$id('hbc-bg-text');
   const avatarEl=$id('hbc-avatar-img');
   const avatarNameEl=$id('hbc-avatar-name');
-  if(u){
-    const name=u.username||'SAQES';
-    if(nameEl)nameEl.textContent=name.toUpperCase().slice(0,6);
-    if(bgTextEl)bgTextEl.textContent=name.toUpperCase().slice(0,4);
-    if(avatarNameEl)avatarNameEl.textContent=name;
-    if(avatarEl&&u.avatar){
-      avatarEl.innerHTML=`<img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    }
+  const name=u.username||'SAQES';
+  if(nameEl)nameEl.textContent=name.toUpperCase().slice(0,6);
+  if(bgTextEl)bgTextEl.textContent=name.toUpperCase().slice(0,4);
+  if(avatarNameEl)avatarNameEl.textContent=name;
+  if(avatarEl&&u.avatar){
+    avatarEl.innerHTML=`<img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   }
 }
 // Call on session restore
