@@ -633,6 +633,40 @@ button{touch-action:manipulation}
   font-size:.64rem;color:var(--ui-text3);padding:0 4px;flex-shrink:0;white-space:nowrap;
 }
 
+/* ════ MOBILE HAMBURGER MENU ════ */
+#mob-menu-btn{
+  display:none;width:34px;height:34px;border:1px solid var(--ui-border2);background:var(--ui-surface2);
+  border-radius:var(--radius-sm);cursor:pointer;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;flex-shrink:0;transition:all var(--fast);
+}
+@media(max-width:900px){
+  #mob-menu-btn{display:flex}
+  .mob-hide{display:none!important}
+  #editor-top{overflow:hidden;gap:3px;padding:0 6px}
+  .page-tabs{max-width:80px}
+}
+.mob-hb-line{width:14px;height:1.5px;background:var(--ui-text2);border-radius:1px;transition:all var(--fast)}
+#mob-menu-btn:hover .mob-hb-line{background:var(--accent)}
+#mob-dropdown{
+  position:fixed;top:var(--topbar-h);right:0;z-index:1000;
+  background:var(--ui-surface);border:1px solid var(--ui-border2);border-top:none;
+  border-radius:0 0 var(--radius-md) var(--radius-md);padding:8px;
+  display:none;flex-direction:column;gap:4px;min-width:180px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);animation:mob-drop-in .15s var(--ease);
+}
+#mob-dropdown.open{display:flex}
+@keyframes mob-drop-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.mob-dd-item{
+  padding:10px 14px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--ui-text2);
+  border:1px solid transparent;transition:all var(--fast);background:transparent;
+  font-family:'Plus Jakarta Sans',sans-serif;width:100%;text-align:left;
+}
+.mob-dd-item:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-dim)}
+.mob-dd-item.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mob-dd-item.primary:hover{background:var(--accent-hover)}
+.mob-dd-sep{height:1px;background:var(--ui-border);margin:2px 0}
+
 /* ════ CONTENTEDITABLE ════ */
 [contenteditable]{outline:none;cursor:text}
 [contenteditable]:hover{outline:1px dashed rgba(99,102,241,.35);border-radius:2px}
@@ -694,6 +728,39 @@ button{touch-action:manipulation}
 
 /* ── HERO ── */
 .site-hero{min-height:440px;display:flex;align-items:center;justify-content:center;padding:64px 24px;position:relative;overflow:hidden}
+
+/* ── HERO CAROUSEL ── */
+.hero-carousel{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hc-slide{
+  position:absolute;inset:0;
+  background-size:cover!important;background-position:center center!important;
+  opacity:0;transition:opacity .8s ease;
+}
+.hc-slide.active{opacity:1}
+/* Ken Burns / zoom animation on active slide */
+.hc-slide.active.anim-zoom{
+  animation:hc-kenburns 6s ease-out forwards;
+}
+@keyframes hc-kenburns{
+  from{transform:scale(1);background-position:center center}
+  to{transform:scale(1.08);background-position:60% 40%}
+}
+/* Slide transition (instead of fade) */
+.hero-carousel.slide-mode .hc-slide{
+  opacity:1;transform:translateX(100%);transition:transform .6s cubic-bezier(.4,0,.2,1);
+}
+.hero-carousel.slide-mode .hc-slide.prev{transform:translateX(-100%)}
+.hero-carousel.slide-mode .hc-slide.active{transform:translateX(0)}
+/* Carousel dots */
+.hc-dots{
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+  display:flex;gap:7px;z-index:5;
+}
+.hc-dot{
+  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.45);
+  transition:all .3s;cursor:pointer;border:none;padding:0;
+}
+.hc-dot.active{background:#fff;transform:scale(1.3);width:20px;border-radius:4px}
 .hero-inner{width:100%;max-width:900px;position:relative;z-index:1}
 .hero-center{text-align:center;display:flex;flex-direction:column;align-items:center}
 .hero-badge{
@@ -1272,34 +1339,62 @@ button{touch-action:manipulation}
 <!-- ══════════════════════ TOP BAR ══════════════════════ -->
 <header id="editor-top">
   <a href="index.html" class="top-btn" style="gap:5px;text-decoration:none;flex-shrink:0" title="Volver al perfil">← Perfil</a>
-  <div class="top-sep"></div>
+  <div class="top-sep mob-hide"></div>
   <div class="top-brand">
     <div class="brand-dot">✦</div>
-    <span id="builder-site-name" style="font-size:.82rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SAQES Builder</span>
+    <span id="builder-site-name" style="font-size:.82rem;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Builder</span>
   </div>
-  <div class="top-sep"></div>
+  <div class="top-sep mob-hide"></div>
   <div class="page-tabs" id="pageTabs"></div>
-  <button class="add-ptab" onclick="addPage()" title="Nueva página">+</button>
-  <div class="top-sep"></div>
-  <div class="vp-group">
-    <button class="vp-btn" id="vp-phone" onclick="setVP('phone',this)" title="Móvil (390px)">📱</button>
-    <button class="vp-btn" id="vp-tablet" onclick="setVP('tablet',this)" title="Tablet (768px)">📟</button>
-    <button class="vp-btn" id="vp-desktop" onclick="setVP('desktop',this)" title="Escritorio (full)" >🖥</button>
+  <button class="add-ptab mob-hide" onclick="addPage()" title="Nueva página">+</button>
+  <div class="top-sep mob-hide"></div>
+  <div class="vp-group mob-hide">
+    <button class="vp-btn" id="vp-phone" onclick="setVP('phone',this)" title="Móvil">📱</button>
+    <button class="vp-btn" id="vp-tablet" onclick="setVP('tablet',this)" title="Tablet">📟</button>
+    <button class="vp-btn" id="vp-desktop" onclick="setVP('desktop',this)" title="Escritorio">🖥</button>
   </div>
-  <div class="top-sep"></div>
-  <button class="top-btn icon-btn" id="btn-undo" onclick="undo()" title="Deshacer (Ctrl+Z)" disabled>↩</button>
-  <button class="top-btn icon-btn" id="btn-redo" onclick="redo()" title="Rehacer (Ctrl+Y)" disabled>↪</button>
-  <span class="history-info" id="history-info"></span>
-  <div class="top-sep"></div>
-  <button class="top-btn icon-btn" onclick="openShortcuts()" title="Atajos de teclado (?)">?</button>
-  <div class="top-sep"></div>
-  <button class="top-btn" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;gap:5px" onclick="openAdminPanel()" title="Panel de administración">⚙️ Admin</button>
-  <div class="top-sep"></div>
-  <button class="top-btn" onclick="openPreview()">👁 Preview</button>
-  <button class="top-btn" onclick="exportHTML()" title="Exportar HTML limpio">⬇ Exportar</button>
-  <div class="save-dot" id="saveDot" title="Estado de guardado"></div>
-  <button class="top-btn primary" onclick="saveData()">💾 Guardar</button>
+  <div class="top-sep mob-hide"></div>
+  <button class="top-btn icon-btn mob-hide" id="btn-undo" onclick="undo()" title="Deshacer (Ctrl+Z)" disabled>↩</button>
+  <button class="top-btn icon-btn mob-hide" id="btn-redo" onclick="redo()" title="Rehacer (Ctrl+Y)" disabled>↪</button>
+  <span class="history-info mob-hide" id="history-info"></span>
+  <div class="top-sep mob-hide"></div>
+  <button class="top-btn icon-btn mob-hide" onclick="openShortcuts()" title="Atajos (?)">?</button>
+  <div class="top-sep mob-hide"></div>
+  <button class="top-btn mob-hide" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none" onclick="openAdminPanel()">⚙️ Admin</button>
+  <div class="top-sep mob-hide"></div>
+  <button class="top-btn mob-hide" onclick="openPreview()">👁</button>
+  <button class="top-btn mob-hide" onclick="exportHTML()">⬇</button>
+  <div class="save-dot mob-hide" id="saveDot"></div>
+  <button class="top-btn primary mob-hide" onclick="saveData()">💾 Guardar</button>
+  <!-- Mobile hamburger -->
+  <button id="mob-menu-btn" onclick="toggleMobMenu()" title="Más opciones">
+    <div class="mob-hb-line"></div>
+    <div class="mob-hb-line"></div>
+    <div class="mob-hb-line"></div>
+  </button>
 </header>
+<!-- Mobile dropdown menu -->
+<div id="mob-dropdown">
+  <button class="mob-dd-item" onclick="saveData();closeMobMenu()">💾 Guardar</button>
+  <button class="mob-dd-item" onclick="openPreview();closeMobMenu()">👁 Vista previa</button>
+  <button class="mob-dd-item" onclick="openAdminPanel();closeMobMenu()">⚙️ Admin</button>
+  <div class="mob-dd-sep"></div>
+  <button class="mob-dd-item" onclick="openAddSec();closeMobMenu()">＋ Añadir sección</button>
+  <button class="mob-dd-item" onclick="exportHTML();closeMobMenu()">⬇ Exportar HTML</button>
+  <div class="mob-dd-sep"></div>
+  <div style="padding:6px 14px">
+    <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:6px">Vista</div>
+    <div style="display:flex;gap:6px">
+      <button class="top-btn" style="flex:1;justify-content:center" onclick="setVP('phone',$('vp-phone'));closeMobMenu()">📱</button>
+      <button class="top-btn" style="flex:1;justify-content:center" onclick="setVP('tablet',$('vp-tablet'));closeMobMenu()">📟</button>
+      <button class="top-btn" style="flex:1;justify-content:center" onclick="setVP('desktop',$('vp-desktop'));closeMobMenu()">🖥</button>
+    </div>
+  </div>
+  <div style="padding:4px 14px 8px;display:flex;gap:6px">
+    <button class="top-btn icon-btn" style="flex:1;width:auto" onclick="undo()">↩ Deshacer</button>
+    <button class="top-btn icon-btn" style="flex:1;width:auto" onclick="redo()">↪ Rehacer</button>
+  </div>
+</div>
 
 <!-- ══════════════════════ EDITOR BODY ══════════════════════ -->
 <div id="editor-body">
@@ -1731,6 +1826,12 @@ function getBg(bg){
   }
   if(bg.type==='image'&&bg.img)return`background:url('${bg.img}') ${bg.imgPos||'center center'}/cover no-repeat;`;
   if(bg.type==='dark')return'background:#111827;';
+  if(bg.type==='carousel'){
+    // Show first slide as static bg in CSS; JS carousel overlay will handle animation
+    const imgs=bg.carouselImgs||[];
+    const first=imgs.find(i=>i);
+    return first?`background:url('${first}') center center/cover no-repeat;`:'background:#111827;';
+  }
   return`background:${bg.color||'#ffffff'};`;
 }
 function getPad(p,custom){
@@ -1777,10 +1878,26 @@ function redo(){
 }
 
 function updateHistoryButtons(){
-  $('btn-undo').disabled = historyIdx<=0;
-  $('btn-redo').disabled = historyIdx>=history.length-1;
+  const u=$('btn-undo'),r=$('btn-redo');
+  if(u)u.disabled = historyIdx<=0;
+  if(r)r.disabled = historyIdx>=history.length-1;
   $('history-info').textContent = history.length>1?`${historyIdx+1}/${history.length}`:'';
 }
+
+/* ════ HAMBURGER MENU ════ */
+function toggleMobMenu(){
+  const dd=$('mob-dropdown');
+  dd.classList.toggle('open');
+}
+function closeMobMenu(){
+  $('mob-dropdown').classList.remove('open');
+}
+// Close on outside click
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#mob-menu-btn')&&!e.target.closest('#mob-dropdown')){
+    closeMobMenu();
+  }
+});
 
 /* ════ MU (mark unsaved + push history) ════ */
 let muTimer;
@@ -1871,10 +1988,18 @@ function renderSectionContent(sec){
   switch(sec.type){
     case 'hero':{
       const isLeft=c.layout==='left'||c.layout==='right';
-      return`<div ${anchorAttr} class="site-hero" style="${getBg(sec.bg)}${colorText(sec)}${wrapStyle}position:relative;">
+      const isCarousel=sec.bg?.type==='carousel';
+      const carImgs=sec.bg?.carouselImgs||[];
+      const carouselHtml=isCarousel&&carImgs.some(i=>i)?`
+        <div class="hero-carousel" data-secid="${sec.id}" data-transition="${sec.bg.carouselTransition||'fade'}" data-interval="${sec.bg.carouselInterval||3000}">
+          ${carImgs.filter(i=>i).map((img,ci)=>`
+            <div class="hc-slide${ci===0?' active':''}" style="background:url('${img}') center center/cover no-repeat"></div>`).join('')}
+        </div>`:'';
+      return`<div ${anchorAttr} class="site-hero" style="${getBg(sec.bg)}${colorText(sec)}${wrapStyle}position:relative;overflow:hidden;">
+        ${carouselHtml}
         ${overlayHtml}
-        ${c.overlayOpacity>0?`<div style="position:absolute;inset:0;background:${c.overlayColor||'rgba(0,0,0,.4)'};opacity:${c.overlayOpacity/100};z-index:0"></div>`:''}
-        <div class="hero-inner" style="z-index:1">
+        ${c.overlayOpacity>0?`<div style="position:absolute;inset:0;background:${c.overlayColor||'rgba(0,0,0,.4)'};opacity:${c.overlayOpacity/100};z-index:1;pointer-events:none"></div>`:''}
+        <div class="hero-inner" style="z-index:2">
           ${isLeft?`<div class="hero-left">
             <div>
               ${c.badge?`<span class="hero-badge" contenteditable="true" data-sid="${sec.id}" data-field="badge">${c.badge}</span>`:''}
@@ -2274,6 +2399,8 @@ function renderCanvas(){
   renderSecList();
   // Apply global styles to canvas device immediately
   applyGlobalToCanvas();
+  // Start carousel animations
+  initCarousels();
 }
 
 function applyGlobalToCanvas(){
@@ -2284,7 +2411,6 @@ function applyGlobalToCanvas(){
   device.style.background=G.bgColor||'#fff';
   device.style.color=G.colorBody||G.textColor||'#111';
   device.style.fontSize=(G.fontSize||16)+'px';
-  // Inject scoped typography stylesheet into canvas device
   let styleTag=device.querySelector('#typo-tokens');
   if(!styleTag){styleTag=document.createElement('style');styleTag.id='typo-tokens';device.prepend(styleTag);}
   styleTag.textContent=`
@@ -2303,6 +2429,82 @@ function applyGlobalToCanvas(){
       font-size:${G.sizeBtns||14}px!important;
     }
   `;
+}
+
+/* ═══════════════════════════════════════════════════
+   🎠 CAROUSEL ENGINE
+═══════════════════════════════════════════════════ */
+// Keep track of running carousel timers so we can clear them on re-render
+const _carouselTimers = new Map();
+
+function initCarousels(){
+  // Clear any timers from previous render
+  _carouselTimers.forEach(t=>clearInterval(t));
+  _carouselTimers.clear();
+
+  document.querySelectorAll('.hero-carousel').forEach(car=>{
+    const slides=[...car.querySelectorAll('.hc-slide')];
+    if(slides.length<2)return;
+
+    const trans=car.dataset.transition||'fade';
+    const intv=parseInt(car.dataset.interval)||3000;
+    const sid=car.dataset.secid;
+
+    // Build dots
+    const dotsEl=document.createElement('div');
+    dotsEl.className='hc-dots';
+    slides.forEach((_,i)=>{
+      const d=document.createElement('button');
+      d.className='hc-dot'+(i===0?' active':'');
+      d.setAttribute('aria-label','Diapositiva '+(i+1));
+      d.onclick=e=>{e.stopPropagation();goToSlide(i);};
+      dotsEl.appendChild(d);
+    });
+    car.appendChild(dotsEl);
+
+    // Apply slide mode class
+    if(trans==='slide')car.classList.add('slide-mode');
+
+    let cur=0;
+
+    function goToSlide(next){
+      if(next===cur)return;
+      const prev=cur;
+      cur=next;
+
+      if(trans==='slide'){
+        // Outgoing: slide left out
+        slides[prev].classList.add('prev');
+        slides[prev].classList.remove('active');
+        setTimeout(()=>slides[prev].classList.remove('prev'),650);
+        // Incoming: slide in from right
+        slides[cur].style.transform='translateX(100%)';
+        slides[cur].classList.add('active');
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{slides[cur].style.transform='';}));
+      } else {
+        // Fade or zoom — cross-fade
+        slides[prev].classList.remove('active');
+        if(trans==='zoom')slides[prev].classList.remove('anim-zoom');
+        slides[cur].classList.add('active');
+        if(trans==='zoom'){
+          // Restart animation by clone trick
+          slides[cur].classList.remove('anim-zoom');
+          requestAnimationFrame(()=>requestAnimationFrame(()=>slides[cur].classList.add('anim-zoom')));
+        }
+      }
+
+      // Update dots
+      dotsEl.querySelectorAll('.hc-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+    }
+
+    // Auto-advance
+    const timer=setInterval(()=>{
+      const next=(cur+1)%slides.length;
+      goToSlide(next);
+    },intv);
+
+    _carouselTimers.set(sid||Math.random()+'',timer);
+  });
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2850,7 +3052,7 @@ function designPanel(sec){
 
   /* ── FONDO ── */
   h+=`<span class="divider-label">🎨 Fondo de la sección</span>`;
-  h+=chips('Tipo',bg.type||'color',[['color','Color'],['gradient','Gradiente'],['image','Imagen'],['dark','Oscuro']],`setBg('${sid}','type',v)`);
+  h+=chips('Tipo',bg.type||'color',[['color','Color'],['gradient','Gradiente'],['image','Imagen'],['dark','Oscuro'],['carousel','🎠 Carrusel']],`setBg('${sid}','type',v)`);
 
   if(bg.type==='color'||!bg.type){
     h+=colorField('Color de fondo',bg.color||'#ffffff',`setBg('${sid}','color',this.value)`);
@@ -2876,6 +3078,42 @@ function designPanel(sec){
       <div class="chip-row">
         ${[['center center','Centro'],['top center','Arriba'],['bottom center','Abajo'],['center left','Izq'],['center right','Der']].map(([v,l])=>`<span class="chip${(bg.imgPos||'center center')===v?' active':''}" onclick="setBg('${sid}','imgPos','${v}')">${l}</span>`).join('')}
       </div></div>`;
+  }
+
+  if(bg.type==='carousel'){
+    const imgs=bg.carouselImgs||['','',''];
+    const trans=bg.carouselTransition||'fade';
+    const intv=bg.carouselInterval||3000;
+    h+=`<div class="prop-group">
+      <label class="prop-label">🎠 Imágenes del carrusel (máx. 3)</label>
+    </div>`;
+    // 3 image slots
+    for(let ci=0;ci<3;ci++){
+      const imgVal=imgs[ci]||'';
+      h+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
+        <div style="flex-shrink:0;font-size:.7rem;font-weight:700;color:var(--ui-text3);min-width:14px">${ci+1}</div>
+        ${imgVal
+          ?`<div style="flex-shrink:0;width:54px;height:40px;border-radius:5px;background:url('${imgVal}') center/cover;border:1px solid var(--ui-border2)"></div>`
+          :`<div style="flex-shrink:0;width:54px;height:40px;border-radius:5px;background:var(--ui-surface3);border:1.5px dashed var(--ui-border2);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--ui-text3)">📸</div>`
+        }
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+          <button onclick="requestImgUpload(url=>{const s=secById('${sid}');if(!s.bg.carouselImgs)s.bg.carouselImgs=['','',''];s.bg.carouselImgs[${ci}]=url;mu();renderCanvas();renderPanel()})" class="add-sub-btn" style="margin:0;padding:5px 8px;font-size:.66rem">${imgVal?'🔄 Cambiar':'📤 Subir imagen'}</button>
+          ${imgVal?`<button onclick="const s=secById('${sid}');if(s.bg.carouselImgs)s.bg.carouselImgs[${ci}]='';mu();renderCanvas();renderPanel()" class="sub-del-btn" style="font-size:.6rem;padding:2px 6px">✕ Quitar</button>`:''}
+        </div>
+      </div>`;
+    }
+    h+=`<span class="divider-label">🔀 Transición</span>`;
+    h+=chips('Efecto',trans,[['fade','🌫 Fade suave'],['slide','↔ Slide'],['zoom','🔭 Zoom Ken Burns']],`setBg('${sid}','carouselTransition',v)`);
+    h+=`<div class="prop-group"><label class="prop-label">Intervalo de cambio (${intv/1000}s)</label>
+      <input type="range" class="range-field" min="1500" max="8000" step="500" value="${intv}"
+        oninput="setBg('${sid}','carouselInterval',+this.value);mu()" title="${intv}ms">
+      <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--ui-text3);margin-top:2px">
+        <span>1.5s</span><span>8s</span>
+      </div>
+    </div>`;
+    h+=`<div style="padding:10px;background:var(--accent-dim);border:1px solid rgba(99,102,241,.25);border-radius:7px;font-size:.7rem;color:var(--accent);line-height:1.5;margin-top:4px">
+      💡 El carrusel se anima automáticamente en el canvas. Sube al menos 2 fotos para verlo funcionar.
+    </div>`;
   }
 
   /* ── OVERLAY ── */
@@ -3179,7 +3417,23 @@ function imgField(label,src,clickAction,inline=false){
    UPDATE HELPERS
 ═══════════════════════════════════════════════════ */
 function upd(sid,f,v){const s=secById(sid);if(s?.content)s.content[f]=v;mu();renderCanvas();}
-function setBg(sid,k,v){const s=secById(sid);if(s?.bg)s.bg[k]=v;mu();renderCanvas();renderPanel();}
+function setBg(sid,k,v){
+  const s=secById(sid);
+  if(!s?.bg)return;
+  s.bg[k]=v;
+  // Initialize defaults when changing type
+  if(k==='type'){
+    if(v==='gradient'&&!s.bg.gradA){s.bg.gradA='#6366F1';s.bg.gradB='#EC4899';s.bg.gradDir='135deg';}
+    if(v==='color'&&!s.bg.color){s.bg.color='#ffffff';}
+    if(v==='dark'){s.bg.color='#111827';}
+    if(v==='carousel'){
+      if(!s.bg.carouselImgs)s.bg.carouselImgs=['','',''];
+      if(!s.bg.carouselTransition)s.bg.carouselTransition='fade';
+      if(!s.bg.carouselInterval)s.bg.carouselInterval=3000;
+    }
+  }
+  mu();renderCanvas();renderPanel();
+}
 function setSecProp(sid,k,v){const s=secById(sid);if(s)s[k]=v;mu();renderCanvas();}
 function renameSec(sid,n){const s=secById(sid);if(s){s.name=n;renderSecList();}mu();}
 function applyTheme(cfg){Object.assign(site.global,cfg);mu();renderCanvas();renderPanel();applyGlobalToCanvas();toast('🎨 Tema aplicado','success');}
@@ -3735,7 +3989,19 @@ img{max-width:100%;height:auto;display:block}
 .site-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 22px;border:none;cursor:pointer;font-weight:700;font-size:.84rem;font-family:inherit;transition:all .2s;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .site-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
 .site-btn.outline{background:transparent!important;border:2px solid currentColor}
-.site-btn.ghost{background:rgba(255,255,255,.15)!important}`;
+.site-btn.ghost{background:rgba(255,255,255,.15)!important}
+/* ─ Carousel ─ */
+.hero-carousel{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hc-slide{position:absolute;inset:0;background-size:cover!important;background-position:center!important;opacity:0;transition:opacity .85s ease}
+.hc-slide.active{opacity:1}
+.hc-slide.active.anim-zoom{animation:hc-kb 7s ease-out forwards}
+@keyframes hc-kb{from{transform:scale(1)}to{transform:scale(1.09)}}
+.hero-carousel.slide-mode .hc-slide{opacity:1;transform:translateX(100%);transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.hero-carousel.slide-mode .hc-slide.prev{transform:translateX(-100%)}
+.hero-carousel.slide-mode .hc-slide.active{transform:translateX(0)}
+.hc-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
+.hc-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.45);border:none;cursor:pointer;transition:all .3s;padding:0}
+.hc-dot.active{background:#fff;width:22px;border-radius:4px}`;
 }
 
 function openPreview(){
@@ -3797,6 +4063,36 @@ function openPreview(){
       else if(a==='slideUp'){el.style.opacity=0;el.style.transform='translateY(30px)';}
       else if(a==='zoom'){el.style.opacity=0;el.style.transform='scale(0.95)';}
       obs.observe(el);
+    });
+    // Carousel engine
+    document.querySelectorAll('.hero-carousel').forEach(function(car){
+      var slides=[].slice.call(car.querySelectorAll('.hc-slide'));
+      if(slides.length<2)return;
+      var trans=car.dataset.transition||'fade';
+      var intv=parseInt(car.dataset.interval)||3000;
+      var cur=0;
+      if(trans==='slide')car.classList.add('slide-mode');
+      // dots
+      var dotsEl=document.createElement('div');dotsEl.className='hc-dots';
+      slides.forEach(function(_,i){var d=document.createElement('button');d.className='hc-dot'+(i===0?' active':'');d.onclick=function(e){e.stopPropagation();go(i);};dotsEl.appendChild(d);});
+      car.appendChild(dotsEl);
+      function go(next){
+        if(next===cur)return;
+        var prev=cur;cur=next;
+        if(trans==='slide'){
+          slides[prev].classList.add('prev');slides[prev].classList.remove('active');
+          setTimeout(function(){slides[prev].classList.remove('prev');},650);
+          slides[cur].style.transform='translateX(100%)';slides[cur].classList.add('active');
+          requestAnimationFrame(function(){requestAnimationFrame(function(){slides[cur].style.transform='';});});
+        }else{
+          slides[prev].classList.remove('active');
+          if(trans==='zoom')slides[prev].classList.remove('anim-zoom');
+          slides[cur].classList.add('active');
+          if(trans==='zoom'){slides[cur].classList.remove('anim-zoom');requestAnimationFrame(function(){requestAnimationFrame(function(){slides[cur].classList.add('anim-zoom');});});}
+        }
+        dotsEl.querySelectorAll('.hc-dot').forEach(function(d,i){d.classList.toggle('active',i===cur);});
+      }
+      setInterval(function(){go((cur+1)%slides.length);},intv);
     });
   <\/script>
 </body></html>`;
@@ -3897,6 +4193,33 @@ ${buildBaseStyles(G)}
         nav.style.boxShadow = window.scrollY > 20 ? '0 4px 20px rgba(0,0,0,.1)' : 'none';
       });
     }
+    // Carousel
+    document.querySelectorAll('.hero-carousel').forEach(function(car){
+      var slides=[].slice.call(car.querySelectorAll('.hc-slide'));
+      if(slides.length<2)return;
+      var trans=car.dataset.transition||'fade',intv=parseInt(car.dataset.interval)||3000,cur=0;
+      if(trans==='slide')car.classList.add('slide-mode');
+      var dotsEl=document.createElement('div');dotsEl.className='hc-dots';
+      slides.forEach(function(_,i){var d=document.createElement('button');d.className='hc-dot'+(i===0?' active':'');d.onclick=function(e){e.stopPropagation();go(i);};dotsEl.appendChild(d);});
+      car.appendChild(dotsEl);
+      function go(next){
+        if(next===cur)return;
+        var prev=cur;cur=next;
+        if(trans==='slide'){
+          slides[prev].classList.add('prev');slides[prev].classList.remove('active');
+          setTimeout(function(){slides[prev].classList.remove('prev');},650);
+          slides[cur].style.transform='translateX(100%)';slides[cur].classList.add('active');
+          requestAnimationFrame(function(){requestAnimationFrame(function(){slides[cur].style.transform='';});});
+        }else{
+          slides[prev].classList.remove('active');
+          if(trans==='zoom')slides[prev].classList.remove('anim-zoom');
+          slides[cur].classList.add('active');
+          if(trans==='zoom'){slides[cur].classList.remove('anim-zoom');requestAnimationFrame(function(){requestAnimationFrame(function(){slides[cur].classList.add('anim-zoom');});});}
+        }
+        dotsEl.querySelectorAll('.hc-dot').forEach(function(d,i){d.classList.toggle('active',i===cur);});
+      }
+      setInterval(function(){go((cur+1)%slides.length);},intv);
+    });
   <\/script>
 </body>
 </html>`;
