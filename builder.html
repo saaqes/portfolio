@@ -636,7 +636,18 @@ button{touch-action:manipulation}
 
 /* Mobile-only spacer */
 .mob-only{display:none}
-@media(max-width:900px){.mob-only{display:block}}
+@media(max-width:900px){.mob-only{display:block;}}
+.mob-undoredo{display:none;align-items:center;gap:2px;flex-shrink:0}
+@media(max-width:900px){.mob-undoredo{display:flex}}
+.mob-ur-btn{
+  width:28px;height:28px;border:1px solid var(--ui-border2);background:var(--ui-surface2);
+  color:var(--ui-text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;transition:all var(--fast);flex-shrink:0;
+}
+.mob-ur-btn:hover{border-color:var(--accent);color:var(--accent)}
+.mob-ur-btn:disabled{opacity:.3;cursor:not-allowed}
+.mob-sep-v{width:1px;height:20px;background:var(--ui-border);flex-shrink:0;margin:0 4px;display:none}
+@media(max-width:900px){.mob-sep-v{display:block}}
 /* ════ MOBILE HAMBURGER MENU ════ */
 #mob-menu-btn{
   display:none;width:34px;height:34px;border:1px solid var(--ui-border2);background:var(--ui-surface2);
@@ -1424,8 +1435,13 @@ button{touch-action:manipulation}
   <button class="top-btn mob-hide" onclick="exportHTML()">⬇</button>
   <div class="save-dot mob-hide" id="saveDot"></div>
   <button class="top-btn primary mob-hide" onclick="saveData()">💾 Guardar</button>
-  <!-- Mobile spacer + hamburger -->
+  <!-- Mobile: spacer + undo/redo + hamburger -->
   <div class="mob-spacer mob-only"></div>
+  <div class="mob-undoredo mob-only">
+    <button class="mob-ur-btn" id="mob-btn-undo" onclick="undo()" title="Deshacer" disabled>↩</button>
+    <button class="mob-ur-btn" id="mob-btn-redo" onclick="redo()" title="Rehacer" disabled>↪</button>
+  </div>
+  <div class="mob-sep-v mob-only"></div>
   <button id="mob-menu-btn" onclick="toggleMobMenu()" title="Más opciones">
     <div class="mob-hb-line"></div>
     <div class="mob-hb-line"></div>
@@ -3624,18 +3640,15 @@ function openBottomSheet(tab, btnEl){
     +`<button style="width:100%;padding:12px;border:1.5px dashed rgba(99,102,241,.4);background:var(--accent-dim);border-radius:10px;font-size:.78rem;cursor:pointer;color:var(--accent);margin-top:4px;font-family:inherit;font-weight:700" onclick="openAddSec();closeBottomSheet()">＋ Añadir sección</button>`;
 
   } else if(tab==='contenido'){
-    // Content editing tab — shows fields of selected section
+    // Auto-select first section if none selected
+    if(!selectedSec && page().sections.length>0){
+      selectedSec=page().sections[0].id;
+    }
     if(!selectedSec){
       $('bs-title-text').textContent='✏️ Editar Contenido';
       body.innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--ui-text3)">
-        <div style="font-size:2.5rem;margin-bottom:12px">👆</div>
-        <div style="font-size:.82rem;line-height:1.6">Toca una sección en el canvas para seleccionarla, luego regresa aquí para editar su contenido</div>
-        <div style="margin-top:16px;display:grid;gap:8px">
-          ${page().sections.slice(0,4).map(s=>`
-            <button class="mob-section-select-btn" onclick="selectSection('${s.id}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">
-              <span>${SEC_META[s.type]?.icon||'◻'} ${s.name}</span><span style="color:var(--accent)">→</span>
-            </button>`).join('')}
-        </div>
+        <div style="font-size:2.5rem;margin-bottom:12px">📄</div>
+        <div style="font-size:.82rem">Añade secciones para comenzar</div>
       </div>`;
     } else {
       const sec=secById(selectedSec);
@@ -3753,125 +3766,419 @@ function closeBottomSheet(){
 /* ─── Mobile Content Editor builder ─── */
 function buildMobContentEditor(sec){
   if(!sec)return'';
-  const c=sec.content;
+  const C=sec.content||{};
+  const G=site.global;
+  const sid=sec.id;
   let html='';
 
-  const mobField=(label,val,key,isTextarea=false)=>`
-    <div style="margin-bottom:12px">
-      <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:6px">${label}</div>
-      ${isTextarea
-        ?`<textarea class="mob-edit-input" rows="3" oninput="secById('${sec.id}').content['${key}']=this.value;mu();renderCanvas()">${val||''}</textarea>`
-        :`<input type="text" class="mob-edit-input" style="display:block" value="${(val||'').replace(/"/g,'&quot;')}" oninput="secById('${sec.id}').content['${key}']=this.value;mu();renderCanvas()">`
+  // ── Lightweight helpers that preserve keyboard focus ──
+  const mf=(label,val,key,ta=false,ph='')=>{
+    const safeVal=(val||'').toString().replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    return`<div style="margin-bottom:11px">
+      <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:5px">${label}</div>
+      ${ta
+        ?`<textarea class="mob-edit-input mob-field" data-sid="${sid}" data-key="${key}" rows="3" placeholder="${ph}"
+            oninput="mobUpdate('${sid}','${key}',this.value)"
+            style="min-height:64px">${(val||'').toString().replace(/</g,'&lt;').replace(/"/g,'&quot;')}</textarea>`
+        :`<input type="text" class="mob-edit-input mob-field" data-sid="${sid}" data-key="${key}" style="display:block"
+            value="${safeVal}"
+            placeholder="${ph}"
+            oninput="mobUpdate('${sid}','${key}',this.value)">`
       }
     </div>`;
+  };
 
-  const mobToggle=(label,val,key)=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:10px 12px;background:var(--ui-surface2);border-radius:8px">
-      <span style="font-size:.78rem;font-weight:600">${label}</span>
+  const mcolor=(label,val,key)=>`
+    <div style="margin-bottom:11px">
+      <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:5px">${label}</div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <input type="color" value="${(val||'#6366F1').slice(0,7)}"
+          style="width:40px;height:38px;border:none;border-radius:7px;cursor:pointer;flex-shrink:0"
+          oninput="mobUpdateImmediate('${sid}','${key}',this.value)">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;flex:1">
+          ${['#6366F1','#EC4899','#111827','#ffffff','#10B981','#F59E0B','#EF4444','#8B5CF6'].map(col=>`
+            <div onclick="document.querySelector('[oninput*=\\'${key}\\'][type=color]')&&(document.querySelector('[oninput*=\\'${key}\\'][type=color]').value='${col}');mobUpdateImmediate('${sid}','${key}','${col}')"
+              style="width:26px;height:26px;border-radius:5px;background:${col};cursor:pointer;border:2px solid ${(val||'').toLowerCase()===col?'#fff':'transparent'};transition:.15s;flex-shrink:0"></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  const mtog=(label,val,key)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--ui-surface2);border-radius:8px;margin-bottom:8px">
+      <span style="font-size:.78rem;font-weight:600;color:var(--ui-text)">${label}</span>
       <label class="toggle-switch">
-        <input type="checkbox" ${val?'checked':''} onchange="secById('${sec.id}').content['${key}']=this.checked;mu();renderCanvas()">
+        <input type="checkbox" ${val?'checked':''} onchange="mobUpdateImmediate('${sid}','${key}',this.checked)">
         <span class="toggle-slider"></span>
       </label>
     </div>`;
 
+  const mchips=(label,active,opts,key)=>`
+    <div style="margin-bottom:11px">
+      <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:5px">${label}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${opts.map(([v,l])=>`<button onclick="mobUpdateImmediate('${sid}','${key}','${v}');openBottomSheet('contenido',document.getElementById('bn-contenido'))"
+          style="padding:6px 12px;border:1.5px solid ${active===v?'var(--accent)':'var(--ui-border2)'};
+          background:${active===v?'var(--accent-dim)':'transparent'};color:${active===v?'var(--accent)':'var(--ui-text2)'};
+          border-radius:16px;font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit">${l}</button>`).join('')}
+      </div>
+    </div>`;
+
+  const mheading=(text)=>`<div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ui-text3);padding:10px 0 6px;border-top:1px solid var(--ui-border);margin-top:6px">${text}</div>`;
+
+  // ── Section switcher at the top ──
+  const secs=page().sections;
+  const curIdx=secs.findIndex(s=>s.id===sid);
+  html+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--ui-border)">
+    <button onclick="if(${curIdx}>0){selectedSec=page().sections[${curIdx}-1].id;openBottomSheet('contenido',document.getElementById('bn-contenido'))}"
+      style="width:30px;height:30px;border:1px solid var(--ui-border2);background:var(--ui-surface2);color:var(--ui-text2);border-radius:6px;cursor:pointer;font-size:.9rem;${curIdx<=0?'opacity:.3;pointer-events:none':''}">‹</button>
+    <div style="flex:1;text-align:center">
+      <div style="font-size:.65rem;color:var(--ui-text3);text-transform:uppercase;letter-spacing:.05em">Sección ${curIdx+1} de ${secs.length}</div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--ui-text);margin-top:1px">${SEC_META[sec.type]?.icon||'◻'} ${sec.name}</div>
+    </div>
+    <button onclick="if(${curIdx}<${secs.length-1}){selectedSec=page().sections[${curIdx+1}].id;openBottomSheet('contenido',document.getElementById('bn-contenido'))}"
+      style="width:30px;height:30px;border:1px solid var(--ui-border2);background:var(--ui-surface2);color:var(--ui-text2);border-radius:6px;cursor:pointer;font-size:.9rem;${curIdx>=secs.length-1?'opacity:.3;pointer-events:none':''}">›</button>
+  </div>
+  <!-- Live canvas strip — shows section preview updating as user types -->
+  <div id="mob-live-canvas-wrap" style="margin-bottom:12px;border-radius:8px;overflow:hidden;border:1px solid var(--ui-border2);position:relative;background:var(--ui-surface2)">
+    <div style="font-size:.55rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ui-text3);padding:5px 8px;background:var(--ui-surface3);display:flex;align-items:center;gap:5px">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse-dot .8s infinite"></span>
+      Vista en vivo
+    </div>
+    <div style="max-height:130px;overflow:hidden;transform-origin:top left;pointer-events:none;position:relative">
+      <div id="mob-canvas-clone" style="transform:scale(0.38);transform-origin:top left;width:263%;pointer-events:none;position:relative"></div>
+    </div>
+    <button onclick="applyMobChanges('${sid}')" style="position:absolute;bottom:6px;right:6px;background:var(--accent);color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:.62rem;font-weight:700;cursor:pointer;font-family:inherit">✅ Aplicar</button>
+  </div>`;
+  // Clone the canvas section into the live strip
+  setTimeout(()=>{
+    const clone=document.getElementById('mob-canvas-clone');
+    const orig=document.getElementById('cs_${sid}');
+    if(clone&&orig){
+      clone.innerHTML=orig.innerHTML;
+      // Remove editor chrome from clone
+      clone.querySelectorAll('.cs-ring,.cs-toolbar,.sec-drag-handle,.cs-resize-handle,.cs-size-badge').forEach(el=>el.remove());
+    }
+  },0);`;
+  html+=`<!-- (strip clone injected above via setTimeout) -->`;
+
+  // ── Section fields ──
   switch(sec.type){
+
     case 'hero':
-      html+=mobField('Título principal',c.h1,'h1');
-      html+=mobField('Subtítulo',c.sub,'sub',true);
-      html+=mobField('Texto del botón',c.btnText,'btnText');
-      html+=`<div style="margin-bottom:12px">
-        <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:6px">Color del botón</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input type="color" value="${c.btnColor||'#6366F1'}" style="width:44px;height:44px;border:none;border-radius:8px;cursor:pointer"
-            oninput="secById('${sec.id}').content.btnColor=this.value;mu();renderCanvas()">
-          <span style="font-size:.78rem;color:var(--ui-text2)">${c.btnColor||'#6366F1'}</span>
+      // Inline field that patches canvas DOM AND sec.content simultaneously
+      const heroField=(label,val,key,ta=false,ph='')=>{
+        const safe=(val||'').toString().replace(/"/g,'&quot;').replace(/</g,'&lt;');
+        // oninput: update model + patch canvas element directly + update mini-preview
+        const onin=`
+          const _s=secById('${sid}');if(_s?.content)_s.content['${key}']=this.value;
+          const _el=document.querySelector('#cs_${sid} [data-field=\\'${key}\\']');
+          if(_el&&_el.innerText!==this.value)_el.innerText=this.value;
+          const _pre=document.getElementById('mob-hero-preview');
+          if(_pre){
+            const _t=_pre.querySelector('.mhp-${key}');
+            if(_t)_t.textContent=this.value||'${ph}';
+          }
+          mu();
+        `.trim().replace(/\s+/g,' ');
+        return`<div style="margin-bottom:11px">
+          <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:5px">${label}</div>
+          ${ta
+            ?`<textarea class="mob-edit-input mob-field" data-sid="${sid}" data-key="${key}" rows="3" placeholder="${ph}"
+                oninput="${onin}" style="min-height:64px">${safe}</textarea>`
+            :`<input type="text" class="mob-edit-input mob-field" data-sid="${sid}" data-key="${key}"
+                value="${safe}" placeholder="${ph}" oninput="${onin}">`
+          }
+        </div>`;
+      };
+
+      html+=`<div style="background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));border:1px solid rgba(99,102,241,.25);border-radius:10px;padding:12px;margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:2px">🦸 Hero / Banner</div>
+        <div style="font-size:.65rem;color:var(--ui-text3)">Los cambios se ven en el canvas al escribir</div>
+      </div>`;
+      html+=heroField('📝 Título principal',C.title,'title',false,'Tu título aquí...');
+      html+=heroField('📄 Subtítulo',C.subtitle,'subtitle',true,'Una breve descripción...');
+      html+=heroField('🏷 Badge',C.badge,'badge',false,'¡Bienvenido!');
+      html+=`<div style="height:1px;background:var(--ui-border);margin:10px 0"></div>`;
+      html+=heroField('🔘 Botón — texto',C.btnText,'btnText',false,'Empezar ahora');
+      html+=heroField('🔗 Botón — URL',C.btnUrl,'btnUrl',false,'#');
+      html+=mcolor('🎨 Color del botón',C.btnColor||G.primaryColor,'btnColor');
+      html+=mtog('Mostrar segundo botón',C.showBtn2,'showBtn2');
+      if(C.showBtn2){
+        html+=heroField('Texto 2° botón',C.btn2Text,'btn2Text',false,'Saber más');
+      }
+      html+=`<div style="height:1px;background:var(--ui-border);margin:10px 0"></div>`;
+      html+=mchips('📐 Layout',C.layout||'center',[['center','Centro'],['left','Img derecha'],['right','Img izq']],'layout');
+      // Mini live preview inside the sheet
+      html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-top:10px">
+        <div style="font-size:.55rem;color:var(--ui-text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:5px">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--success);display:inline-block"></span>Vista previa en vivo
+        </div>
+        <div id="mob-hero-preview" style="background:linear-gradient(135deg,${sec.bg?.gradA||'#1a0533'},${sec.bg?.gradB||'#0d1b2a'});border-radius:6px;padding:14px;text-align:center;min-height:80px">
+          <div class="mhp-badge" style="display:${C.badge?'inline-block':'none'};font-size:.6rem;font-weight:700;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:3px 10px;border-radius:20px;margin-bottom:7px">${C.badge||''}</div>
+          <div class="mhp-title" style="font-size:1rem;font-weight:900;color:#fff;line-height:1.1;margin-bottom:5px">${C.title||'Título...'}</div>
+          <div class="mhp-subtitle" style="font-size:.65rem;color:rgba(255,255,255,.7);line-height:1.4;margin-bottom:9px">${C.subtitle||'Subtítulo...'}</div>
+          <div class="mhp-btnText" style="display:inline-block;background:${C.btnColor||G.primaryColor};color:#fff;padding:5px 12px;border-radius:4px;font-size:.65rem;font-weight:700">${C.btnText||'Botón'}</div>
         </div>
       </div>`;
+            break;
+
+    case 'productos':
+      html+=mf('Título sección',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle');
+      html+=mtog('Mostrar precios',C.showPrice,'showPrice');
+      html+=mtog('Mostrar botón compra',C.showBtn,'showBtn');
+      if(C.showBtn)html+=mf('Texto del botón',C.btnText,'btnText');
+      html+=mcolor('Color del botón',C.btnColor||G.primaryColor,'btnColor');
+      html+=mheading(`Productos (${(C.products||[]).length})`);
+      (C.products||[]).forEach((p,pi)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">Producto ${pi+1}</span>
+            <button onclick="delProduct('${sid}',${pi})" style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(p.name||'').replace(/"/g,'&quot;')}" placeholder="Nombre del producto"
+            oninput="const s=secById('${sid}');if(s?.content?.products?.[${pi}]){s.content.products[${pi}].name=this.value;mu();}">
+          <input type="text" class="mob-edit-input" style="display:block"
+            value="${(p.price||'').replace(/"/g,'&quot;')}" placeholder="Precio"
+            oninput="const s=secById('${sid}');if(s?.content?.products?.[${pi}]){s.content.products[${pi}].price=this.value;mu();}">
+        </div>`;
+      });
+      html+=`<button class="add-sub-btn" onclick="addProduct('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Producto</button>`;
       break;
+
+    case 'galeria':
+      html+=mf('Título',C.title,'title');
+      html+=`<p style="font-size:.7rem;color:var(--ui-text3);margin-bottom:10px;padding:10px;background:var(--ui-surface2);border-radius:6px">📸 Sube imágenes desde el panel lateral en escritorio (arrastra o haz clic en los placeholders del canvas).</p>`;
+      html+=`<button class="add-sub-btn" onclick="addGalleryImg('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Añadir imagen</button>`;
+      break;
+
     case 'sobre_mi':
-      html+=mobField('Título',c.title,'title');
-      html+=mobField('Descripción',c.text,'text',true);
+      html+=mf('Nombre / Título',C.title,'title');
+      html+=mf('Profesión / Cargo',C.subtitle,'subtitle');
+      html+=mf('Texto descriptivo',C.body,'body',true,'Cuéntale a la gente quién eres...');
+      html+=mchips('Foto al',C.layout||'right',[['left','Izquierda'],['right','Derecha']],'layout');
+      html+=mtog('Mostrar estadísticas',C.showStats,'showStats');
+      html+=mtog('Mostrar skills/tags',C.showTags,'showTags');
+      if(C.showStats){
+        html+=mheading('Estadísticas');
+        for(let n=1;n<=3;n++){
+          html+=`<div style="display:grid;grid-template-columns:1fr 2fr;gap:6px;margin-bottom:6px">
+            <input type="text" class="mob-edit-input" value="${(C['stat'+n+'n']||'').replace(/"/g,'&quot;')}" placeholder="0+"
+              oninput="mobUpdate('${sid}','stat${n}n',this.value)">
+            <input type="text" class="mob-edit-input" value="${(C['stat'+n+'l']||'').replace(/"/g,'&quot;')}" placeholder="Etiqueta"
+              oninput="mobUpdate('${sid}','stat${n}l',this.value)">
+          </div>`;
+        }
+      }
       break;
+
     case 'servicios':
-      html+=mobField('Título de sección',c.title,'title');
-      html+=mobField('Descripción',c.desc,'desc',true);
-      if(c.items){
-        html+=`<div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Servicios</div>`;
-        c.items.forEach((item,i)=>{
-          html+=`<div style="background:var(--ui-surface2);border-radius:8px;padding:12px;margin-bottom:8px">
-            <div style="font-size:.7rem;color:var(--accent);font-weight:700;margin-bottom:6px">Servicio ${i+1}</div>
-            <input type="text" class="mob-edit-input" style="display:block;margin-bottom:6px" value="${(item.title||'').replace(/"/g,'&quot;')}" 
-              placeholder="Nombre" oninput="secById('${sec.id}').content.items[${i}].title=this.value;mu();renderCanvas()">
-            <textarea class="mob-edit-input" rows="2" placeholder="Descripción"
-              oninput="secById('${sec.id}').content.items[${i}].desc=this.value;mu();renderCanvas()">${item.desc||''}</textarea>
-          </div>`;
-        });
-      }
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle');
+      html+=mcolor('Fondo de cards',C.cardBg||'#F9FAFB','cardBg');
+      html+=mheading(`Servicios (${(C.services||[]).length})`);
+      (C.services||[]).forEach((s,si)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">Servicio ${si+1}</span>
+            <button onclick="delService('${sid}',${si})" style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(s.icon||'').replace(/"/g,'&quot;')}" placeholder="Emoji ícono"
+            oninput="const sc=secById('${sid}');if(sc?.content?.services?.[${si}])sc.content.services[${si}].icon=this.value;mu();">
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(s.title||'').replace(/"/g,'&quot;')}" placeholder="Título del servicio"
+            oninput="const sc=secById('${sid}');if(sc?.content?.services?.[${si}])sc.content.services[${si}].title=this.value;mu();">
+          <textarea class="mob-edit-input" rows="2" placeholder="Descripción breve"
+            oninput="const sc=secById('${sid}');if(sc?.content?.services?.[${si}])sc.content.services[${si}].desc=this.value;mu();">${s.desc||''}</textarea>
+        </div>`;
+      });
+      html+=`<button class="add-sub-btn" onclick="addService('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Servicio</button>`;
       break;
+
+    case 'testimonios':
+      html+=mf('Título',C.title,'title');
+      html+=mheading(`Testimonios (${(C.testimonials||[]).length})`);
+      (C.testimonials||[]).forEach((t,ti)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">Reseña ${ti+1}</span>
+            <button onclick="const sc=secById('${sid}');sc.content.testimonials.splice(${ti},1);mu();renderCanvas();openBottomSheet('contenido',document.getElementById('bn-contenido'))"
+              style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <textarea class="mob-edit-input" rows="3" placeholder="Escribe la reseña..."
+            oninput="const sc=secById('${sid}');if(sc?.content?.testimonials?.[${ti}])sc.content.testimonials[${ti}].text=this.value;mu();">${t.text||''}</textarea>
+          <input type="text" class="mob-edit-input" style="display:block;margin-top:5px;margin-bottom:5px"
+            value="${(t.name||'').replace(/"/g,'&quot;')}" placeholder="Nombre del cliente"
+            oninput="const sc=secById('${sid}');if(sc?.content?.testimonials?.[${ti}])sc.content.testimonials[${ti}].name=this.value;mu();">
+          <input type="text" class="mob-edit-input" style="display:block"
+            value="${(t.role||'').replace(/"/g,'&quot;')}" placeholder="Cargo / Empresa"
+            oninput="const sc=secById('${sid}');if(sc?.content?.testimonials?.[${ti}])sc.content.testimonials[${ti}].role=this.value;mu();">
+        </div>`;
+      });
+      html+=`<button class="add-sub-btn" onclick="addTestimonial('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Reseña</button>`;
+      break;
+
     case 'contacto':
-      html+=mobField('Título',c.title,'title');
-      html+=mobField('Email',c.email,'email');
-      html+=mobField('Teléfono',c.phone,'phone');
-      html+=mobField('Dirección',c.address,'address');
-      html+=mobField('Texto del botón',c.btnText,'btnText');
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle');
+      html+=mf('Email',C.email,'email');
+      html+=mf('Teléfono',C.phone,'phone');
+      html+=mf('Dirección',C.address,'address');
+      html+=mf('Texto del botón',C.btnText,'btnText');
+      html+=mcolor('Color del botón',C.btnColor||G.primaryColor,'btnColor');
+      html+=mtog('Mostrar info contacto',C.showInfo,'showInfo');
       break;
+
     case 'texto':
-      html+=mobField('Título',c.title,'title');
-      html+=mobField('Contenido',c.text,'text',true);
+      html+=mf('Título',C.title,'title');
+      html+=mf('Contenido',C.body,'body',true);
+      html+=mchips('Alineación',C.align||'left',[['left','Izq'],['center','Centro'],['right','Der']],'align');
       break;
-    case 'cta':
-      html+=mobField('Título',c.title,'title');
-      html+=mobField('Subtítulo',c.sub,'sub',true);
-      html+=mobField('Texto del botón',c.btnText,'btnText');
-      break;
-    case 'faq':
-      html+=mobField('Título de sección',c.title,'title');
-      if(c.items){
-        html+=`<div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ui-text3);margin-bottom:8px">Preguntas</div>`;
-        c.items.forEach((item,i)=>{
-          html+=`<div style="background:var(--ui-surface2);border-radius:8px;padding:12px;margin-bottom:8px">
-            <input type="text" class="mob-edit-input" style="display:block;margin-bottom:6px" value="${(item.q||'').replace(/"/g,'&quot;')}" 
-              placeholder="Pregunta" oninput="secById('${sec.id}').content.items[${i}].q=this.value;mu();renderCanvas()">
-            <textarea class="mob-edit-input" rows="2" placeholder="Respuesta"
-              oninput="secById('${sec.id}').content.items[${i}].a=this.value;mu();renderCanvas()">${item.a||''}</textarea>
-          </div>`;
-        });
-      }
-      break;
-    case 'newsletter':
-      html+=mobField('Título',c.title,'title');
-      html+=mobField('Descripción',c.desc,'desc',true);
-      html+=mobField('Placeholder del input',c.placeholder,'placeholder');
-      html+=mobField('Texto del botón',c.btnText,'btnText');
-      break;
+
     case 'stats':
-      html+=mobField('Título de sección',c.title,'title');
-      if(c.items){
-        c.items.forEach((item,i)=>{
-          html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-            <input type="text" class="mob-edit-input" value="${(item.num||'').replace(/"/g,'&quot;')}" placeholder="Número"
-              oninput="secById('${sec.id}').content.items[${i}].num=this.value;mu();renderCanvas()">
-            <input type="text" class="mob-edit-input" value="${(item.label||'').replace(/"/g,'&quot;')}" placeholder="Etiqueta"
-              oninput="secById('${sec.id}').content.items[${i}].label=this.value;mu();renderCanvas()">
-          </div>`;
-        });
-      }
+      html+=mf('Título',C.title,'title');
+      html+=mheading(`Estadísticas (${(C.stats||[]).length})`);
+      (C.stats||[]).forEach((s,si)=>{
+        html+=`<div style="display:grid;grid-template-columns:1fr 2fr;gap:6px;margin-bottom:6px">
+          <input type="text" class="mob-edit-input" value="${(s.num||'').replace(/"/g,'&quot;')}" placeholder="0+"
+            oninput="const sc=secById('${sid}');if(sc?.content?.stats?.[${si}])sc.content.stats[${si}].num=this.value;mu();">
+          <input type="text" class="mob-edit-input" value="${(s.label||'').replace(/"/g,'&quot;')}" placeholder="Etiqueta"
+            oninput="const sc=secById('${sid}');if(sc?.content?.stats?.[${si}])sc.content.stats[${si}].label=this.value;mu();">
+        </div>`;
+      });
       break;
+
+    case 'faq':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle');
+      html+=mheading(`Preguntas (${(C.faqs||[]).length})`);
+      (C.faqs||[]).forEach((f,fi)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">Pregunta ${fi+1}</span>
+            <button onclick="delFaq('${sid}',${fi})" style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(f.q||'').replace(/"/g,'&quot;')}" placeholder="Escribe la pregunta"
+            oninput="const sc=secById('${sid}');if(sc?.content?.faqs?.[${fi}])sc.content.faqs[${fi}].q=this.value;mu();">
+          <textarea class="mob-edit-input" rows="2" placeholder="Respuesta"
+            oninput="const sc=secById('${sid}');if(sc?.content?.faqs?.[${fi}])sc.content.faqs[${fi}].a=this.value;mu();">${f.a||''}</textarea>
+        </div>`;
+      });
+      html+=`<button class="add-sub-btn" onclick="addFaq('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Pregunta</button>`;
+      break;
+
+    case 'cta':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle',true);
+      html+=mf('Texto botón principal',C.btnText,'btnText');
+      html+=mf('URL del botón',C.btnUrl,'btnUrl',false,'#');
+      html+=mtog('Mostrar 2° botón',C.showBtn2,'showBtn2');
+      if(C.showBtn2)html+=mf('Texto 2° botón',C.btn2Text,'btn2Text');
+      break;
+
+    case 'newsletter':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle',true);
+      html+=mf('Placeholder email',C.placeholder,'placeholder',false,'tu@email.com');
+      html+=mf('Texto del botón',C.btnText,'btnText');
+      html+=mcolor('Color del botón',C.btnColor||G.primaryColor,'btnColor');
+      break;
+
+    case 'video':
+      html+=mf('Título',C.title,'title');
+      html+=mf('URL del video',C.url,'url',false,'https://youtube.com/...');
+      break;
+
+    case 'mapa':
+      html+=mf('Título',C.title,'title');
+      html+=mf('URL embed Google Maps',C.embedUrl,'embedUrl',false,'https://maps.google.com/...');
+      html+=mf('Dirección (texto)',C.address,'address');
+      break;
+
+    case 'equipo':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Subtítulo',C.subtitle,'subtitle');
+      html+=mheading(`Miembros (${(C.members||[]).length})`);
+      (C.members||[]).forEach((m,mi)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">Miembro ${mi+1}</span>
+            <button onclick="delMember('${sid}',${mi})" style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(m.name||'').replace(/"/g,'&quot;')}" placeholder="Nombre completo"
+            oninput="const sc=secById('${sid}');if(sc?.content?.members?.[${mi}])sc.content.members[${mi}].name=this.value;mu();">
+          <input type="text" class="mob-edit-input" style="display:block"
+            value="${(m.role||'').replace(/"/g,'&quot;')}" placeholder="Cargo"
+            oninput="const sc=secById('${sid}');if(sc?.content?.members?.[${mi}])sc.content.members[${mi}].role=this.value;mu();">
+        </div>`;
+      });
+      html+=`<button class="add-sub-btn" onclick="addMember('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Miembro</button>`;
+      break;
+
+    case 'bloques':
+      html+=mf('Título sección',C.title,'title');
+      html+=mheading(`Bloques (${(C.blocks||[]).length}/3)`);
+      (C.blocks||[]).forEach((b,bi)=>{
+        html+=`<div style="background:var(--ui-surface2);border:1px solid var(--ui-border);border-radius:8px;padding:10px;margin-bottom:7px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:.68rem;color:var(--accent);font-weight:700">🧱 Bloque ${bi+1}</span>
+            <button onclick="delBloque('${sid}',${bi})" style="background:rgba(239,68,68,.12);color:var(--danger);border:none;border-radius:4px;padding:2px 8px;font-size:.6rem;cursor:pointer;font-family:inherit">✕</button>
+          </div>
+          <input type="text" class="mob-edit-input" style="display:block;margin-bottom:5px"
+            value="${(b.titulo||'').replace(/"/g,'&quot;')}" placeholder="Título del bloque"
+            oninput="const sc=secById('${sid}');if(sc?.content?.blocks?.[${bi}])sc.content.blocks[${bi}].titulo=this.value;mu();">
+          <textarea class="mob-edit-input" rows="3" placeholder="Texto del bloque"
+            oninput="const sc=secById('${sid}');if(sc?.content?.blocks?.[${bi}])sc.content.blocks[${bi}].texto=this.value;mu();">${b.texto||''}</textarea>
+        </div>`;
+      });
+      if((C.blocks||[]).length<3)
+        html+=`<button class="add-sub-btn" onclick="addBloque('${sid}');openBottomSheet('contenido',document.getElementById('bn-contenido'))">＋ Bloque</button>`;
+      break;
+
+    case 'modelo_3d':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Descripción',C.desc,'desc',true);
+      html+=mf('Precio',C.price,'price',false,'$0.00');
+      html+=mf('Texto botón',C.btnText,'btnText');
+      html+=mcolor('Color botón',C.btnColor||'#A78BFA','btnColor');
+      html+=mtog('Mostrar título',C.showTitle,'showTitle');
+      html+=mtog('Mostrar precio',C.showPrice,'showPrice');
+      html+=mtog('Mostrar botón',C.showBtn,'showBtn');
+      break;
+
+    case 'ideas':
+      html+=mf('Título',C.title,'title');
+      html+=mf('Nota descriptiva',C.note,'note');
+      html+=`<button onclick="openPaintModal('${sid}');closeBottomSheet()"
+        style="width:100%;padding:12px;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:.8rem;font-family:inherit;margin-top:6px">
+        🎨 Abrir lienzo de ideas
+      </button>`;
+      break;
+
     default:
-      html+=`<div style="text-align:center;padding:30px;color:var(--ui-text3)">
-        <div style="font-size:2rem;margin-bottom:10px">${SEC_META[sec.type]?.icon||'◻'}</div>
-        <div style="font-size:.8rem;margin-bottom:16px">Usa el panel lateral en escritorio para editar todos los campos de esta sección</div>
-        <button style="padding:10px 20px;background:var(--accent);border:none;color:white;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="closeBottomSheet()">Entendido</button>
+      html+=`<div style="text-align:center;padding:24px;color:var(--ui-text3)">
+        <div style="font-size:2rem;margin-bottom:8px">${SEC_META[sec.type]?.icon||'◻'}</div>
+        <div style="font-size:.78rem;margin-bottom:14px;line-height:1.5">Para <strong>${sec.name}</strong>, usa el panel derecho en escritorio.</div>
+        <button style="padding:9px 18px;background:var(--accent);border:none;color:white;border-radius:7px;font-size:.76rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="closeBottomSheet()">Ok</button>
       </div>`;
   }
 
-  html+=`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--ui-border);display:flex;gap:8px">
-    <button style="flex:1;padding:11px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700" onclick="saveData();showToastMob('✅ Guardado')">💾 Guardar</button>
-    <button style="flex:1;padding:11px;background:var(--ui-surface2);border:1px solid var(--ui-border2);color:var(--ui-text2);border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit" onclick="openBottomSheet('diseño',document.getElementById('bn-diseño'))">🎨 Diseño</button>
+  // ── Bottom action bar ──
+  html+=`<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--ui-border);display:flex;gap:8px">
+    <button style="flex:2;padding:11px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700"
+      onclick="applyMobChanges('${sid}')">✅ Aplicar y ver</button>
+    <button style="flex:1;padding:11px;background:var(--ui-surface2);border:1px solid var(--ui-border2);color:var(--ui-text2);border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit"
+      onclick="openBottomSheet('diseño',document.getElementById('bn-diseño'))">🎨</button>
   </div>`;
 
   return html;
 }
+
+
 
 /* ─── Mobile Design Editor ─── */
 function buildMobDesignEditor(sec){
@@ -4665,6 +4972,93 @@ document.addEventListener('click',e=>{
   }
 });
 
+
+
+/* ─── Mobile field updater — direct DOM patch ─── */
+let _mobRenderTimer=null;
+
+function mobUpdate(sid, key, value){
+  // 1. Update data model immediately
+  const sec=secById(sid);
+  if(!sec?.content) return;
+  sec.content[key]=value;
+  mu();
+  // 2. Direct canvas DOM patch (zero focus loss)
+  const canvasEl=document.querySelector(`#cs_${sid} [data-sid="${sid}"][data-field="${key}"]`);
+  if(canvasEl && canvasEl.innerText!==value) canvasEl.innerText=value;
+  // 3. Update the in-sheet mini-preview live
+  const prev=document.getElementById('mob-hero-preview');
+  if(prev){
+    const titleEl=prev.querySelector('.mhp-title');
+    const subEl=prev.querySelector('.mhp-sub');
+    const badgeEl=prev.querySelector('.mhp-badge');
+    const btnEl=prev.querySelector('.mhp-btn');
+    if(key==='title'&&titleEl) titleEl.textContent=value||'Título...';
+    if(key==='subtitle'&&subEl) subEl.textContent=value||'Subtítulo...';
+    if(key==='badge'&&badgeEl){ badgeEl.textContent=value; badgeEl.style.display=value?'inline-block':'none';}
+    if(key==='btnText'&&btnEl) btnEl.textContent=value||'Botón';
+    // Also update by class (subtitle vs sub)
+    const subEl2=prev.querySelector('.mhp-subtitle');
+    if(key==='subtitle'&&subEl2) subEl2.textContent=value||'Subtítulo...';
+  }
+  // 4. Update the live canvas clone strip
+  const cloneEl=document.getElementById('mob-canvas-clone');
+  if(cloneEl){
+    const cloneField=cloneEl.querySelector(`[data-field="${key}"]`);
+    if(cloneField) cloneField.innerText=value;
+  }
+  // 5. Debounced FULL re-render (only for structure changes like layout)
+  clearTimeout(_mobRenderTimer);
+  _mobRenderTimer=setTimeout(()=>renderCanvas(),1000);
+}
+
+function mobUpdateImmediate(sid, key, value){
+  const sec=secById(sid);
+  if(!sec?.content) return;
+  sec.content[key]=value;
+  mu();
+  renderCanvas();
+  // Rebuild sheet after immediate update
+  setTimeout(()=>{
+    const bs=document.getElementById('bottom-sheet');
+    if(bs?.classList.contains('open') && bs.dataset.tab==='contenido'){
+      const sec2=secById(selectedSec);
+      if(sec2) document.getElementById('bs-body').innerHTML=buildMobContentEditor(sec2);
+    }
+  }, 100);
+}
+
+
+function applyMobChanges(sid){
+  // STEP 1: Force-read every field from the bottom sheet DOM
+  // This guarantees the latest typed values are in sec.content
+  // regardless of debounce timing
+  const sec=secById(sid);
+  if(sec?.content){
+    document.querySelectorAll('#bs-body .mob-field[data-sid="'+sid+'"]').forEach(el=>{
+      const key=el.dataset.key;
+      if(key!==undefined && key!==''){
+        sec.content[key]=el.value!==undefined?el.value:el.innerText;
+      }
+    });
+  }
+  // STEP 2: Cancel debounce + full re-render
+  clearTimeout(_mobRenderTimer);
+  renderCanvas();
+  saveData();
+  // STEP 3: Close sheet so canvas is visible
+  closeBottomSheet();
+  // STEP 4: Scroll & highlight the edited section
+  setTimeout(()=>{
+    const el=document.getElementById('cs_'+sid);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.style.outline='3px solid var(--accent)';
+      setTimeout(()=>{el.style.outline='';},1400);
+    }
+  },80);
+  showToastMob('✅ Cambios aplicados');
+}
 
 /* ═══════════════════════════════════════════════════
    KEYBOARD SHORTCUTS
