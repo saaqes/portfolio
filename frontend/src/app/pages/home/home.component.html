@@ -1,0 +1,222 @@
+<!-- ══ HERO — BANNER CLEO STYLE ══ -->
+<header class="hero">
+  <div class="hero-cleo-wrap">
+
+    <!-- Banner card -->
+    <div class="hcb-card">
+      <div class="hcb-dot-bg"></div>
+
+      <!-- Slot imagen del banner (admin lo puede cambiar) -->
+      <div class="hcb-img-slot">
+        @if (auth.currentUser()?.banner_img) {
+          <img [src]="auth.currentUser()!.banner_img" alt="Banner">
+        }
+      </div>
+
+      <!-- Deco marks -->
+      <span class="hcb-deco" style="top:18%;left:10%">✦ ✦</span>
+      <span class="hcb-deco" style="top:62%;left:8%">+</span>
+      <span class="hcb-deco" style="top:22%;right:10%">+</span>
+      <span class="hcb-deco" style="bottom:20%;right:8%">✦</span>
+    </div>
+
+    <!-- Avatar superpuesto -->
+    <div class="hcb-avatar-wrap">
+      <div class="hcb-avatar-circle">
+        @if (auth.currentUser()?.avatar) {
+          <img [src]="auth.currentUser()!.avatar" alt="Perfil">
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  @if (auth.isLoggedIn()) {
+    <a class="btn-cta" routerLink="/builder">{{ settings().hero_cta }} ✦</a>
+  } @else {
+    <button class="btn-cta" (click)="openLogin()">{{ settings().hero_cta }} ✦</button>
+  }
+</header>
+
+<!-- ══ STATS BANNER ══ -->
+<div class="stats-banner zoom-in">
+  <div class="stat-big">
+    <div class="stat-big-num">{{ statProjects() }}</div>
+    <div class="stat-big-label">Proyectos Creados</div>
+  </div>
+  <div class="stat-big">
+    <div class="stat-big-num">{{ statUsers() }}</div>
+    <div class="stat-big-label">Usuarios Activos</div>
+  </div>
+  <div class="stat-big">
+    <div class="stat-big-num">{{ statPages() }}</div>
+    <div class="stat-big-label">Páginas Publicadas</div>
+  </div>
+  <div class="stat-big">
+    <div class="stat-big-num">{{ statYears() }}+</div>
+    <div class="stat-big-label">Años de Experiencia</div>
+  </div>
+</div>
+
+<!-- ══ SKILLS ══ -->
+<section class="section" id="skills">
+  <h2 class="title-sketch fade-in">Mis Habilidades</h2>
+  <div class="skills-grid">
+    @for (skill of skills; track skill.name) {
+      <div class="skill-card stagger-item">
+        <span class="skill-icon">{{ skill.icon }}</span>
+        <div class="skill-name">{{ skill.name }}</div>
+        <div class="skill-desc">{{ skill.desc }}</div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar" [attr.data-pct]="skill.pct"></div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section class="section timeline-section">
+  <div style="max-width:800px;margin:0 auto">
+    <h2 class="title-sketch slide-left">Trayectoria</h2>
+    <div class="timeline">
+      @for (item of timeline; track item.year) {
+        <div class="tl-item" [class.slide-right]="item.side === 'right'" [class.slide-left]="item.side === 'left'">
+          <div class="tl-year">{{ item.year }}</div>
+          <div class="tl-title">{{ item.title }}</div>
+          <div class="tl-desc">{{ item.desc }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section class="section" id="projects">
+  <h2 class="title-sketch fade-in">Proyectos Hechos</h2>
+  <p class="fade-in" style="color:#666;margin-top:-20px;margin-bottom:36px;font-size:.84rem">Proyectos de diseño y desarrollo</p>
+  <div id="projects-grid">
+    @for (p of projects(); track p.id) {
+      <div class="card stagger-item">
+        @if (p.image) {
+          <div class="preview-img" [style.background-image]="'url(' + p.image + ')'"></div>
+        } @else {
+          <div class="preview-img preview-empty">🖼</div>
+        }
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.description }}</p>
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">
+          @for (tag of p.tags; track tag) {
+            <span class="card-tag">{{ tag }}</span>
+          }
+        </div>
+        @if (p.tech) {
+          <p style="font-size:.72rem;color:#555;margin-top:8px">{{ p.tech }}</p>
+        }
+        @if (p.link && p.link !== '#') {
+          <a [href]="p.link" target="_blank" class="card-open-btn">Ver proyecto →</a>
+        }
+      </div>
+    }
+    @if (projects().length === 0) {
+      <p style="color:#444;font-size:.85rem">Sin proyectos aún.</p>
+    }
+  </div>
+</section>
+
+<!-- ══ REPOSITORY TEASER ══ -->
+<section class="repo-section fade-in">
+  <h2 class="title-sketch" style="text-align:center;margin-bottom:0">Mi Repositorio</h2>
+  <p style="text-align:center;color:#666;margin-top:10px;margin-bottom:32px;font-size:.84rem;font-family:'Space Mono',monospace">
+    Páginas creadas con SAQES Builder
+  </p>
+  <div style="text-align:center;margin-top:20px">
+    @if (auth.isLoggedIn()) {
+      <a class="btn-cta" routerLink="/profile" style="font-size:1rem;padding:14px 32px">Ver mi repositorio →</a>
+    } @else {
+      <button class="btn-cta" (click)="openLogin()" style="font-size:1rem;padding:14px 32px">Crear mi página →</button>
+    }
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="section" style="background:#080808;padding-top:80px;padding-bottom:80px">
+  <h2 class="title-sketch fade-in">Lo que dicen</h2>
+  <div class="testimonials-grid">
+    @for (t of testimonials; track t.name) {
+      <div class="testimonial stagger-item">
+        <p class="test-text">{{ t.text }}</p>
+        <div class="test-author">
+          <div class="test-avatar">{{ t.avatar }}</div>
+          <div>
+            <div class="test-name">{{ t.name }}</div>
+            <div class="test-role">{{ t.role }}</div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section class="section" id="contact-sec">
+  <h2 class="title-sketch fade-in">Contacto</h2>
+  <div class="contact-grid">
+    <div class="fade-in">
+      <input type="text"  class="contact-input" placeholder="Tu nombre"   [(ngModel)]="contactName">
+      <input type="email" class="contact-input" placeholder="Tu email"    [(ngModel)]="contactEmail">
+      <textarea           class="contact-input" rows="5" placeholder="Cuéntame sobre tu proyecto..." [(ngModel)]="contactMsg"></textarea>
+      <button class="btn-cta" style="font-size:1rem;padding:14px 28px"
+              (click)="sendContact()" [disabled]="sendingContact()">
+        {{ sendingContact() ? 'ENVIANDO...' : 'ENVIAR' }}
+      </button>
+    </div>
+    <div class="slide-right">
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📧</div>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-val">hola&#64;saqes.co</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📱</div>
+        <div>
+          <div class="contact-info-label">WhatsApp</div>
+          <div class="contact-info-val">+57 300 000 0000</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📍</div>
+        <div>
+          <div class="contact-info-label">Ubicación</div>
+          <div class="contact-info-val">Armenia, Colombia</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">⏰</div>
+        <div>
+          <div class="contact-info-label">Disponibilidad</div>
+          <div class="contact-info-val">Lun–Vie, 9am–6pm COT</div>
+        </div>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+        <a href="#" class="social-link">Instagram</a>
+        <a href="#" class="social-link pink">Behance</a>
+        <a href="#" class="social-link cyan">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER CTA ══ -->
+<section class="footer-cta">
+  <h2 class="fade-in">¿Listo para crear<br><span style="color:var(--neon-pink)">tu espacio digital?</span></h2>
+  <p class="fade-in">Únete a cientos de creadores que ya tienen su presencia online con SAQES</p>
+  @if (auth.isLoggedIn()) {
+    <a class="btn-cta zoom-in" routerLink="/builder" style="font-size:1.2rem;padding:18px 44px">EMPEZAR GRATIS ✦</a>
+  } @else {
+    <button class="btn-cta zoom-in" (click)="openLogin()" style="font-size:1.2rem;padding:18px 44px">EMPEZAR GRATIS ✦</button>
+  }
+</section>

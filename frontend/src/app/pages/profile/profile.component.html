@@ -1,0 +1,134 @@
+<div id="view-profile">
+  <!-- BANNER -->
+  <div class="profile-banner"
+       [style.background]="user()?.banner_grad || 'linear-gradient(135deg,#1a0040,#4b0082,#1a1a2e)'"
+       [style.background-image]="user()?.banner_img ? 'url(' + user()!.banner_img + ')' : ''">
+    <div class="banner-overlay"></div>
+
+    <!-- Avatar -->
+    <div class="profile-avatar-outer">
+      <div class="hcb-avatar-circle">
+        @if (user()?.avatar) {
+          <img [src]="user()!.avatar" alt="avatar" class="profile-avatar">
+        } @else {
+          <span class="avatar-placeholder">{{ user()?.username?.charAt(0)?.toUpperCase() }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="profile-body">
+    <div class="profile-meta-row">
+      <div class="profile-pill">
+        <div class="profile-name">{{ user()?.username }}</div>
+        <div class="profile-level">{{ user()?.role === 'admin' ? '⚡ Admin / Master' : '✍ Writer' }}</div>
+        @if (user()?.location) { <div class="profile-loc">📍 {{ user()?.location }}</div> }
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-nav" (click)="openEdit()">✏ Editar Perfil</button>
+        <a class="btn-nav" routerLink="/builder">＋ Nueva Página</a>
+        @if (user()?.role === 'admin') {
+          <a class="btn-nav admin-btn" routerLink="/admin">⚙ Admin</a>
+        }
+      </div>
+    </div>
+
+    @if (user()?.bio) {
+      <p class="profile-bio">{{ user()?.bio }}</p>
+    }
+
+    <!-- STATS -->
+    <div class="profile-stats">
+      <div class="stat-item"><div class="stat-num">{{ pages().length }}</div><div class="stat-label">Páginas</div></div>
+      <div class="stat-item"><div class="stat-num">{{ user()?.role === 'admin' ? '∞' : '5' }}</div><div class="stat-label">Límite</div></div>
+      <div class="stat-item"><div class="stat-num">{{ user()?.created_at | date:'yyyy' }}</div><div class="stat-label">Miembro desde</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+      <button class="profile-tab" [class.active]="activeTab()==='pages'" (click)="switchTab('pages')">Mis Páginas</button>
+      <button class="profile-tab" [class.active]="activeTab()==='settings'" (click)="switchTab('settings')">Apariencia</button>
+    </div>
+
+    <!-- PAGES TAB -->
+    @if (activeTab() === 'pages') {
+      @if (pages().length === 0) {
+        <div class="empty-pages">
+          <span class="empty-icon">📄</span>
+          <p>No tienes páginas aún.</p>
+          <a class="btn-cta" routerLink="/builder" style="font-size:.9rem;padding:12px 24px">＋ Crear primera página</a>
+        </div>
+      } @else {
+        <div class="pages-grid">
+          @for (page of pages(); track page.id) {
+            <div class="page-card">
+              <div class="page-thumb">
+                @if (page.thumbnail) {
+                  <img [src]="page.thumbnail" alt="thumb">
+                } @else {
+                  <div class="page-thumb-placeholder">{{ page.page_name.charAt(0) }}</div>
+                }
+              </div>
+              <div class="page-card-body">
+                <div class="page-card-name">{{ page.page_name }}</div>
+                <div class="page-card-slug">{{ getPageUrl(page) }}</div>
+                <div class="page-card-date">{{ page.updated_at | date:'dd/MM/yyyy' }}</div>
+                <div class="page-card-actions">
+                  <a [routerLink]="['/builder', page.id]" class="card-open-btn">✏ Editar</a>
+                  <a [href]="getPageUrl(page)" target="_blank" class="card-open-btn">🔗 Ver</a>
+                  <button class="card-open-btn danger" (click)="deletePage(page.id)" [disabled]="deletingId() === page.id">
+                    {{ deletingId() === page.id ? '...' : '🗑' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+
+    <!-- APPEARANCE TAB -->
+    @if (activeTab() === 'settings') {
+      <div class="appearance-section">
+        <h3 class="appear-title">🎨 Banner de Perfil</h3>
+        <div class="banner-grads">
+          @for (grad of BANNER_GRADS; track grad) {
+            <div class="banner-grad-chip" [style.background]="grad" (click)="setBanner(grad)"></div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+@if (editMode()) {
+  <div class="modal-overlay open">
+    <div class="modal-box">
+      <button class="modal-close" (click)="editMode.set(false)">✕</button>
+      <h2 class="modal-title">// EDITAR PERFIL</h2>
+
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea class="form-input" rows="3" [(ngModel)]="editBio" placeholder="Cuéntame de ti..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Ubicación</label>
+        <input class="form-input" type="text" [(ngModel)]="editLocation" placeholder="Ciudad, País">
+      </div>
+      <div class="form-group">
+        <label>Avatar (URL o subir imagen)</label>
+        <input class="form-input" type="text" [(ngModel)]="editAvatar" placeholder="https://...">
+        <input type="file" accept="image/*" style="display:none" #avatarInput (change)="onAvatarFile($event)">
+        <button class="btn-nav" style="margin-top:8px;font-size:.75rem" (click)="avatarInput.click()">📁 Subir imagen</button>
+        @if (editAvatar) { <img [src]="editAvatar" style="width:60px;height:60px;border-radius:50%;margin-top:10px;object-fit:cover;border:2px solid var(--purple)"> }
+      </div>
+
+      <button class="btn-admin-save" style="width:100%" (click)="saveEdit()" [disabled]="loading()">
+        {{ loading() ? 'Guardando...' : '💾 GUARDAR' }}
+      </button>
+    </div>
+  </div>
+}

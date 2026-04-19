@@ -1,0 +1,26 @@
+<nav id="navbar">
+  <div class="logo" routerLink="/">SAQES</div>
+
+  <div class="nav-links">
+    <a routerLink="/" fragment="skills">Skills</a>
+    <a routerLink="/" fragment="projects">Proyectos</a>
+    <a routerLink="/" fragment="contact-sec">Contacto</a>
+
+    @if (auth.isAdmin()) {
+      <button class="btn-nav admin-btn" routerLink="/admin">⚙ ADMIN</button>
+    }
+
+    @if (auth.isLoggedIn()) {
+      <button class="btn-nav" routerLink="/profile">Mi Perfil</button>
+      <div class="nav-user" (click)="logout()" title="Cerrar sesión">
+        @if (auth.currentUser()?.avatar) {
+          <img [src]="auth.currentUser()!.avatar" alt="avatar" class="nav-avatar">
+        } @else {
+          <div class="nav-avatar-placeholder">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</div>
+        }
+      </div>
+    } @else {
+      <button class="btn-nav" (click)="openLogin()">Login</button>
+    }
+  </div>
+</nav>

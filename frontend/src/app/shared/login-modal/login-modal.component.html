@@ -1,0 +1,53 @@
+<div class="modal-overlay" [class.open]="modal.loginOpen()">
+  <div class="modal-box">
+    <button class="modal-close" (click)="close()">✕</button>
+    <h2 class="modal-title">{{ tab() === 'login' ? '// LOGIN' : '// REGISTRO' }}</h2>
+
+    <div class="modal-tabs">
+      <button [class.active]="tab()==='login'" (click)="switchTab('login')">Iniciar Sesión</button>
+      <button [class.active]="tab()==='register'" (click)="switchTab('register')">Registrarse</button>
+    </div>
+
+    @if (tab() === 'login') {
+      <div>
+        <div class="form-group">
+          <label>Usuario o Email</label>
+          <input class="form-input" type="text" [(ngModel)]="loginUser" placeholder="Tu usuario..." (keyup.enter)="handleLogin()">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input class="form-input" type="password" [(ngModel)]="loginPass" placeholder="••••••••" (keyup.enter)="handleLogin()">
+        </div>
+        @if (error()) { <div class="field-error show">{{ error() }}</div> }
+        <button class="btn-cta submit-btn" (click)="handleLogin()" [disabled]="loading()">
+          {{ loading() ? 'Entrando...' : 'ENTRAR ✦' }}
+        </button>
+      </div>
+    }
+
+    @if (tab() === 'register') {
+      <div>
+        <div class="form-group">
+          <label>Usuario</label>
+          <input class="form-input" type="text" [(ngModel)]="regUser" placeholder="Mi usuario único...">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-input" type="email" [(ngModel)]="regEmail" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input class="form-input" type="password" [(ngModel)]="regPass" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="form-group">
+          <label>Confirmar Contraseña</label>
+          <input class="form-input" type="password" [(ngModel)]="regPass2" placeholder="Repite la contraseña" (keyup.enter)="handleRegister()">
+        </div>
+        @if (error()) { <div class="field-error show">{{ error() }}</div> }
+        <button class="btn-cta submit-btn" (click)="handleRegister()" [disabled]="loading()">
+          {{ loading() ? 'Creando cuenta...' : 'CREAR CUENTA ✦' }}
+        </button>
+      </div>
+    }
+  </div>
+</div>

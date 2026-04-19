@@ -1,0 +1,213 @@
+<div id="view-admin">
+  <div class="admin-wrapper">
+    <!-- HEADER -->
+    <div class="admin-header">
+      <div class="admin-badge">ADMIN</div>
+      <h1 class="admin-title">Panel de Control</h1>
+      @if (stats()) {
+        <div class="admin-stats-row">
+          <div class="astat"><span>{{ stats()!.userCount }}</span> Usuarios</div>
+          <div class="astat"><span>{{ stats()!.pageCount }}</span> Páginas</div>
+          <div class="astat"><span>{{ stats()!.projectCount }}</span> Proyectos</div>
+          <div class="astat" [class.has-unread]="stats()!.unreadMessages > 0"><span>{{ stats()!.unreadMessages }}</span> Sin leer</div>
+        </div>
+      }
+    </div>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button [class.active]="activeTab()==='hero'" (click)="activeTab.set('hero')">🎯 Hero</button>
+      <button [class.active]="activeTab()==='projects'" (click)="activeTab.set('projects')">📂 Proyectos</button>
+      <button [class.active]="activeTab()==='users'" (click)="activeTab.set('users')">👥 Usuarios</button>
+      <button [class.active]="activeTab()==='messages'" (click)="activeTab.set('messages')">
+        ✉ Mensajes @if(unreadCount() > 0){ <span class="badge">{{ unreadCount() }}</span> }
+      </button>
+      <button [class.active]="activeTab()==='appearance'" (click)="activeTab.set('appearance')">🌈 Apariencia</button>
+    </div>
+
+    <!-- ── HERO TAB ── -->
+    @if (activeTab() === 'hero') {
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card-title">🎨 Textos del Hero</div>
+          <label class="admin-label">Título principal</label>
+          <input class="admin-input" [(ngModel)]="settings.hero_title" placeholder="SAQES">
+          <label class="admin-label">Subtítulo</label>
+          <input class="admin-input" [(ngModel)]="settings.hero_subtitle" placeholder="Diseño Urbano · Código...">
+          <label class="admin-label">Texto del botón CTA</label>
+          <input class="admin-input" [(ngModel)]="settings.hero_cta" placeholder="CREA TU PÁGINA">
+          <button class="btn-admin-save" (click)="saveHero()" [disabled]="savingHero()">
+            {{ savingHero() ? 'Guardando...' : '💾 Guardar Hero' }}
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-title">👤 Mi Perfil Admin</div>
+          <label class="admin-label">Bio</label>
+          <textarea class="admin-input" rows="3" [(ngModel)]="adminBio" placeholder="Tu bio..."></textarea>
+          <label class="admin-label">Ubicación</label>
+          <input class="admin-input" [(ngModel)]="adminLocation" placeholder="Ciudad, País">
+          <label class="admin-label">Texto botón perfil</label>
+          <input class="admin-input" [(ngModel)]="adminBtnText" placeholder="+ Crear Página">
+          <label class="admin-label">Link botón perfil</label>
+          <input class="admin-input" [(ngModel)]="adminBtnLink" placeholder="/builder">
+          <button class="btn-admin-save" (click)="saveAdminProfile()" [disabled]="savingAdmin()">
+            {{ savingAdmin() ? 'Guardando...' : '💾 Guardar Perfil' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ── PROJECTS TAB ── -->
+    @if (activeTab() === 'projects') {
+      <div class="admin-card full-width">
+        <div class="admin-card-title" style="justify-content:space-between;display:flex;align-items:center">
+          <span>📂 Proyectos ({{ projects().length }})</span>
+          <button class="btn-admin-save" (click)="showAddProject.set(true)" style="font-size:.75rem">+ Agregar</button>
+        </div>
+
+        @if (showAddProject()) {
+          <div class="add-project-form">
+            <h3 style="font-family:'Bungee',cursive;color:var(--orange);margin-bottom:16px">
+              {{ editingProject() ? 'Editar Proyecto' : 'Nuevo Proyecto' }}
+            </h3>
+            <div class="form-row">
+              <div>
+                <label class="admin-label">Título *</label>
+                <input class="admin-input" [(ngModel)]="newProject.title" placeholder="Nombre del proyecto">
+              </div>
+              <div>
+                <label class="admin-label">Tech Stack</label>
+                <input class="admin-input" [(ngModel)]="newProject.tech" placeholder="Angular · Node.js · ...">
+              </div>
+            </div>
+            <label class="admin-label">Descripción</label>
+            <textarea class="admin-input" rows="2" [(ngModel)]="newProject.description" placeholder="Breve descripción..."></textarea>
+            <div class="form-row">
+              <div>
+                <label class="admin-label">Imagen (URL)</label>
+                <input class="admin-input" [(ngModel)]="newProject.image" placeholder="https://...">
+              </div>
+              <div>
+                <label class="admin-label">Link del proyecto</label>
+                <input class="admin-input" [(ngModel)]="newProject.link" placeholder="https://...">
+              </div>
+            </div>
+            <label class="admin-label">Tags</label>
+            <div class="tags-row">
+              @for (tag of newProject.tags; track tag) {
+                <span class="tag">{{ tag }} <button (click)="removeTag(tag)" style="background:none;border:none;color:inherit;cursor:pointer;padding:0 0 0 4px">✕</button></span>
+              }
+              <input class="admin-input" style="width:120px;display:inline-block" [(ngModel)]="newTagInput" placeholder="+ tag" (keyup.enter)="addTag()">
+              <button class="btn-admin-save" style="font-size:.7rem;padding:6px 12px" (click)="addTag()">Añadir</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <button class="btn-admin-save" (click)="saveProject()" [disabled]="savingProj()">
+                {{ savingProj() ? '...' : editingProject() ? '💾 Actualizar' : '💾 Crear' }}
+              </button>
+              <button class="btn-admin-save" style="background:#333;color:white" (click)="cancelProject()">Cancelar</button>
+            </div>
+          </div>
+        }
+
+        <ul class="project-list-admin">
+          @for (p of projects(); track p.id) {
+            <li class="project-item-admin">
+              <div>
+                <div style="font-family:'Bungee',cursive;font-size:.85rem">{{ p.title }}</div>
+                <div style="font-size:.65rem;color:#555">{{ p.description | slice:0:60 }}...</div>
+                <div class="project-tags-mini">
+                  @for(tag of p.tags; track tag){ <span class="tag">{{ tag }}</span> }
+                </div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn-admin-save" style="font-size:.7rem;padding:6px 12px;background:#333;color:white" (click)="openEditProject(p)">✏</button>
+                <button class="btn-admin-save danger" style="font-size:.7rem;padding:6px 12px" (click)="deleteProject(p.id)">🗑</button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    <!-- ── USERS TAB ── -->
+    @if (activeTab() === 'users') {
+      <div class="admin-card full-width">
+        <div class="admin-card-title">👥 Usuarios Registrados ({{ users().length }})</div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Usuario</th><th>Email</th><th>Rol</th><th>Páginas</th><th>Registro</th><th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users(); track u.id) {
+              <tr [class.admin-row]="u.role === 'admin'">
+                <td><strong>{{ u.username }}</strong></td>
+                <td style="color:#666;font-size:.78rem">{{ u.email }}</td>
+                <td><span class="role-badge" [class.is-admin]="u.role==='admin'">{{ u.role }}</span></td>
+                <td style="text-align:center">{{ u.page_count }}</td>
+                <td style="color:#555;font-size:.72rem">{{ u.created_at | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  @if (u.role !== 'admin') {
+                    <button class="btn-admin-save danger" style="font-size:.7rem;padding:5px 10px" (click)="deleteUser(u.id, u.username)">🗑</button>
+                  } @else {
+                    <span style="color:#444;font-size:.7rem">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- ── MESSAGES TAB ── -->
+    @if (activeTab() === 'messages') {
+      <div class="admin-card full-width">
+        <div class="admin-card-title">✉ Mensajes de Contacto ({{ messages().length }})</div>
+        @if (messages().length === 0) {
+          <p style="color:#555;font-size:.85rem">Sin mensajes aún.</p>
+        }
+        @for (msg of messages(); track msg.id) {
+          <div class="message-item" [class.unread]="!msg.read">
+            <div class="msg-head">
+              <div>
+                <span class="msg-name">{{ msg.name }}</span>
+                <span class="msg-email"> — {{ msg.email }}</span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <span style="font-size:.65rem;color:#555">{{ msg.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                @if (!msg.read) {
+                  <button class="btn-admin-save" style="font-size:.65rem;padding:4px 8px;background:#333;color:white" (click)="markRead(msg.id)">✓ Leído</button>
+                }
+                <button class="btn-admin-save danger" style="font-size:.65rem;padding:4px 8px" (click)="deleteMessage(msg.id)">🗑</button>
+              </div>
+            </div>
+            <div class="msg-body">{{ msg.message }}</div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── APPEARANCE TAB ── -->
+    @if (activeTab() === 'appearance') {
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card-title">🌈 Colores Globales</div>
+          <label class="admin-label">Color primario (purple)</label>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+            <input type="color" [(ngModel)]="settings.primary_color" style="width:50px;height:40px;border:none;background:none;cursor:pointer;border-radius:4px">
+            <span style="font-size:.8rem;color:#888">{{ settings.primary_color }}</span>
+          </div>
+          <label class="admin-label">Color acento (neon)</label>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px">
+            <input type="color" [(ngModel)]="settings.accent_color" style="width:50px;height:40px;border:none;background:none;cursor:pointer;border-radius:4px">
+            <span style="font-size:.8rem;color:#888">{{ settings.accent_color }}</span>
+          </div>
+          <button class="btn-admin-save" (click)="saveAppearance()">🎨 Aplicar Colores</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
