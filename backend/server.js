@@ -32,6 +32,14 @@ app.use('/api/pages',    require('./routes/pages.routes'));
 app.use('/api/admin',    require('./routes/admin.routes'));
 app.use('/api/contact',  require('./routes/contact.routes'));
 
+app.get('/', (req, res) => {
+  res.json({ 
+    name: 'SAQES Portfolio API',
+    status: 'online',
+    endpoints: '/api/health · /api/projects · /api/auth/login'
+  });
+});
+
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', time: new Date().toISOString(), env: process.env.NODE_ENV })
 );
