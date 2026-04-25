@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brief — Idea General Página Web</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#08080f;--surface:#111119;--card:#181825;--border:#252538;
+      --accent:#7c6aff;--accent2:#a78bfa;--green:#34d399;--red:#f87171;--yellow:#fbbf24;
+      --text:#e4e4f0;--muted:#6b6b95;--radius:12px;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6;padding-bottom:80px}
+
+    /* HERO */
+    .hero{background:linear-gradient(140deg,#0c0c1a 0%,#14102a 50%,#0a0a14 100%);border-bottom:1px solid var(--border);padding:72px 24px 56px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% -5%,rgba(124,106,255,.22),transparent)}
+    .hero-badge{display:inline-block;background:rgba(124,106,255,.12);border:1px solid rgba(124,106,255,.35);color:var(--accent2);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:20px}
+    .hero h1{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#fff 0%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px}
+    .hero p{color:var(--muted);font-size:.95rem;max-width:500px;margin:0 auto}
+
+    /* PROGRESS */
+    .progress-wrap{position:sticky;top:0;z-index:100;background:rgba(8,8,15,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:11px 24px;display:flex;align-items:center;gap:14px}
+    .progress-bar{flex:1;height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;width:0%;transition:width .4s ease}
+    .progress-label{font-size:11px;color:var(--muted);white-space:nowrap;font-family:'Syne',sans-serif}
+
+    /* LAYOUT */
+    .container{max-width:740px;margin:0 auto;padding:44px 20px 60px}
+
+    /* SECTION */
+    .section{margin-bottom:44px;opacity:0;transform:translateY(18px);animation:fadeUp .5s forwards}
+    .section:nth-child(1){animation-delay:.06s}.section:nth-child(2){animation-delay:.1s}
+    .section:nth-child(3){animation-delay:.14s}.section:nth-child(4){animation-delay:.18s}
+    .section:nth-child(5){animation-delay:.22s}.section:nth-child(6){animation-delay:.26s}
+    .section:nth-child(7){animation-delay:.3s}.section:nth-child(8){animation-delay:.34s}
+    .section:nth-child(9){animation-delay:.38s}.section:nth-child(10){animation-delay:.42s}
+    .section:nth-child(11){animation-delay:.46s}.section:nth-child(12){animation-delay:.5s}
+    .section:nth-child(13){animation-delay:.54s}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+    .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+    .section-icon{font-size:1.3rem;width:38px;height:38px;background:rgba(124,106,255,.1);border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+    .section-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent2)}
+    .section-num{font-size:11px;color:var(--muted);margin-top:2px}
+
+    /* CARD */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px;transition:border-color .2s}
+    .card:hover{border-color:rgba(124,106,255,.28)}
+
+    /* FIELDS */
+    .field{margin-bottom:18px}.field:last-child{margin-bottom:0}
+    label{display:block;font-size:.83rem;font-weight:500;color:var(--text);margin-bottom:7px}
+    label .req{color:var(--accent);margin-left:2px}
+    label .hint{display:block;font-size:.74rem;color:var(--muted);font-weight:400;margin-top:2px}
+    input[type=text],input[type=email],input[type=tel],input[type=number],input[type=url],textarea,select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.88rem;padding:10px 13px;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,106,255,.13)}
+    textarea{resize:vertical;min-height:90px}
+
+    /* CHECK GRID */
+    .check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;margin-top:7px}
+    .check-item{display:flex;align-items:center;gap:9px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;cursor:pointer;transition:border-color .2s,background .2s;font-size:.83rem;position:relative}
+    .check-item:hover{border-color:var(--accent);background:rgba(124,106,255,.06)}
+    .check-item input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+    .check-item.checked{border-color:var(--accent);background:rgba(124,106,255,.11)}
+    .check-item.checked .ptag{opacity:1;color:var(--green)}
+
+    /* PRICE TAG inline */
+    .ptag{margin-left:auto;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;color:var(--muted);opacity:.7;white-space:nowrap;flex-shrink:0;transition:color .2s,opacity .2s}
+
+    /* COLOR ROW */
+    .color-row{display:flex;gap:9px;align-items:center;margin-top:7px;flex-wrap:wrap}
+    .color-swatch{display:flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:6px 11px 6px 7px;cursor:pointer;font-size:.8rem;flex:1;min-width:130px;transition:border-color .2s}
+    .color-swatch:hover{border-color:var(--accent)}
+    .color-swatch input[type=color]{width:26px;height:26px;border:none;border-radius:5px;padding:0;cursor:pointer;background:none}
+
+    /* FILE DROP */
+    .file-drop{border:2px dashed var(--border);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--surface);position:relative}
+    .file-drop:hover{border-color:var(--accent);background:rgba(124,106,255,.05)}
+    .file-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .file-drop .drop-icon{font-size:1.8rem;margin-bottom:6px}
+    .file-drop p{font-size:.8rem;color:var(--muted)}
+    .file-drop strong{color:var(--accent2)}
+    .file-name{margin-top:6px;font-size:.76rem;color:var(--green)}
+
+    /* ════ FLOATING PRICE BAR ════ */
+    .price-float{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(8,8,15,.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .pf-left{display:flex;align-items:center;gap:20px}
+    .pf-item{display:flex;flex-direction:column}
+    .pf-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .pf-value{font-family:'DM Mono',monospace;font-size:1rem;font-weight:500;color:var(--green);transition:color .3s}
+    .pf-items-count{font-size:.72rem;color:var(--muted)}
+    .pf-right{display:flex;gap:10px;align-items:center}
+    .btn-calc{background:linear-gradient(135deg,var(--green),#059669);color:#000;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap}
+    .btn-calc:hover{opacity:.88;transform:translateY(-1px)}
+    .btn-submit-float{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap}
+    .btn-submit-float:hover{opacity:.88;transform:translateY(-1px)}
+    .btn-submit-float:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+    /* ════ CALC MODAL ════ */
+    .calc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+    .calc-overlay.open{display:flex}
+    .calc-modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:88vh;display:flex;flex-direction:column;animation:popIn .28s ease}
+    @keyframes popIn{from{opacity:0;transform:scale(.93) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .calc-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0}
+    .calc-head h2{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800}
+    .calc-head p{font-size:.78rem;color:var(--muted);margin-top:2px}
+    .btn-xcalc{background:var(--surface);border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.9rem;display:grid;place-items:center;flex-shrink:0;transition:background .15s}
+    .btn-xcalc:hover{background:rgba(248,113,113,.15);color:var(--red);border-color:var(--red)}
+    .calc-body{overflow-y:auto;flex:1;padding:0 24px}
+    .calc-category{margin:16px 0 8px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+    .calc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(37,37,56,.6)}
+    .calc-row:last-of-type{border-bottom:none}
+    .calc-row-label{font-size:.83rem;color:var(--text)}
+    .calc-row-price{font-family:'DM Mono',monospace;font-size:.83rem;color:var(--green);white-space:nowrap}
+    .calc-row.base .calc-row-label{color:var(--muted);font-style:italic}
+    .calc-foot{border-top:1px solid var(--border);padding:16px 24px;flex-shrink:0}
+    .calc-total-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .calc-total-label{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800}
+    .calc-total-amount{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--green)}
+    .budget-status{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;margin-bottom:12px;font-size:.83rem}
+    .budget-status.ok {background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:var(--green)}
+    .budget-status.over{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red)}
+    .budget-status.near{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:var(--yellow)}
+    .budget-status.none{background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.3);color:var(--accent2)}
+    .calc-note{font-size:.73rem;color:var(--muted);margin-bottom:12px;line-height:1.5}
+    .calc-empty{text-align:center;padding:32px 0;color:var(--muted);font-size:.88rem}
+
+    /* SUBMIT WRAP */
+    .submit-section{text-align:center;padding:20px 0 40px}
+    .submit-section p{color:var(--muted);font-size:.76rem;margin-top:10px}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:80px;right:20px;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px 18px;font-size:.85rem;box-shadow:0 16px 40px rgba(0,0,0,.5);transform:translateY(130%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;max-width:300px}
+    .toast.show{transform:translateY(0)}
+    .toast.success{border-color:var(--green)}
+    .toast.error{border-color:var(--red)}
+
+    @media(max-width:520px){
+      .check-grid{grid-template-columns:1fr 1fr}
+      .ptag{display:none}
+      .pf-left{gap:12px}
+      .pf-value{font-size:.9rem}
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-badge">Desarrollo Web · Brief de Proyecto</div>
+  <h1>Diseña tu Página Web</h1>
+  <p>Cuéntanos todo sobre tu proyecto. Entre más detalle, mejor será el resultado y más precisa la cotización.</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% completado</div>
+</div>
+
+<div class="container">
+<form id="mainForm" novalidate>
+<input type="hidden" name="precio_calculado" id="hPrecio"/>
+<input type="hidden" name="desglose_precios" id="hDesglose"/>
+
+<!-- S1: INFORMACIÓN GENERAL -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🧩</div>
+    <div><div class="section-title">Información General</div><div class="section-num">Sección 1</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>Tu nombre completo <span class="req">*</span></label>
+      <input type="text" name="nombre_persona" placeholder="Ej. María Fernanda López" required/>
+    </div>
+    <div class="field">
+      <label>Nombre del negocio <span class="req">*</span></label>
+      <input type="text" name="nombre_negocio" placeholder="Ej. Studio Noir, La Tienda de Lara…" required/>
+    </div>
+    <div class="field">
+      <label>Correo de contacto <span class="req">*</span></label>
+      <input type="email" name="correo" placeholder="hola@tuempresa.com" required/>
+    </div>
+    <div class="field">
+      <label>WhatsApp / Teléfono</label>
+      <input type="tel" name="telefono" placeholder="+57 300 000 0000"/>
+    </div>
+    <div class="field">
+      <label>¿Cuál es el objetivo principal de la página? <span class="req">*</span><span class="hint">Afecta el precio base del proyecto</span></label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="objetivo" value="Vender productos"/> Vender productos <span class="ptag">+$300k</span></label>
+        <label class="check-item"><input type="radio" name="objetivo" value="Mostrar portafolio"/> Mostrar portafolio <span class="ptag">+$150k</span></label>
+        <label class="check-item"><input type="radio" name="objetivo" value="Blog / contenido"/> Blog / contenido <span class="ptag">+$120k</span></label>
+        <label class="check-item"><input type="radio" name="objetivo" value="Página informativa"/> Página informativa <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="radio" name="objetivo" value="Otro"/> Otro <span class="ptag">+$100k</span></label>
+      </div>
+      <input type="text" name="objetivo_otro" placeholder="Si elegiste Otro, especifica aquí…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>Describe tu idea de negocio <span class="req">*</span><span class="hint">¿Qué vendes, para quién, qué te hace único?</span></label>
+      <textarea name="descripcion_negocio" placeholder="Ej. Tienda online de ropa vintage para mujeres jóvenes en Colombia. Nos diferenciamos por piezas únicas y envío rápido." rows="4" required></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S2: PÚBLICO OBJETIVO -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🎯</div>
+    <div><div class="section-title">Público Objetivo</div><div class="section-num">Sección 2</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿A quién va dirigida tu página?<span class="hint">Edad, género, intereses, ubicación de tu cliente ideal</span></label>
+      <textarea name="publico_objetivo" placeholder="Ej. Mujeres de 18-35 años, amantes de la moda, en ciudades principales de Colombia…" rows="3"></textarea>
+    </div>
+    <div class="field">
+      <label>¿Cuál es tu propuesta de valor?</label>
+      <textarea name="propuesta_valor" placeholder="Ej. Precios más bajos, envío gratis, productos exclusivos, atención personalizada…" rows="3"></textarea>
+    </div>
+    <div class="field">
+      <label>¿Tienes competidores? ¿Cuáles?</label>
+      <input type="text" name="competidores" placeholder="Ej. Zara, H&M, tiendas locales en Instagram…"/>
+    </div>
+  </div>
+</div>
+
+<!-- S3: DISEÑO Y ESTILO VISUAL -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🎨</div>
+    <div><div class="section-title">Diseño y Estilo Visual</div><div class="section-num">Sección 3</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Qué estilo visual prefieres?<span class="hint">Puedes elegir varios (no afecta el precio)</span></label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="estilo" value="Minimalista"/> Minimalista</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Moderno"/> Moderno</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Elegante"/> Elegante</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Oscuro (dark)"/> Oscuro</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Colorido"/> Colorido</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Tecnológico"/> Tecnológico</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Retro / Vintage"/> Retro</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Orgánico"/> Orgánico</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Lujoso / Premium"/> Lujoso</label>
+        <label class="check-item"><input type="checkbox" name="estilo" value="Juvenil"/> Juvenil</label>
+      </div>
+      <input type="text" name="estilo_otro" placeholder="Otro estilo…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>Colores principales</label>
+      <div class="color-row">
+        <div class="color-swatch"><input type="color" name="color_principal_1" value="#7c6aff"/> Principal 1</div>
+        <div class="color-swatch"><input type="color" name="color_principal_2" value="#a78bfa"/> Principal 2</div>
+        <div class="color-swatch"><input type="color" name="color_principal_3" value="#34d399"/> Principal 3</div>
+      </div>
+      <input type="text" name="colores_descripcion" placeholder="También puedes describir: azul marino, dorado, blanco perla…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>Colores secundarios</label>
+      <div class="color-row">
+        <div class="color-swatch"><input type="color" name="color_secundario_1" value="#1a1a27"/> Sec. 1</div>
+        <div class="color-swatch"><input type="color" name="color_secundario_2" value="#0a0a0f"/> Sec. 2</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Deseas modo oscuro?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="radio" name="dark_mode" value="Sí"/> Sí</label>
+        <label class="check-item"><input type="radio" name="dark_mode" value="No"/> No</label>
+        <label class="check-item"><input type="radio" name="dark_mode" value="Ambos (toggle)"/> Ambos <span class="ptag">+$50k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Qué tipografía prefieres?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="tipografia" value="Serif (clásica)"/> Serif — Elegante</label>
+        <label class="check-item"><input type="radio" name="tipografia" value="Sans-serif (moderna)"/> Sans-serif</label>
+        <label class="check-item"><input type="radio" name="tipografia" value="Display (llamativa)"/> Display</label>
+        <label class="check-item"><input type="radio" name="tipografia" value="Monospace (técnica)"/> Monospace</label>
+        <label class="check-item"><input type="radio" name="tipografia" value="Manuscrita"/> Manuscrita</label>
+        <label class="check-item"><input type="radio" name="tipografia" value="Sin preferencia"/> Sin preferencia</label>
+      </div>
+      <input type="text" name="tipografia_nombre" placeholder="Fuente específica: Playfair Display, Montserrat…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>Ejemplos de páginas que te gusten<span class="hint">URLs separadas por coma</span></label>
+      <textarea name="referencias_web" placeholder="https://ejemplo1.com, https://ejemplo2.com…" rows="2"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S4: ESTRUCTURA -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🧱</div>
+    <div><div class="section-title">Estructura de la Página</div><div class="section-num">Sección 4</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Qué secciones quieres?<span class="hint">Cada sección adicional suma al total</span></label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="secciones" value="Inicio / Hero"/> Inicio / Hero</label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Productos"/> Productos <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Servicios"/> Servicios <span class="ptag">+$60k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Sobre nosotros"/> Sobre nosotros <span class="ptag">+$40k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Contacto"/> Contacto <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Blog"/> Blog <span class="ptag">+$150k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Reseñas / Opiniones"/> Reseñas <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Galería"/> Galería <span class="ptag">+$70k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="FAQ"/> FAQ <span class="ptag">+$40k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Equipo"/> Equipo <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Ubicación / Mapa"/> Ubicación <span class="ptag">+$60k</span></label>
+        <label class="check-item"><input type="checkbox" name="secciones" value="Newsletter"/> Newsletter <span class="ptag">+$80k</span></label>
+      </div>
+      <input type="text" name="secciones_otras" placeholder="Otras secciones…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Cómo quieres la página de inicio?<span class="hint">Describe: banners, sliders, mensajes, llamadas a la acción…</span></label>
+      <textarea name="pagina_inicio" placeholder="Ej. Banner grande con imagen de fondo y botón 'Ver colección', luego 3 cards de productos destacados…" rows="5"></textarea>
+    </div>
+    <div class="field">
+      <label>¿Dónde quieres el menú?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="radio" name="menu_posicion" value="Arriba fijo (sticky)"/> Arriba fijo</label>
+        <label class="check-item"><input type="radio" name="menu_posicion" value="Lateral"/> Lateral</label>
+        <label class="check-item"><input type="radio" name="menu_posicion" value="Hamburguesa"/> Hamburguesa</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Qué quieres en el footer?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="footer" value="Redes sociales"/> Redes sociales</label>
+        <label class="check-item"><input type="checkbox" name="footer" value="Contacto"/> Contacto</label>
+        <label class="check-item"><input type="checkbox" name="footer" value="Ubicación"/> Ubicación</label>
+        <label class="check-item"><input type="checkbox" name="footer" value="Derechos de autor"/> Copyright</label>
+        <label class="check-item"><input type="checkbox" name="footer" value="Links de navegación"/> Links nav.</label>
+        <label class="check-item"><input type="checkbox" name="footer" value="Newsletter"/> Newsletter</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cuántas páginas/vistas necesitas?<span class="hint">Más de 6 páginas suma al precio</span></label>
+      <input type="number" name="num_paginas" placeholder="Ej. 5" min="1" max="99" id="numPaginasInp"/>
+    </div>
+  </div>
+</div>
+
+<!-- S5: PRODUCTOS Y VENTAS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🛍</div>
+    <div><div class="section-title">Productos y Ventas</div><div class="section-num">Sección 5</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Quieres carrito de compras?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="carrito" value="Sí"/> Sí <span class="ptag">+$150k</span></label>
+        <label class="check-item"><input type="radio" name="carrito" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cómo quieres el proceso de compra?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="proceso_compra" value="Añadir al carrito"/> Añadir al carrito</label>
+        <label class="check-item"><input type="checkbox" name="proceso_compra" value="Compra directa"/> Comprar ahora <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="checkbox" name="proceso_compra" value="Redirigir a WhatsApp"/> Redirigir WhatsApp <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="checkbox" name="proceso_compra" value="Formulario de pedido"/> Formulario pedido <span class="ptag">+$40k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Qué información debe tener cada producto?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Nombre"/> Nombre</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Precio"/> Precio</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Descripción"/> Descripción</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Imágenes"/> Imágenes</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Reseñas"/> Reseñas</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Stock disponible"/> Stock</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Tallas / Variantes"/> Tallas / Variantes</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Descuento"/> Descuento</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="SKU"/> SKU</label>
+        <label class="check-item"><input type="checkbox" name="info_producto" value="Categoría"/> Categoría</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cuántos productos aproximadamente?</label>
+      <input type="number" name="num_productos" placeholder="Ej. 50" min="1"/>
+    </div>
+    <div class="field">
+      <label>¿Cómo quieres las cards de productos?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="card_estilo" value="Clásica"/> Clásica</label>
+        <label class="check-item"><input type="radio" name="card_estilo" value="Con hover overlay"/> Hover overlay</label>
+        <label class="check-item"><input type="radio" name="card_estilo" value="Minimalista"/> Minimalista</label>
+        <label class="check-item"><input type="radio" name="card_estilo" value="Horizontal"/> Horizontal</label>
+        <label class="check-item"><input type="radio" name="card_estilo" value="Con badge de oferta"/> Con badge</label>
+        <label class="check-item"><input type="radio" name="card_estilo" value="Sin preferencia"/> Sin preferencia</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Sistema de reseñas/opiniones de productos?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="resenias" value="Sí"/> Sí <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="radio" name="resenias" value="No"/> No</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S6: FUNCIONALIDADES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">⚙️</div>
+    <div><div class="section-title">Funcionalidades</div><div class="section-num">Sección 6</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Qué funcionalidades deseas?<span class="hint">Cada una implica desarrollo backend adicional</span></label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Registro de usuarios"/> Registro usuarios <span class="ptag">+$150k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Inicio de sesión"/> Login / Auth <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Chat en vivo"/> Chat en vivo <span class="ptag">+$200k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Redes sociales"/> Integración redes <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Notificaciones push"/> Notificaciones push <span class="ptag">+$120k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Filtros de búsqueda"/> Buscador + filtros <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Mapa interactivo"/> Mapa interactivo <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Multiidioma"/> Multi-idioma <span class="ptag">+$200k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Wishlist / Favoritos"/> Wishlist / Favoritos <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="checkbox" name="funcionalidades" value="Comparar productos"/> Comparar productos <span class="ptag">+$80k</span></label>
+      </div>
+      <input type="text" name="funcionalidades_otras" placeholder="Otras funcionalidades…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Integración con WhatsApp?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="whatsapp" value="Sí, botón flotante"/> Botón flotante <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="radio" name="whatsapp" value="Sí, redirigir pedidos"/> Redirigir pedidos <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="radio" name="whatsapp" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Quieres animaciones?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="radio" name="animaciones" value="Sí, vistosas"/> Vistosas <span class="ptag">+$60k</span></label>
+        <label class="check-item"><input type="radio" name="animaciones" value="Sí, sutiles"/> Sutiles <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="radio" name="animaciones" value="No"/> No</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S7: SEGURIDAD -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🔐</div>
+    <div><div class="section-title">Seguridad y Administración</div><div class="section-num">Sección 7</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Quieres panel de administración?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="panel_admin" value="Sí"/> Sí <span class="ptag">+$200k</span></label>
+        <label class="check-item"><input type="radio" name="panel_admin" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Quién administrará la página?</label>
+      <input type="text" name="administrador" placeholder="Ej. Yo mismo, mi equipo, un desarrollador externo…"/>
+    </div>
+    <div class="field">
+      <label>¿Qué características de seguridad necesitas?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="seguridad" value="HTTPS / SSL"/> HTTPS / SSL <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="checkbox" name="seguridad" value="Login seguro JWT"/> Auth JWT <span class="ptag">+$50k</span></label>
+        <label class="check-item"><input type="checkbox" name="seguridad" value="Protección de datos"/> Protección datos <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="checkbox" name="seguridad" value="Captcha anti-spam"/> Captcha <span class="ptag">+$40k</span></label>
+        <label class="check-item"><input type="checkbox" name="seguridad" value="Rate limiting"/> Rate limiting <span class="ptag">+$30k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Sistema de roles? <span class="hint">Admin, vendedor, cliente, etc.</span></label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="roles" value="Sí"/> Sí <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="radio" name="roles" value="No"/> No</label>
+      </div>
+      <input type="text" name="roles_descripcion" placeholder="Describe los roles si aplica…" style="margin-top:9px"/>
+    </div>
+  </div>
+</div>
+
+<!-- S8: DETALLES ADICIONALES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🚀</div>
+    <div><div class="section-title">Detalles Adicionales</div><div class="section-num">Sección 8</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Tienes logo?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="tiene_logo" value="Sí, ya tengo"/> Sí, ya tengo</label>
+        <label class="check-item"><input type="radio" name="tiene_logo" value="No, necesito uno"/> No, necesito <span class="ptag">+$150k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Tienes el contenido listo? (textos, imágenes, productos)</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="contenido_listo" value="Sí, todo listo"/> Todo listo</label>
+        <label class="check-item"><input type="radio" name="contenido_listo" value="Parcialmente"/> Parcialmente <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="radio" name="contenido_listo" value="No, necesito ayuda"/> Necesito ayuda <span class="ptag">+$200k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cuál es tu presupuesto estimado?<span class="hint">El calculador te ayudará a saber si tu selección está en rango</span></label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="presupuesto" value="$500k – $1M COP"/> $500k – $1M</label>
+        <label class="check-item"><input type="radio" name="presupuesto" value="$1M – $1.5M COP"/> $1M – $1.5M</label>
+        <label class="check-item"><input type="radio" name="presupuesto" value="$1.5M – $2.5M COP"/> $1.5M – $2.5M</label>
+        <label class="check-item"><input type="radio" name="presupuesto" value="$2.5M – $4M COP"/> $2.5M – $4M</label>
+        <label class="check-item"><input type="radio" name="presupuesto" value="Más de $4M COP"/> Más de $4M</label>
+        <label class="check-item"><input type="radio" name="presupuesto" value="Por definir"/> Por definir</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿En cuánto tiempo necesitas el proyecto?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="tiempo" value="Urgente (1-2 semanas)"/> Urgente <span class="ptag">+20%</span></label>
+        <label class="check-item"><input type="radio" name="tiempo" value="Normal (1 mes)"/> Normal (1 mes)</label>
+        <label class="check-item"><input type="radio" name="tiempo" value="Sin prisa (2+ meses)"/> Sin prisa</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S9: PROTOTIPADO -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🖼</div>
+    <div><div class="section-title">Prototipado y Referencias</div><div class="section-num">Sección 9</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Tienes boceto o wireframe?<span class="hint">Dibujo a mano, Figma o captura sirven</span></label>
+      <div class="file-drop">
+        <input type="file" id="boceto-input" accept="image/*,.pdf" multiple/>
+        <div class="drop-icon">📎</div>
+        <p><strong>Arrastra aquí</strong> o clic para seleccionar</p>
+        <p>PNG, JPG, PDF — máx. 10 MB</p>
+        <div class="file-name" id="boceto-names"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Tienes logo para compartir?</label>
+      <div class="file-drop">
+        <input type="file" id="logo-input" accept="image/*,.svg"/>
+        <div class="drop-icon">🏷</div>
+        <p><strong>Arrastra aquí</strong> o clic</p>
+        <div class="file-name" id="logo-names"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Links de referencia adicionales</label>
+      <textarea name="referencias_adicionales" placeholder="https://behance.net/..., https://dribbble.com/..." rows="2"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S10: CATÁLOGO -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">📦</div>
+    <div><div class="section-title">Catálogo de Productos</div><div class="section-num">Sección 10</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Categorías de productos?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="categorias" value="Sí"/> Sí <span class="ptag">+$60k</span></label>
+        <label class="check-item"><input type="radio" name="categorias" value="No"/> No</label>
+      </div>
+      <input type="text" name="categorias_descripcion" placeholder="Describe las categorías: Ropa, Accesorios, Calzado…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Qué filtros de búsqueda deseas?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="filtros" value="Precio"/> Precio <span class="ptag">+$30k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Categoría"/> Categoría <span class="ptag">+$20k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Popularidad"/> Popularidad <span class="ptag">+$25k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Calificación"/> Calificación <span class="ptag">+$25k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Talla"/> Talla <span class="ptag">+$25k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Color"/> Color <span class="ptag">+$25k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Disponibilidad"/> Disponibilidad <span class="ptag">+$20k</span></label>
+        <label class="check-item"><input type="checkbox" name="filtros" value="Descuento"/> Descuento <span class="ptag">+$20k</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Productos destacados en el inicio?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="productos_destacados" value="Sí"/> Sí <span class="ptag">+$40k</span></label>
+        <label class="check-item"><input type="radio" name="productos_destacados" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cómo mostrar los productos?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="checkbox" name="display_productos" value="Grid"/> Grid</label>
+        <label class="check-item"><input type="checkbox" name="display_productos" value="Lista"/> Lista</label>
+        <label class="check-item"><input type="checkbox" name="display_productos" value="Carrusel"/> Carrusel</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S11: CARRUSEL -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🎠</div>
+    <div><div class="section-title">Carrusel de Imágenes</div><div class="section-num">Sección 11</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Quieres carrusel de imágenes?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="carrusel" value="Sí"/> Sí <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="radio" name="carrusel" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Dónde ubicarlo?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="carrusel_posicion" value="Debajo del menú (hero)"/> Debajo del menú</label>
+        <label class="check-item"><input type="radio" name="carrusel_posicion" value="Mitad de la página"/> Mitad</label>
+        <label class="check-item"><input type="radio" name="carrusel_posicion" value="Antes del footer"/> Antes del footer</label>
+      </div>
+      <input type="text" name="carrusel_posicion_otro" placeholder="Otra posición…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Objetivo del carrusel?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="carrusel_objetivo" value="Promover productos"/> Promover productos</label>
+        <label class="check-item"><input type="checkbox" name="carrusel_objetivo" value="Mostrar ofertas"/> Ofertas</label>
+        <label class="check-item"><input type="checkbox" name="carrusel_objetivo" value="Info del negocio"/> Info negocio</label>
+        <label class="check-item"><input type="checkbox" name="carrusel_objetivo" value="Branding"/> Branding</label>
+        <label class="check-item"><input type="checkbox" name="carrusel_objetivo" value="Testimonios"/> Testimonios</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cómo organizar el contenido?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="carrusel_layout" value="Texto + imagen"/> Texto + Imagen</label>
+        <label class="check-item"><input type="radio" name="carrusel_layout" value="Texto centrado"/> Centrado</label>
+        <label class="check-item"><input type="radio" name="carrusel_layout" value="Overlay (texto sobre imagen)"/> Overlay</label>
+        <label class="check-item"><input type="radio" name="carrusel_layout" value="Solo imagen"/> Solo imagen</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cuántos slides?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="radio" name="carrusel_slides" value="2-3"/> 2 – 3</label>
+        <label class="check-item"><input type="radio" name="carrusel_slides" value="4-6"/> 4 – 6</label>
+        <label class="check-item"><input type="radio" name="carrusel_slides" value="A mi gusto"/> A mi gusto</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Botones de acción dentro del carrusel?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="carrusel_botones" value="Sí"/> Sí <span class="ptag">+$20k</span></label>
+        <label class="check-item"><input type="radio" name="carrusel_botones" value="No"/> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Se mueve automáticamente?</label>
+      <div class="check-grid" style="grid-template-columns:1fr 1fr">
+        <label class="check-item"><input type="radio" name="carrusel_autoplay" value="Sí"/> Sí, automático <span class="ptag">+$20k</span></label>
+        <label class="check-item"><input type="radio" name="carrusel_autoplay" value="No"/> No, manual</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S12: NOTIFICACIONES Y CIERRE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🔔</div>
+    <div><div class="section-title">Notificaciones y Cierre</div><div class="section-num">Sección 12</div></div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label>¿Por dónde notificar novedades a clientes?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="notificaciones" value="Correo electrónico"/> Email (SMTP) <span class="ptag">+$80k</span></label>
+        <label class="check-item"><input type="checkbox" name="notificaciones" value="WhatsApp"/> WhatsApp API <span class="ptag">+$60k</span></label>
+        <label class="check-item"><input type="checkbox" name="notificaciones" value="Notificaciones web push"/> Push web <span class="ptag">+$120k</span></label>
+        <label class="check-item"><input type="checkbox" name="notificaciones" value="SMS"/> SMS <span class="ptag">+$100k</span></label>
+        <label class="check-item"><input type="checkbox" name="notificaciones" value="Redes sociales"/> Redes sociales</label>
+      </div>
+      <input type="text" name="notificaciones_otras" placeholder="Otro canal…" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Tienes dominio ya comprado?</label>
+      <div class="check-grid">
+        <label class="check-item"><input type="radio" name="dominio" value="Sí, ya tengo"/> Sí, ya tengo</label>
+        <label class="check-item"><input type="radio" name="dominio" value="No, necesito uno"/> No, necesito</label>
+        <label class="check-item"><input type="radio" name="dominio" value="No sé"/> No sé</label>
+      </div>
+      <input type="text" name="dominio_nombre" placeholder="¿Cuál es o cuál quieres? Ej. tunegocio.com" style="margin-top:9px"/>
+    </div>
+    <div class="field">
+      <label>¿Necesitas hosting?</label>
+      <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
+        <label class="check-item"><input type="radio" name="hosting" value="Sí, necesito"/> Sí, necesito</label>
+        <label class="check-item"><input type="radio" name="hosting" value="Ya tengo"/> Ya tengo</label>
+        <label class="check-item"><input type="radio" name="hosting" value="No sé"/> No sé</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Comentarios adicionales</label>
+      <textarea name="comentarios" placeholder="Cualquier detalle extra que no hayas expresado arriba. Mientras más detalles, mejor…" rows="5"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- S13: PREGUNTAS EXTRA (dinámicas) -->
+<div class="section" id="extraSection" style="display:none">
+  <div class="section-header">
+    <div class="section-icon">➕</div>
+    <div><div class="section-title">Preguntas Adicionales</div><div class="section-num">Sección 13</div></div>
+  </div>
+  <div class="card" id="extraQuestionsContainer"></div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-section">
+  <p style="color:var(--muted);font-size:.8rem;margin-bottom:18px">Usa el botón <strong style="color:var(--green)">Calcular total</strong> antes de enviar para ver la cotización estimada.</p>
+  <p style="color:var(--muted);font-size:.74rem;margin-top:8px">Tu información se guarda de forma segura. Te contactaremos pronto.</p>
+</div>
+
+</form>
+</div>
+
+<!-- ════ FLOATING BAR ════ -->
+<div class="price-float">
+  <div class="pf-left">
+    <div class="pf-item">
+      <span class="pf-label">Estimado</span>
+      <span class="pf-value" id="pfTotal">$200.000</span>
+    </div>
+    <div class="pf-item" style="display:none" id="pfBudgetWrap">
+      <span class="pf-label">Presupuesto</span>
+      <span class="pf-value" id="pfBudget" style="font-size:.8rem;color:var(--muted)">—</span>
+    </div>
+    <div class="pf-item">
+      <span class="pf-items-count" id="pfItemsCount">Base del proyecto</span>
+    </div>
+  </div>
+  <div class="pf-right">
+    <button type="button" class="btn-calc" onclick="showCalc()">💰 Calcular total</button>
+    <button type="button" class="btn-submit-float" id="submitBtn" onclick="submitForm()">Enviar →</button>
+  </div>
+</div>
+
+<!-- ════ CALC MODAL ════ -->
+<div class="calc-overlay" id="calcOverlay" onclick="closeCalcOverlay(event)">
+  <div class="calc-modal">
+    <div class="calc-head">
+      <div>
+        <h2>💰 Estimación del Proyecto</h2>
+        <p>Desglose basado en tus selecciones actuales</p>
+      </div>
+      <button class="btn-xcalc" onclick="document.getElementById('calcOverlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="calc-body" id="calcBody">
+      <div class="calc-empty">Selecciona opciones en el formulario para ver la estimación.</div>
+    </div>
+    <div class="calc-foot">
+      <div class="calc-total-row">
+        <span class="calc-total-label">Total estimado</span>
+        <span class="calc-total-amount" id="calcTotalAmount">$200.000</span>
+      </div>
+      <div id="budgetStatus"></div>
+      <p class="calc-note">* Estimación orientativa. El precio final puede variar según complejidad, revisiones y acuerdos. Si seleccionaste "Urgente" se aplica un 20% adicional.</p>
+      <button style="width:100%;padding:11px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.85rem;cursor:pointer;border-color:var(--accent);color:var(--accent2)" onclick="document.getElementById('calcOverlay').classList.remove('open')">
+        Cerrar y continuar el formulario
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ PRICING TABLE ════════════════════════════════════
+const BASE_PRICE = 200000;
+const P = {
+  objetivo: {
+    'Vender productos':   { p:300000, cat:'Objetivo' },
+    'Mostrar portafolio': { p:150000, cat:'Objetivo' },
+    'Blog / contenido':   { p:120000, cat:'Objetivo' },
+    'Página informativa': { p: 80000, cat:'Objetivo' },
+    'Otro':               { p:100000, cat:'Objetivo' },
+  },
+  secciones: {
+    'Productos':          { p: 80000, cat:'Secciones' },
+    'Servicios':          { p: 60000, cat:'Secciones' },
+    'Sobre nosotros':     { p: 40000, cat:'Secciones' },
+    'Contacto':           { p: 50000, cat:'Secciones' },
+    'Blog':               { p:150000, cat:'Secciones' },
+    'Reseñas / Opiniones':{ p: 80000, cat:'Secciones' },
+    'Galería':            { p: 70000, cat:'Secciones' },
+    'FAQ':                { p: 40000, cat:'Secciones' },
+    'Equipo':             { p: 50000, cat:'Secciones' },
+    'Ubicación / Mapa':   { p: 60000, cat:'Secciones' },
+    'Newsletter':         { p: 80000, cat:'Secciones' },
+  },
+  carrito:       { 'Sí':                      { p:150000, cat:'E-commerce' } },
+  proceso_compra:{ 'Compra directa':           { p: 50000, cat:'E-commerce' },
+                   'Redirigir a WhatsApp':      { p: 30000, cat:'E-commerce' },
+                   'Formulario de pedido':      { p: 40000, cat:'E-commerce' } },
+  resenias:      { 'Sí':                       { p: 80000, cat:'E-commerce' } },
+  funcionalidades:{
+    'Registro de usuarios':  { p:150000, cat:'Funcionalidades' },
+    'Inicio de sesión':      { p:100000, cat:'Funcionalidades' },
+    'Chat en vivo':          { p:200000, cat:'Funcionalidades' },
+    'Redes sociales':        { p: 50000, cat:'Funcionalidades' },
+    'Notificaciones push':   { p:120000, cat:'Funcionalidades' },
+    'Filtros de búsqueda':   { p:100000, cat:'Funcionalidades' },
+    'Mapa interactivo':      { p: 80000, cat:'Funcionalidades' },
+    'Multiidioma':           { p:200000, cat:'Funcionalidades' },
+    'Wishlist / Favoritos':  { p:100000, cat:'Funcionalidades' },
+    'Comparar productos':    { p: 80000, cat:'Funcionalidades' },
+  },
+  animaciones: {
+    'Sí, vistosas': { p:60000, cat:'Diseño' },
+    'Sí, sutiles':  { p:30000, cat:'Diseño' },
+  },
+  dark_mode: { 'Ambos (toggle)': { p:50000, cat:'Diseño' } },
+  whatsapp: {
+    'Sí, botón flotante':    { p: 30000, cat:'Integraciones' },
+    'Sí, redirigir pedidos': { p: 50000, cat:'Integraciones' },
+  },
+  panel_admin: { 'Sí': { p:200000, cat:'Admin & Seguridad' } },
+  seguridad: {
+    'HTTPS / SSL':         { p: 30000, cat:'Admin & Seguridad' },
+    'Login seguro JWT':    { p: 50000, cat:'Admin & Seguridad' },
+    'Protección de datos': { p: 30000, cat:'Admin & Seguridad' },
+    'Captcha anti-spam':   { p: 40000, cat:'Admin & Seguridad' },
+    'Rate limiting':       { p: 30000, cat:'Admin & Seguridad' },
+  },
+  roles: { 'Sí': { p:100000, cat:'Admin & Seguridad' } },
+  tiene_logo: {
+    'No, necesito uno':    { p:150000, cat:'Extras' },
+  },
+  contenido_listo: {
+    'Parcialmente':        { p: 80000, cat:'Extras' },
+    'No, necesito ayuda':  { p:200000, cat:'Extras' },
+  },
+  categorias:          { 'Sí': { p: 60000, cat:'Catálogo' } },
+  filtros: {
+    'Precio':         { p:30000, cat:'Catálogo' },
+    'Categoría':      { p:20000, cat:'Catálogo' },
+    'Popularidad':    { p:25000, cat:'Catálogo' },
+    'Calificación':   { p:25000, cat:'Catálogo' },
+    'Talla':          { p:25000, cat:'Catálogo' },
+    'Color':          { p:25000, cat:'Catálogo' },
+    'Disponibilidad': { p:20000, cat:'Catálogo' },
+    'Descuento':      { p:20000, cat:'Catálogo' },
+  },
+  productos_destacados: { 'Sí': { p:40000, cat:'Catálogo' } },
+  carrusel:          { 'Sí': { p:100000, cat:'Carrusel' } },
+  carrusel_botones:  { 'Sí': { p: 20000, cat:'Carrusel' } },
+  carrusel_autoplay: { 'Sí': { p: 20000, cat:'Carrusel' } },
+  notificaciones: {
+    'Correo electrónico':       { p: 80000, cat:'Notificaciones' },
+    'WhatsApp':                 { p: 60000, cat:'Notificaciones' },
+    'Notificaciones web push':  { p:120000, cat:'Notificaciones' },
+    'SMS':                      { p:100000, cat:'Notificaciones' },
+  },
+};
+
+const BUDGET_RANGES = {
+  '$500k – $1M COP':   [500000, 1000000],
+  '$1M – $1.5M COP':   [1000000, 1500000],
+  '$1.5M – $2.5M COP': [1500000, 2500000],
+  '$2.5M – $4M COP':   [2500000, 4000000],
+  'Más de $4M COP':    [4000000, Infinity],
+};
+
+// ══ PRICE CALCULATION ════════════════════════════════
+function calcTotal() {
+  const form = document.getElementById('mainForm');
+  const items = [];
+  let total = BASE_PRICE;
+  const seen = new Set(); // prevent double-counting
+
+  for (const fieldName in P) {
+    const fieldPrices = P[fieldName];
+    const inputs = [...form.querySelectorAll(`[name="${fieldName}"]:checked`)];
+    inputs.forEach(inp => {
+      const entry = fieldPrices[inp.value];
+      if (entry && entry.p > 0) {
+        const key = `${fieldName}::${inp.value}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        // Avoid double-counting panel_admin vs funcionalidades "Panel de administración"
+        if (fieldName === 'funcionalidades' && inp.value === 'Panel de administración') return;
+        items.push({ label: inp.value, precio: entry.p, cat: entry.cat });
+        total += entry.p;
+      }
+    });
+  }
+
+  // num_paginas surcharge
+  const numPags = parseInt(document.getElementById('numPaginasInp')?.value) || 0;
+  if (numPags > 6) {
+    const extra = Math.ceil((numPags - 6) / 3) * 100000;
+    items.push({ label: `${numPags} páginas (${numPags-6} extra)`, precio: extra, cat:'Extras' });
+    total += extra;
+  }
+
+  // Urgente surcharge
+  const urgente = form.querySelector('[name="tiempo"][value="Urgente (1-2 semanas)"]:checked');
+  if (urgente) {
+    const surge = Math.round(total * 0.2);
+    items.push({ label: 'Cargo urgencia (20%)', precio: surge, cat:'Extras' });
+    total += surge;
+  }
+
+  return { total, items };
+}
+
+function fmtCOP(n) {
+  return '$' + Math.round(n).toLocaleString('es-CO');
+}
+function fmtShort(n) {
+  if (n >= 1000000) return `$${(n/1000000).toFixed(1).replace(/\.0$/,'')}M`;
+  return `$${(n/1000).toFixed(0)}k`;
+}
+
+// ══ LIVE UPDATE ══════════════════════════════════════
+function updateLive() {
+  const { total, items } = calcTotal();
+  document.getElementById('pfTotal').textContent = fmtCOP(total);
+  document.getElementById('pfItemsCount').textContent = items.length ? `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}` : 'Base del proyecto';
+
+  const presupuestoEl = document.querySelector('[name="presupuesto"]:checked');
+  if (presupuestoEl) {
+    document.getElementById('pfBudgetWrap').style.display = '';
+    document.getElementById('pfBudget').textContent = presupuestoEl.value.replace(' COP','');
+    const range = BUDGET_RANGES[presupuestoEl.value];
+    const col = !range ? 'var(--muted)' : total <= range[1] ? 'var(--green)' : 'var(--red)';
+    document.getElementById('pfTotal').style.color = col;
+  }
+
+  // Store in hidden inputs for submission
+  document.getElementById('hPrecio').value   = total;
+  document.getElementById('hDesglose').value = JSON.stringify(items);
+}
+
+// ══ SHOW CALC MODAL ══════════════════════════════════
+function showCalc() {
+  const { total, items } = calcTotal();
+
+  // Group by category
+  const cats = {};
+  items.forEach(i => {
+    if (!cats[i.cat]) cats[i.cat] = [];
+    cats[i.cat].push(i);
+  });
+
+  let html = `<div class="calc-row base"><div class="calc-row-label">⚙️ Configuración base del proyecto</div><div class="calc-row-price">${fmtCOP(BASE_PRICE)}</div></div>`;
+
+  if (!items.length) {
+    html += '<div class="calc-empty" style="padding:20px 0">Selecciona funciones en el formulario para ver el desglose detallado.</div>';
+  } else {
+    for (const cat in cats) {
+      html += `<div class="calc-category">— ${cat} —</div>`;
+      cats[cat].forEach(i => {
+        html += `<div class="calc-row"><div class="calc-row-label">${i.label}</div><div class="calc-row-price">${fmtCOP(i.precio)}</div></div>`;
+      });
+    }
+  }
+
+  document.getElementById('calcBody').innerHTML = html;
+  document.getElementById('calcTotalAmount').textContent = fmtCOP(total);
+
+  // Budget status
+  const presEl = document.querySelector('[name="presupuesto"]:checked');
+  let statusHtml = '';
+  if (presEl) {
+    const range = BUDGET_RANGES[presEl.value];
+    if (range) {
+      const [min, max] = range;
+      if (total < min) {
+        statusHtml = `<div class="budget-status ok">✅ Tu estimado (${fmtCOP(total)}) está <strong>por debajo</strong> de tu presupuesto de ${presEl.value}. Puedes añadir más funciones.</div>`;
+      } else if (total <= max) {
+        statusHtml = `<div class="budget-status ok">✅ Tu estimado (${fmtCOP(total)}) está <strong>dentro</strong> de tu presupuesto de ${presEl.value}.</div>`;
+      } else if (total <= max * 1.2) {
+        statusHtml = `<div class="budget-status near">⚠️ Tu estimado (${fmtCOP(total)}) está <strong>ligeramente por encima</strong> de tu presupuesto de ${presEl.value}. Considera reducir algunas funciones.</div>`;
+      } else {
+        statusHtml = `<div class="budget-status over">🔴 Tu estimado (${fmtCOP(total)}) <strong>supera</strong> tu presupuesto de ${presEl.value}. Revisa las funciones seleccionadas.</div>`;
+      }
+    }
+  } else {
+    statusHtml = `<div class="budget-status none">💡 Selecciona un presupuesto en la Sección 8 para ver si estás en rango.</div>`;
+  }
+  document.getElementById('budgetStatus').innerHTML = statusHtml;
+
+  document.getElementById('calcOverlay').classList.add('open');
+}
+
+function closeCalcOverlay(e) {
+  if (e.target === document.getElementById('calcOverlay'))
+    document.getElementById('calcOverlay').classList.remove('open');
+}
+
+// ══ CHECK ITEMS ══════════════════════════════════════
+function initCheckItems(root) {
+  (root || document).querySelectorAll('.check-item').forEach(item => {
+    const inp = item.querySelector('input');
+    if (!inp) return;
+    const update = () => {
+      if (inp.type === 'checkbox') {
+        item.classList.toggle('checked', inp.checked);
+      } else {
+        document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r => r.closest('.check-item')?.classList.remove('checked'));
+        if (inp.checked) item.classList.add('checked');
+      }
+      updateLive();
+    };
+    inp.addEventListener('change', update);
+    update();
+  });
+}
+initCheckItems();
+document.getElementById('numPaginasInp').addEventListener('input', updateLive);
+
+// ══ PROGRESS ═════════════════════════════════════════
+const fill  = document.getElementById('progressFill');
+const pLbl  = document.getElementById('progressLabel');
+const sects = document.querySelectorAll('.section');
+document.getElementById('mainForm').addEventListener('input', () => {
+  let done = 0;
+  sects.forEach(s => {
+    const inps = s.querySelectorAll('input,textarea,select');
+    if ([...inps].some(i => (i.type==='checkbox'||i.type==='radio') ? i.checked : i.value.trim())) done++;
+  });
+  const pct = Math.round(done/sects.length*100);
+  fill.style.width = pct + '%';
+  pLbl.textContent = pct + '% completado';
+});
+
+// ══ FILE INPUTS ══════════════════════════════════════
+[['boceto-input','boceto-names'],['logo-input','logo-names']].forEach(([id,nid]) => {
+  const inp=document.getElementById(id), nm=document.getElementById(nid);
+  if(inp&&nm) inp.addEventListener('change', ()=>{ nm.textContent=[...inp.files].map(f=>f.name).join(', '); });
+});
+
+// ══ TOAST ════════════════════════════════════════════
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = (type==='success'?'✅ ':'❌ ') + msg;
+  t.className = `toast ${type} show`;
+  setTimeout(()=>t.className='toast', 4500);
+}
+
+// ══ CUSTOM QUESTIONS ═════════════════════════════════
+let customQuestions = [];
+async function loadCustomQuestions() {
+  try {
+    const r = await fetch('/api/preguntas');
+    customQuestions = await r.json();
+    if (!customQuestions.length) return;
+    document.getElementById('extraSection').style.display = '';
+    const container = document.getElementById('extraQuestionsContainer');
+    customQuestions.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'field';
+      const lbl = `<label>${q.pregunta}${q.requerido?' <span class="req">*</span>':''}<span class="hint">Sección: ${q.seccion}</span></label>`;
+      let inp = '';
+      if (q.tipo==='text') {
+        inp = `<input type="text" name="custom_${q.id}" ${q.requerido?'required':''} placeholder="Tu respuesta…"/>`;
+      } else if (q.tipo==='textarea') {
+        inp = `<textarea name="custom_${q.id}" ${q.requerido?'required':''} placeholder="Tu respuesta…" rows="3"></textarea>`;
+      } else if ((q.tipo==='radio'||q.tipo==='checkbox') && q.opciones) {
+        const opts = q.opciones.split(',').map(o=>o.trim()).filter(Boolean);
+        inp = `<div class="check-grid">${opts.map(o=>`<label class="check-item"><input type="${q.tipo}" name="custom_${q.id}" value="${o}"/> ${o}</label>`).join('')}</div>`;
+      }
+      div.innerHTML = lbl + inp;
+      container.appendChild(div);
+    });
+    initCheckItems(document.getElementById('extraQuestionsContainer'));
+  } catch(e) { console.log('Sin preguntas custom:', e.message); }
+}
+loadCustomQuestions();
+
+// ══ SUBMIT ════════════════════════════════════════════
+async function submitForm() {
+  const form  = document.getElementById('mainForm');
+  const btn   = document.getElementById('submitBtn');
+  const nombre = form.querySelector('[name="nombre_persona"]').value.trim();
+  const negocio = form.querySelector('[name="nombre_negocio"]').value.trim();
+  const correo  = form.querySelector('[name="correo"]').value.trim();
+  if (!nombre || !negocio || !correo) {
+    showToast('Tu nombre, negocio y correo son obligatorios.', 'error');
+    return;
+  }
+
+  // Actualizar precio en hidden inputs antes de enviar
+  updateLive();
+
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const fd = new FormData(form);
+  const data = {};
+  for (const [key, val] of fd.entries()) {
+    if (data[key]) {
+      data[key] = Array.isArray(data[key]) ? [...data[key], val] : [data[key], val];
+    } else { data[key] = val; }
+  }
+
+  // Collect custom answers separately
+  const respuestas_custom = {};
+  for (const key in data) {
+    if (key.startsWith('custom_')) {
+      respuestas_custom[key] = Array.isArray(data[key]) ? data[key].join(', ') : data[key];
+      delete data[key];
+    } else if (Array.isArray(data[key])) {
+      data[key] = data[key].join(', ');
+    }
+  }
+  data.respuestas_custom = respuestas_custom;
+
+  try {
+    const res  = await fetch('/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    const json = await res.json();
+    if (res.ok) {
+      showToast('¡Brief enviado con éxito! Te contactaremos pronto. 🎉', 'success');
+      form.reset();
+      document.querySelectorAll('.check-item').forEach(i=>i.classList.remove('checked'));
+      fill.style.width='0%'; pLbl.textContent='0% completado';
+      updateLive();
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else { showToast('Error: ' + (json.error || 'inténtalo de nuevo'), 'error'); }
+  } catch { showToast('No se pudo conectar con el servidor', 'error'); }
+  finally { btn.disabled=false; btn.textContent='Enviar →'; }
+}
+
+// Init live counter
+updateLive();
+</script>
+</body>
+</html>
