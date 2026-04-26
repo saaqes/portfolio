@@ -249,19 +249,19 @@
       <span class="hint">El tipo de negocio determina el descuento en tu cotización</span>
     </label>
     <div class="biz-grid" id="bizGrid">
-      <div class="biz-card" data-type="Personal" data-discount="30" onclick="selectBiz(this)">
+      <div class="biz-card" data-type="Personal" data-discount="20" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Personal"/>
         <div class="biz-icon">🧑‍💻</div>
         <div class="biz-name">Personal</div>
         <div class="biz-desc">Freelancer, marca personal, proyecto propio o portafolio individual</div>
       </div>
-      <div class="biz-card" data-type="Tienda / PYME" data-discount="25" onclick="selectBiz(this)">
+      <div class="biz-card" data-type="Tienda / PYME" data-discount="13" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Tienda / PYME"/>
         <div class="biz-icon">🛒</div>
         <div class="biz-name">Tienda / PYME</div>
         <div class="biz-desc">Tienda online, pequeño negocio, emprendimiento o PYME local</div>
       </div>
-      <div class="biz-card" data-type="Empresa" data-discount="10" onclick="selectBiz(this)">
+      <div class="biz-card" data-type="Empresa" data-discount="0" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Empresa"/>
         <div class="biz-icon">🏢</div>
         <div class="biz-name">Empresa</div>
@@ -1051,9 +1051,9 @@ function calcTotal() {
   let surcharge = 0;
   if (urgente) { surcharge = Math.round(subtotal * .2); subtotal += surcharge; }
 
-  // Descuento por tipo de negocio
+  // Descuento por tipo de negocio (currentDiscountPct es ej. 20, no 0.20)
   let discount = 0;
-  if (currentDiscountPct > 0) discount = Math.round(subtotal * currentDiscountPct);
+  if (currentDiscountPct > 0) discount = Math.round(subtotal * (currentDiscountPct / 100));
   const total = subtotal - discount;
 
   return { items, subtotal, discount, total, surcharge };
