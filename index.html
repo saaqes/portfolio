@@ -118,7 +118,6 @@
     .biz-card input{display:none}
     .biz-icon{font-size:1.8rem;margin-bottom:6px}
     .biz-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;margin-bottom:4px}
-    .biz-discount{display:inline-block;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:var(--green);font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:6px}
     .biz-desc{font-size:.7rem;color:var(--muted);line-height:1.4}
 
     /* ── FLOATING PRICE BAR ── */
@@ -250,25 +249,22 @@
       <span class="hint">El tipo de negocio determina el descuento en tu cotización</span>
     </label>
     <div class="biz-grid" id="bizGrid">
-      <div class="biz-card" data-type="Personal" data-discount="45" onclick="selectBiz(this)">
+      <div class="biz-card" data-type="Personal" data-discount="30" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Personal"/>
         <div class="biz-icon">🧑‍💻</div>
         <div class="biz-name">Personal</div>
-        <div class="biz-discount">45% descuento</div>
         <div class="biz-desc">Freelancer, marca personal, proyecto propio o portafolio individual</div>
       </div>
       <div class="biz-card" data-type="Tienda / PYME" data-discount="25" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Tienda / PYME"/>
         <div class="biz-icon">🛒</div>
         <div class="biz-name">Tienda / PYME</div>
-        <div class="biz-discount">25% descuento</div>
         <div class="biz-desc">Tienda online, pequeño negocio, emprendimiento o PYME local</div>
       </div>
       <div class="biz-card" data-type="Empresa" data-discount="10" onclick="selectBiz(this)">
         <input type="radio" name="tipo_negocio_sel" value="Empresa"/>
         <div class="biz-icon">🏢</div>
         <div class="biz-name">Empresa</div>
-        <div class="biz-discount">10% descuento</div>
         <div class="biz-desc">Empresa mediana o grande, corporación, institución o entidad formal</div>
       </div>
     </div>
@@ -1066,30 +1062,20 @@ function calcTotal() {
 function fmtCOP(n) { return '$' + Math.round(n).toLocaleString('es-CO'); }
 
 function updateLive() {
-  const { total, subtotal, discount, items } = calcTotal();
+  const { subtotal, items } = calcTotal();
   const el = document.getElementById('pfTotal');
   const elOrig = document.getElementById('pfOriginal');
   const elTag = document.getElementById('pfDiscountTag');
-  el.textContent = fmtCOP(total);
-  if (discount > 0) {
-    elOrig.style.display = '';
-    elOrig.textContent = fmtCOP(subtotal);
-    elTag.style.display = '';
-    elTag.textContent = `-${currentDiscountPct}%`;
-  } else {
-    elOrig.style.display = 'none';
-    elTag.style.display = 'none';
-  }
-  document.getElementById('pfCount').textContent = items.length ? `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}` : 'Base del proyecto';
-  document.getElementById('hPrecio').value = total;
+  // Siempre muestra el subtotal sin descuento hasta que el usuario calcule
+  el.textContent = fmtCOP(subtotal);
+  el.style.color = 'var(--green)';
+  elOrig.style.display = 'none';
+  elTag.style.display = 'none';
+  document.getElementById('pfCount').textContent = items.length
+    ? `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}`
+    : 'Base del proyecto';
+  document.getElementById('hPrecio').value = calcTotal().total; // guarda el total CON descuento
   document.getElementById('hDesglose').value = JSON.stringify(items);
-
-  // Budget color
-  const presEl = document.querySelector('[name="presupuesto"]:checked');
-  if (presEl) {
-    const range = BUDGET_RANGES[presEl.value];
-    el.style.color = !range ? 'var(--green)' : total <= range[1] ? 'var(--green)' : 'var(--red)';
-  }
 }
 
 function showCalc() {
@@ -1104,8 +1090,7 @@ function showCalc() {
     for (const cat in cats) {
       body += `<div class="calc-cat">— ${cat} —</div>`;
       cats[cat].forEach(item => {
-        const removeKey = `${item.key}::${item.value}`;
-        body += `<div class="calc-row" id="crow-${CSS.escape(removeKey)}">
+        body += `<div class="calc-row">
           <div class="calc-row-label">${item.label}</div>
           <div class="calc-row-price">${fmtCOP(item.precio)}</div>
           <button class="btn-remove" title="Quitar" onclick="removeItem('${item.key}','${item.value.replace(/'/g,"\\'")}')">✕</button>
@@ -1115,28 +1100,45 @@ function showCalc() {
   }
   document.getElementById('calcBody').innerHTML = body;
 
-  let totalsHtml = '';
+  // Totals — descuento solo visible aquí
+  let totalsHtml = `<div class="calc-total-row"><div class="calc-total-label">Subtotal</div><div class="calc-total-val">${fmtCOP(subtotal + discount)}</div></div>`;
+  if (surcharge) totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Cargo urgencia (+20%)</div><div class="calc-total-val" style="color:var(--yellow)">+${fmtCOP(surcharge)}</div></div>`;
   if (discount > 0) {
-    totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Subtotal</div><div class="calc-total-val">${fmtCOP(subtotal + discount)}</div></div>`;
-    if (surcharge) totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Cargo urgencia (+20%)</div><div class="calc-total-val" style="color:var(--yellow)">+${fmtCOP(surcharge)}</div></div>`;
-    totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Descuento ${currentBizType} (-${currentDiscountPct}%)</div><div class="calc-total-val" style="color:var(--green)">-${fmtCOP(discount)}</div></div>`;
+    totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Descuento ${currentBizType}</div><div class="calc-total-val" style="color:var(--green)">-${fmtCOP(discount)}</div></div>`;
   }
-  totalsHtml += `<div class="calc-final-row"><div class="calc-final-label">Total estimado</div><div class="calc-final-val">${fmtCOP(total)}</div></div>`;
+  totalsHtml += `<div class="calc-final-row"><div class="calc-final-label">Total a pagar</div><div class="calc-final-val">${fmtCOP(total)}</div></div>`;
   document.getElementById('calcTotals').innerHTML = totalsHtml;
 
+  // Actualizar barra flotante con precio final + descuento visible
+  const pfEl   = document.getElementById('pfTotal');
+  const pfOrig = document.getElementById('pfOriginal');
+  const pfTag  = document.getElementById('pfDiscountTag');
+  pfEl.textContent = fmtCOP(total);
+  if (discount > 0) {
+    pfOrig.style.display = '';
+    pfOrig.textContent   = fmtCOP(subtotal + discount);
+    pfTag.style.display  = '';
+    pfTag.textContent    = `Descuento aplicado`;
+    pfEl.style.color     = 'var(--green)';
+  }
+
+  // Budget status
   const presEl = document.querySelector('[name="presupuesto"]:checked');
-  let statusHtml = '<div class="budget-status bs-none">💡 Selecciona un presupuesto en la Sección 8 para ver si estás en rango.</div>';
+  let statusHtml = '<div class="budget-status bs-none">💡 Selecciona un presupuesto para ver si estás en rango.</div>';
   if (presEl) {
     const range = BUDGET_RANGES[presEl.value];
     if (range) {
-      if (total < range[0]) statusHtml = `<div class="budget-status bs-ok">✅ Estás <strong>por debajo</strong> de tu presupuesto. Puedes añadir más funciones.</div>`;
+      if (total < range[0])      statusHtml = `<div class="budget-status bs-ok">✅ Estás <strong>por debajo</strong> de tu presupuesto. Puedes añadir más funciones.</div>`;
       else if (total <= range[1]) statusHtml = `<div class="budget-status bs-ok">✅ Tu estimado encaja <strong>perfectamente</strong> dentro de tu presupuesto.</div>`;
       else if (total <= range[1]*1.2) statusHtml = `<div class="budget-status bs-near">⚠️ Estás <strong>ligeramente encima</strong>. Considera quitar alguna función.</div>`;
       else statusHtml = `<div class="budget-status bs-over">🔴 Tu estimado <strong>supera</strong> tu presupuesto. Usa ✕ para quitar funciones.</div>`;
     }
   }
   document.getElementById('budgetStatus').innerHTML = statusHtml;
-  document.getElementById('calcSubhead').textContent = `${items.length} función${items.length!==1?'es':''} — ${currentBizType ? `Descuento ${currentDiscountPct}%` : 'Sin tipo de negocio seleccionado'}`;
+  document.getElementById('calcSubhead').textContent = discount > 0
+    ? `Con descuento para ${currentBizType} aplicado`
+    : `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}`;
+
   document.getElementById('calcOverlay').classList.add('open');
 }
 
