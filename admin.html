@@ -202,6 +202,10 @@
         </button>
       </nav>
       <div class="aside-footer">
+        <button class="btn-logout" id="btnPush" onclick="togglePush()" style="margin-bottom:6px">
+          <span id="pushIcon">🔕</span>
+          <span id="pushLabel">Activar notif.</span>
+        </button>
         <button class="btn-logout" onclick="doLogout()">
           <span>↩</span>
           <span>Cerrar sesión</span>
@@ -371,6 +375,7 @@ function showApp() {
   document.getElementById('app').style.display = 'block';
   loadBriefs();
   loadQuestions();
+  initPush();
 }
 function doLogout() {
   localStorage.removeItem('brief_admin_token');
@@ -754,6 +759,71 @@ async function deleteQuestion(id) {
   } catch { toast('Error al eliminar', 'error'); }
 }
 
+// ── PUSH NOTIFICATIONS ───────────────────────────────
+let swRegistration = null;
+let pushSubscription = null;
+
+async function initPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    swRegistration = await navigator.serviceWorker.register('/sw.js');
+    pushSubscription = await swRegistration.pushManager.getSubscription();
+    updatePushBtn();
+  } catch(e) { console.log('SW:', e); }
+}
+
+function updatePushBtn() {
+  const icon = document.getElementById('pushIcon');
+  const label = document.getElementById('pushLabel');
+  if (!icon) return;
+  if (pushSubscription) {
+    icon.textContent = '🔔';
+    label.textContent = 'Notif. activas';
+    document.getElementById('btnPush').style.color = 'var(--green)';
+  } else {
+    icon.textContent = '🔕';
+    label.textContent = 'Activar notif.';
+    document.getElementById('btnPush').style.color = 'var(--muted)';
+  }
+}
+
+async function togglePush() {
+  if (!swRegistration) { toast('Tu navegador no soporta push', 'error'); return; }
+  if (pushSubscription) {
+    // Desuscribir
+    await pushSubscription.unsubscribe();
+    await fetch('/api/push/unsubscribe', { method:'DELETE', headers:{...apiHeaders(),'Content-Type':'application/json'}, body:JSON.stringify({endpoint:pushSubscription.endpoint}) });
+    pushSubscription = null;
+    updatePushBtn();
+    toast('Notificaciones desactivadas', 'success');
+  } else {
+    // Suscribir
+    const r = await fetch('/api/vapid-public-key');
+    const { key } = await r.json();
+    if (!key) { toast('Push no configurado en el servidor', 'error'); return; }
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { toast('Permiso denegado', 'error'); return; }
+    try {
+      pushSubscription = await swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(key)
+      });
+      await fetch('/api/push/subscribe', { method:'POST', headers:{...apiHeaders(),'Content-Type':'application/json'}, body:JSON.stringify(pushSubscription.toJSON()) });
+      updatePushBtn();
+      toast('🔔 Notificaciones activadas', 'success');
+    } catch(e) { toast('Error al suscribir: '+e.message, 'error'); }
+  }
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
+
+// Init push after login
+const _origShowApp = showApp;
 // ── UTILS ─────────────────────────────────────────────
 function esc(s) {
   if (s == null) return '';
