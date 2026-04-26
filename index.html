@@ -829,7 +829,6 @@
 <script>
 // ══════ PRICING TABLE ════════════════════════════════
 const BASE = 150000;
-const DISCOUNTS = { 'Personal': .45, 'Tienda / PYME': .25, 'Empresa': .10 };
 
 const P = {
   objetivo: {
@@ -983,19 +982,6 @@ function updateLive() {
   const { total, items } = calcTotal();
   document.getElementById('hPrecio').value = total;
   document.getElementById('hDesglose').value = JSON.stringify(items);
-} = calcTotal();
-  const el =
-  const elOrig =
-  const elTag =
-  // Siempre muestra el subtotal sin descuento hasta que el usuario calcule
-  el.textContent = fmtCOP(subtotal);
-  el.style.color = 'var(--green)';
-  elOrig.style.display = 'none';
-  elTag.style.display = 'none';
-    ? `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}`
-    : 'Base del proyecto';
-  document.getElementById('hPrecio').value = calcTotal().total; // guarda el total CON descuento
-  document.getElementById('hDesglose').value = JSON.stringify(items);
 }
 
 
@@ -1044,7 +1030,7 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = pct+'%';
   document.getElementById('progressLabel').textContent = pct+'% completado';
 }
-document.getElementById('mainForm').addEventListener('input', updateProgress);
+document.getElementById('mainForm').addEventListener('input', () => { updateLive(); updateProgress(); });
 
 // ══════ FILE INPUTS ══════════════════════════════════
 [['boceto-input','boceto-names'],['logo-input','logo-names']].forEach(([id,nid]) => {
@@ -1175,6 +1161,8 @@ window.addEventListener('appinstalled', () => {
 });
 
 // Init
+updateLive();
+updateProgress();
 </script>
 </body>
 </html>
