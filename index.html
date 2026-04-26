@@ -85,9 +85,9 @@
 
     /* ── CHECK GRID ── */
     .check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:6px}
-    .check-item{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;-webkit-tap-highlight-color:transparent}
+    .check-item{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     .check-item-row{display:flex;align-items:center;gap:8px}
-    .check-item input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+    .check-item input{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;pointer-events:none}
     .check-item-label{font-size:.82rem;flex:1}
     .check-item .ptag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);white-space:nowrap}
     .check-item:hover{border-color:var(--accent);background:rgba(124,106,255,.06)}
