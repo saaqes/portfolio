@@ -120,54 +120,6 @@
     .biz-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;margin-bottom:4px}
     .biz-desc{font-size:.7rem;color:var(--muted);line-height:1.4}
 
-    /* ── FLOATING PRICE BAR ── */
-    .price-float{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(8,8,15,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .pf-prices{display:flex;flex-direction:column;gap:1px}
-    .pf-original{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);text-decoration:line-through}
-    .pf-total{font-family:'DM Mono',monospace;font-size:1.05rem;font-weight:500;color:var(--green)}
-    .pf-discount-tag{display:inline-block;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:var(--green);font-size:.65rem;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px}
-    .pf-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .pf-buttons{display:flex;gap:7px;flex-shrink:0}
-    .btn-calc{background:rgba(52,211,153,.15);border:1.5px solid rgba(52,211,153,.4);color:var(--green);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;padding:9px 14px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:background .2s}
-    .btn-calc:hover{background:rgba(52,211,153,.25)}
-    .btn-submit-float{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;padding:9px 16px;border:none;border-radius:8px;cursor:pointer;transition:opacity .2s;white-space:nowrap}
-    .btn-submit-float:disabled{opacity:.4;cursor:not-allowed}
-
-    /* ── CALC MODAL ── */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-end;justify-content:center;padding:0}
-    .overlay.open{display:flex}
-    .calc-sheet{background:var(--card);border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;animation:slideUp .3s ease}
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .sheet-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0}
-    .calc-head{padding:14px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .calc-head h2{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800}
-    .calc-head p{font-size:.74rem;color:var(--muted);margin-top:2px}
-    .btn-xsheet{background:var(--surface);border:1px solid var(--border);color:var(--text);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:.85rem;display:grid;place-items:center;flex-shrink:0}
-    .calc-scroll{overflow-y:auto;flex:1;padding:0 20px}
-    .calc-cat{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:14px 0 6px}
-    .calc-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(37,37,56,.5)}
-    .calc-row-label{flex:1;font-size:.82rem}
-    .calc-row-price{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--green);white-space:nowrap}
-    .calc-row-base .calc-row-label{color:var(--muted);font-style:italic;font-size:.78rem}
-    .btn-remove{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:var(--red);width:22px;height:22px;border-radius:5px;cursor:pointer;font-size:.75rem;display:grid;place-items:center;flex-shrink:0;transition:background .15s}
-    .btn-remove:hover{background:rgba(248,113,113,.25)}
-    .calc-empty-msg{text-align:center;padding:28px 0;color:var(--muted);font-size:.85rem}
-    .calc-foot{border-top:1px solid var(--border);padding:14px 20px}
-    .calc-totals{margin-bottom:10px}
-    .calc-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-    .calc-total-label{font-size:.82rem;color:var(--muted)}
-    .calc-total-val{font-family:'DM Mono',monospace;font-size:.88rem}
-    .calc-final-row{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--border)}
-    .calc-final-label{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800}
-    .calc-final-val{font-family:'DM Mono',monospace;font-size:1.3rem;color:var(--green);font-weight:500}
-    .budget-status{padding:9px 14px;border-radius:8px;font-size:.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-    .bs-ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:var(--green)}
-    .bs-near{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:var(--yellow)}
-    .bs-over{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red)}
-    .bs-none{background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.3);color:var(--accent2)}
-    .calc-note{font-size:.7rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
-    .btn-close-sheet{width:100%;padding:11px;background:var(--surface);border:1.5px solid var(--accent);border-radius:8px;color:var(--accent2);font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer}
-
     /* ── TOAST ── */
     .toast{position:fixed;bottom:80px;right:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:.83rem;box-shadow:0 16px 40px rgba(0,0,0,.5);transform:translateY(130%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;max-width:280px}
     .toast.show{transform:translateY(0)}
@@ -187,12 +139,8 @@
       .check-item{padding:9px 10px}
       .check-item-label{font-size:.78rem}
       .ptag{font-size:.62rem}
-      .price-float{flex-wrap:wrap;gap:6px;padding:8px 12px}
-      .pf-buttons{width:100%;justify-content:stretch}
-      .btn-calc,.btn-submit-float{flex:1;text-align:center;font-size:.72rem;padding:9px 10px}
       .container{padding:24px 12px 60px}
       .card{padding:14px}
-      .calc-sheet{border-radius:14px 14px 0 0}
       .color-row{flex-direction:column}
       .color-swatch{min-width:unset;width:100%}
     }
@@ -206,6 +154,11 @@
       .check-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
       .container{padding:28px 16px 60px}
     }
+
+    /* ── SUBMIT ── */
+    .btn-submit-main{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.07em;padding:14px 44px;border:none;border-radius:99px;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 8px 28px rgba(124,106,255,.3)}
+    .btn-submit-main:hover{opacity:.88;transform:translateY(-2px)}
+    .btn-submit-main:disabled{opacity:.4;cursor:not-allowed;transform:none}
   </style>
 </head>
 <body>
@@ -303,23 +256,23 @@
       <label class="lbl">¿Cuál es el objetivo principal? <span class="req">*</span></label>
       <div class="check-grid">
         <div class="check-item" onclick="selectCheck(this)">
-          <div class="check-item-row"><input type="radio" name="objetivo" value="Vender productos"/><span class="check-item-label">Vender productos</span><span class="ptag">+$230k</span></div>
+          <div class="check-item-row"><input type="radio" name="objetivo" value="Vender productos"/><span class="check-item-label">Vender productos</span></div>
           <div class="opt-desc">Tienda online con catálogo, carrito y proceso de compra. Ideal para e-commerce.</div>
         </div>
         <div class="check-item" onclick="selectCheck(this)">
-          <div class="check-item-row"><input type="radio" name="objetivo" value="Mostrar portafolio"/><span class="check-item-label">Portafolio</span><span class="ptag">+$110k</span></div>
+          <div class="check-item-row"><input type="radio" name="objetivo" value="Mostrar portafolio"/><span class="check-item-label">Portafolio</span></div>
           <div class="opt-desc">Muestra tu trabajo, proyectos o servicios de forma visual y profesional.</div>
         </div>
         <div class="check-item" onclick="selectCheck(this)">
-          <div class="check-item-row"><input type="radio" name="objetivo" value="Blog / contenido"/><span class="check-item-label">Blog</span><span class="ptag">+$90k</span></div>
+          <div class="check-item-row"><input type="radio" name="objetivo" value="Blog / contenido"/><span class="check-item-label">Blog</span></div>
           <div class="opt-desc">Publica artículos, tutoriales o noticias. Bueno para posicionamiento SEO.</div>
         </div>
         <div class="check-item" onclick="selectCheck(this)">
-          <div class="check-item-row"><input type="radio" name="objetivo" value="Página informativa"/><span class="check-item-label">Página informativa</span><span class="ptag">+$60k</span></div>
+          <div class="check-item-row"><input type="radio" name="objetivo" value="Página informativa"/><span class="check-item-label">Página informativa</span></div>
           <div class="opt-desc">Presenta tu negocio, servicios y contacto. La opción más simple y económica.</div>
         </div>
         <div class="check-item" onclick="selectCheck(this)">
-          <div class="check-item-row"><input type="radio" name="objetivo" value="Otro"/><span class="check-item-label">Otro</span><span class="ptag">+$80k</span></div>
+          <div class="check-item-row"><input type="radio" name="objetivo" value="Otro"/><span class="check-item-label">Otro</span></div>
           <div class="opt-desc">Cualquier otro tipo de página web personalizada según tus necesidades.</div>
         </div>
       </div>
@@ -402,7 +355,7 @@
       <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="dark_mode" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Solo modo oscuro, fondo negro o muy oscuro.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="dark_mode" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Solo modo claro, fondo blanco o gris claro.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="dark_mode" value="Ambos (toggle)"/><span class="check-item-label">Ambos</span><span class="ptag">+$40k</span></div><div class="opt-desc">Toggle para que el usuario cambie entre modo claro y oscuro.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="dark_mode" value="Ambos (toggle)"/><span class="check-item-label">Ambos</span></div><div class="opt-desc">Toggle para que el usuario cambie entre modo claro y oscuro.</div></div>
       </div>
     </div>
     <div class="field">
@@ -435,17 +388,17 @@
       <label class="lbl">¿Qué secciones necesitas?</label>
       <div class="check-grid">
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Inicio / Hero"/><span class="check-item-label">Inicio / Hero</span></div><div class="opt-desc">Banner principal de bienvenida. La primera impresión de tu página.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Productos"/><span class="check-item-label">Productos</span><span class="ptag">+$70k</span></div><div class="opt-desc">Catálogo con cards de productos, imágenes, precios y detalles.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Servicios"/><span class="check-item-label">Servicios</span><span class="ptag">+$50k</span></div><div class="opt-desc">Lista o cards de servicios ofrecidos con descripción y precio.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Sobre nosotros"/><span class="check-item-label">Sobre nosotros</span><span class="ptag">+$35k</span></div><div class="opt-desc">Historia, misión, visión y valores de tu negocio o marca.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Contacto"/><span class="check-item-label">Contacto</span><span class="ptag">+$40k</span></div><div class="opt-desc">Formulario de contacto, mapa, teléfono y redes sociales.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Blog"/><span class="check-item-label">Blog</span><span class="ptag">+$130k</span></div><div class="opt-desc">Sección de artículos, noticias o tutoriales. Mejora el SEO.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Reseñas / Opiniones"/><span class="check-item-label">Reseñas</span><span class="ptag">+$65k</span></div><div class="opt-desc">Testimonios y valoraciones de clientes. Genera confianza.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Galería"/><span class="check-item-label">Galería</span><span class="ptag">+$55k</span></div><div class="opt-desc">Portafolio visual con grid de imágenes o trabajos realizados.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="FAQ"/><span class="check-item-label">FAQ</span><span class="ptag">+$35k</span></div><div class="opt-desc">Preguntas frecuentes en acordeón. Reduce consultas repetidas.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Equipo"/><span class="check-item-label">Equipo</span><span class="ptag">+$40k</span></div><div class="opt-desc">Foto y perfil de cada integrante del equipo o empresa.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Ubicación / Mapa"/><span class="check-item-label">Ubicación</span><span class="ptag">+$45k</span></div><div class="opt-desc">Mapa de Google Maps con tu dirección integrado en la página.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Newsletter"/><span class="check-item-label">Newsletter</span><span class="ptag">+$65k</span></div><div class="opt-desc">Formulario para capturar correos y enviar boletines.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Productos"/><span class="check-item-label">Productos</span></div><div class="opt-desc">Catálogo con cards de productos, imágenes, precios y detalles.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Servicios"/><span class="check-item-label">Servicios</span></div><div class="opt-desc">Lista o cards de servicios ofrecidos con descripción y precio.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Sobre nosotros"/><span class="check-item-label">Sobre nosotros</span></div><div class="opt-desc">Historia, misión, visión y valores de tu negocio o marca.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Contacto"/><span class="check-item-label">Contacto</span></div><div class="opt-desc">Formulario de contacto, mapa, teléfono y redes sociales.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Blog"/><span class="check-item-label">Blog</span></div><div class="opt-desc">Sección de artículos, noticias o tutoriales. Mejora el SEO.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Reseñas / Opiniones"/><span class="check-item-label">Reseñas</span></div><div class="opt-desc">Testimonios y valoraciones de clientes. Genera confianza.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Galería"/><span class="check-item-label">Galería</span></div><div class="opt-desc">Portafolio visual con grid de imágenes o trabajos realizados.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="FAQ"/><span class="check-item-label">FAQ</span></div><div class="opt-desc">Preguntas frecuentes en acordeón. Reduce consultas repetidas.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Equipo"/><span class="check-item-label">Equipo</span></div><div class="opt-desc">Foto y perfil de cada integrante del equipo o empresa.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Ubicación / Mapa"/><span class="check-item-label">Ubicación</span></div><div class="opt-desc">Mapa de Google Maps con tu dirección integrado en la página.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="secciones" value="Newsletter"/><span class="check-item-label">Newsletter</span></div><div class="opt-desc">Formulario para capturar correos y enviar boletines.</div></div>
       </div>
       <input type="text" name="secciones_otras" placeholder="Otras secciones…" style="margin-top:8px"/>
     </div>
@@ -493,7 +446,7 @@
     <div class="field">
       <label class="lbl">¿Carrito de compras?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrito" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$120k</span></div><div class="opt-desc">Carrito completo con agregar, quitar productos y total. Requiere backend.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrito" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Carrito completo con agregar, quitar productos y total. Requiere backend.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrito" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin carrito. Los pedidos se toman por WhatsApp o formulario.</div></div>
       </div>
     </div>
@@ -501,9 +454,9 @@
       <label class="lbl">Proceso de compra</label>
       <div class="check-grid">
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Añadir al carrito"/><span class="check-item-label">Añadir al carrito</span></div><div class="opt-desc">El cliente acumula productos en el carrito y paga al final.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Compra directa"/><span class="check-item-label">Compra directa</span><span class="ptag">+$40k</span></div><div class="opt-desc">Botón "Comprar ahora" que lleva directamente al pago. Más rápido.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Redirigir a WhatsApp"/><span class="check-item-label">Redirigir WhatsApp</span><span class="ptag">+$25k</span></div><div class="opt-desc">El pedido se envía como mensaje de WhatsApp con detalles del producto.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Formulario de pedido"/><span class="check-item-label">Formulario pedido</span><span class="ptag">+$35k</span></div><div class="opt-desc">El cliente llena un formulario con sus datos y el pedido llega por correo.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Compra directa"/><span class="check-item-label">Compra directa</span></div><div class="opt-desc">Botón "Comprar ahora" que lleva directamente al pago. Más rápido.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Redirigir a WhatsApp"/><span class="check-item-label">Redirigir WhatsApp</span></div><div class="opt-desc">El pedido se envía como mensaje de WhatsApp con detalles del producto.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="proceso_compra" value="Formulario de pedido"/><span class="check-item-label">Formulario pedido</span></div><div class="opt-desc">El cliente llena un formulario con sus datos y el pedido llega por correo.</div></div>
       </div>
     </div>
     <div class="field">
@@ -536,7 +489,7 @@
     <div class="field">
       <label class="lbl">¿Sistema de reseñas/opiniones?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="resenias" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$65k</span></div><div class="opt-desc">Los clientes pueden dejar calificaciones (estrellas) y comentarios.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="resenias" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Los clientes pueden dejar calificaciones (estrellas) y comentarios.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="resenias" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin sistema de reseñas. Más simple y rápido de desarrollar.</div></div>
       </div>
     </div>
@@ -553,32 +506,32 @@
     <div class="field">
       <label class="lbl">¿Qué funcionalidades necesitas?</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Registro de usuarios"/><span class="check-item-label">Registro</span><span class="ptag">+$110k</span></div><div class="opt-desc">Los usuarios pueden crear una cuenta con email y contraseña.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Inicio de sesión"/><span class="check-item-label">Login / Auth</span><span class="ptag">+$85k</span></div><div class="opt-desc">Sistema de autenticación con JWT. Sesiones seguras y persistentes.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Chat en vivo"/><span class="check-item-label">Chat en vivo</span><span class="ptag">+$160k</span></div><div class="opt-desc">Chat en tiempo real entre clientes y el equipo usando WebSockets.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Redes sociales"/><span class="check-item-label">Login con redes</span><span class="ptag">+$45k</span></div><div class="opt-desc">Iniciar sesión con Google, Facebook o Instagram. OAuth 2.0.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Notificaciones push"/><span class="check-item-label">Notificaciones push</span><span class="ptag">+$100k</span></div><div class="opt-desc">Notificaciones al navegador aunque el usuario no esté en la página.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Filtros de búsqueda"/><span class="check-item-label">Buscador + filtros</span><span class="ptag">+$80k</span></div><div class="opt-desc">Búsqueda por texto y filtros por precio, categoría, talla, etc.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Mapa interactivo"/><span class="check-item-label">Mapa interactivo</span><span class="ptag">+$65k</span></div><div class="opt-desc">Google Maps integrado con marcadores, rutas o zonas de cobertura.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Multiidioma"/><span class="check-item-label">Multi-idioma</span><span class="ptag">+$160k</span></div><div class="opt-desc">La página disponible en varios idiomas con selector. Para mercados internacionales.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Wishlist / Favoritos"/><span class="check-item-label">Wishlist</span><span class="ptag">+$80k</span></div><div class="opt-desc">Los usuarios guardan productos favoritos para comprar después.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Comparar productos"/><span class="check-item-label">Comparar</span><span class="ptag">+$65k</span></div><div class="opt-desc">Tabla para comparar características de varios productos entre sí.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Registro de usuarios"/><span class="check-item-label">Registro</span></div><div class="opt-desc">Los usuarios pueden crear una cuenta con email y contraseña.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Inicio de sesión"/><span class="check-item-label">Login / Auth</span></div><div class="opt-desc">Sistema de autenticación con JWT. Sesiones seguras y persistentes.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Chat en vivo"/><span class="check-item-label">Chat en vivo</span></div><div class="opt-desc">Chat en tiempo real entre clientes y el equipo usando WebSockets.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Redes sociales"/><span class="check-item-label">Login con redes</span></div><div class="opt-desc">Iniciar sesión con Google, Facebook o Instagram. OAuth 2.0.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Notificaciones push"/><span class="check-item-label">Notificaciones push</span></div><div class="opt-desc">Notificaciones al navegador aunque el usuario no esté en la página.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Filtros de búsqueda"/><span class="check-item-label">Buscador + filtros</span></div><div class="opt-desc">Búsqueda por texto y filtros por precio, categoría, talla, etc.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Mapa interactivo"/><span class="check-item-label">Mapa interactivo</span></div><div class="opt-desc">Google Maps integrado con marcadores, rutas o zonas de cobertura.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Multiidioma"/><span class="check-item-label">Multi-idioma</span></div><div class="opt-desc">La página disponible en varios idiomas con selector. Para mercados internacionales.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Wishlist / Favoritos"/><span class="check-item-label">Wishlist</span></div><div class="opt-desc">Los usuarios guardan productos favoritos para comprar después.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="funcionalidades" value="Comparar productos"/><span class="check-item-label">Comparar</span></div><div class="opt-desc">Tabla para comparar características de varios productos entre sí.</div></div>
       </div>
       <input type="text" name="funcionalidades_otras" placeholder="Otras funcionalidades…" style="margin-top:8px"/>
     </div>
     <div class="field">
       <label class="lbl">¿Integración con WhatsApp?</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="whatsapp" value="Sí, botón flotante"/><span class="check-item-label">Botón flotante</span><span class="ptag">+$25k</span></div><div class="opt-desc">Burbuja de WhatsApp fija en la esquina. El cliente te escribe con un clic.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="whatsapp" value="Sí, redirigir pedidos"/><span class="check-item-label">Redirigir pedidos</span><span class="ptag">+$40k</span></div><div class="opt-desc">Los pedidos se envían automáticamente a WhatsApp con nombre, producto y precio.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="whatsapp" value="Sí, botón flotante"/><span class="check-item-label">Botón flotante</span></div><div class="opt-desc">Burbuja de WhatsApp fija en la esquina. El cliente te escribe con un clic.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="whatsapp" value="Sí, redirigir pedidos"/><span class="check-item-label">Redirigir pedidos</span></div><div class="opt-desc">Los pedidos se envían automáticamente a WhatsApp con nombre, producto y precio.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="whatsapp" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin integración con WhatsApp.</div></div>
       </div>
     </div>
     <div class="field">
       <label class="lbl">¿Animaciones?</label>
       <div class="check-grid" style="grid-template-columns:repeat(3,1fr)">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="animaciones" value="Sí, vistosas"/><span class="check-item-label">Vistosas</span><span class="ptag">+$50k</span></div><div class="opt-desc">Parallax, partículas, animaciones complejas y transiciones llamativas.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="animaciones" value="Sí, sutiles"/><span class="check-item-label">Sutiles</span><span class="ptag">+$25k</span></div><div class="opt-desc">Fade-in al hacer scroll, hover suaves. Elegante sin distraer.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="animaciones" value="Sí, vistosas"/><span class="check-item-label">Vistosas</span></div><div class="opt-desc">Parallax, partículas, animaciones complejas y transiciones llamativas.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="animaciones" value="Sí, sutiles"/><span class="check-item-label">Sutiles</span></div><div class="opt-desc">Fade-in al hacer scroll, hover suaves. Elegante sin distraer.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="animaciones" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin animaciones. Carga más rápida y más simple de mantener.</div></div>
       </div>
     </div>
@@ -595,7 +548,7 @@
     <div class="field">
       <label class="lbl">¿Panel de administración?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="panel_admin" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$160k</span></div><div class="opt-desc">Dashboard privado para gestionar productos, pedidos y usuarios desde el navegador.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="panel_admin" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Dashboard privado para gestionar productos, pedidos y usuarios desde el navegador.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="panel_admin" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin panel. El contenido se actualiza manualmente o por el desarrollador.</div></div>
       </div>
     </div>
@@ -606,17 +559,17 @@
     <div class="field">
       <label class="lbl">Características de seguridad</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="HTTPS / SSL"/><span class="check-item-label">HTTPS / SSL</span><span class="ptag">+$25k</span></div><div class="opt-desc">Certificado de seguridad SSL. El candado 🔒 en la barra del navegador. Obligatorio para e-commerce.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Login seguro JWT"/><span class="check-item-label">Auth JWT</span><span class="ptag">+$40k</span></div><div class="opt-desc">Tokens seguros para sesiones de usuario. Evita accesos no autorizados.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Protección de datos"/><span class="check-item-label">Protección datos</span><span class="ptag">+$25k</span></div><div class="opt-desc">Política de privacidad, cifrado de datos sensibles y cumplimiento normativo.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Captcha anti-spam"/><span class="check-item-label">Captcha</span><span class="ptag">+$30k</span></div><div class="opt-desc">Google reCAPTCHA en formularios. Evita bots y envíos automáticos de spam.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Rate limiting"/><span class="check-item-label">Rate limiting</span><span class="ptag">+$25k</span></div><div class="opt-desc">Limita las peticiones por IP. Protege contra ataques de fuerza bruta y DDoS.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="HTTPS / SSL"/><span class="check-item-label">HTTPS / SSL</span></div><div class="opt-desc">Certificado de seguridad SSL. El candado 🔒 en la barra del navegador. Obligatorio para e-commerce.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Login seguro JWT"/><span class="check-item-label">Auth JWT</span></div><div class="opt-desc">Tokens seguros para sesiones de usuario. Evita accesos no autorizados.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Protección de datos"/><span class="check-item-label">Protección datos</span></div><div class="opt-desc">Política de privacidad, cifrado de datos sensibles y cumplimiento normativo.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Captcha anti-spam"/><span class="check-item-label">Captcha</span></div><div class="opt-desc">Google reCAPTCHA en formularios. Evita bots y envíos automáticos de spam.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="seguridad" value="Rate limiting"/><span class="check-item-label">Rate limiting</span></div><div class="opt-desc">Limita las peticiones por IP. Protege contra ataques de fuerza bruta y DDoS.</div></div>
       </div>
     </div>
     <div class="field">
       <label class="lbl">¿Sistema de roles?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="roles" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$85k</span></div><div class="opt-desc">Diferentes permisos por tipo de usuario: admin, vendedor, cliente, etc.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="roles" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Diferentes permisos por tipo de usuario: admin, vendedor, cliente, etc.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="roles" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Un solo tipo de usuario con los mismos permisos para todos.</div></div>
       </div>
       <input type="text" name="roles_descripcion" placeholder="Describe los roles si aplica…" style="margin-top:8px"/>
@@ -635,21 +588,21 @@
       <label class="lbl">¿Tienes logo?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiene_logo" value="Sí, ya tengo"/><span class="check-item-label">Sí, ya tengo</span></div><div class="opt-desc">Tienes el logo listo en PNG, SVG o AI y puedes compartirlo.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiene_logo" value="No, necesito uno"/><span class="check-item-label">Necesito uno</span><span class="ptag">+$120k</span></div><div class="opt-desc">Se diseña un logo desde cero incluyendo variantes de color y formatos.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiene_logo" value="No, necesito uno"/><span class="check-item-label">Necesito uno</span></div><div class="opt-desc">Se diseña un logo desde cero incluyendo variantes de color y formatos.</div></div>
       </div>
     </div>
     <div class="field">
       <label class="lbl">¿Tienes el contenido listo?</label>
       <div class="check-grid">
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="contenido_listo" value="Sí, todo listo"/><span class="check-item-label">Todo listo</span></div><div class="opt-desc">Tienes textos, imágenes y productos listos para subir a la página.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="contenido_listo" value="Parcialmente"/><span class="check-item-label">Parcialmente</span><span class="ptag">+$65k</span></div><div class="opt-desc">Tienes parte del contenido. Se apoya en la creación del resto.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="contenido_listo" value="No, necesito ayuda"/><span class="check-item-label">Necesito ayuda</span><span class="ptag">+$160k</span></div><div class="opt-desc">Se crea todo el contenido: textos, imágenes y estructura desde cero.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="contenido_listo" value="Parcialmente"/><span class="check-item-label">Parcialmente</span></div><div class="opt-desc">Tienes parte del contenido. Se apoya en la creación del resto.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="contenido_listo" value="No, necesito ayuda"/><span class="check-item-label">Necesito ayuda</span></div><div class="opt-desc">Se crea todo el contenido: textos, imágenes y estructura desde cero.</div></div>
       </div>
     </div>
     <div class="field">
       <label class="lbl">¿Necesitas hosting? <span class="hint">Alojamiento del sitio en un servidor</span></label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="hosting" value="Sí, necesito"/><span class="check-item-label">Sí, necesito</span><span class="ptag">+$50k</span></div><div class="opt-desc">Se configura y despliega en un servidor como Render, Railway o DigitalOcean.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="hosting" value="Sí, necesito"/><span class="check-item-label">Sí, necesito</span></div><div class="opt-desc">Se configura y despliega en un servidor como Render, Railway o DigitalOcean.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="hosting" value="Ya tengo"/><span class="check-item-label">Ya tengo</span></div><div class="opt-desc">Ya tienes contratado un servidor y solo se despliega en el tuyo.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="hosting" value="No sé"/><span class="check-item-label">No sé</span></div><div class="opt-desc">No estás seguro. Se te explicará qué necesitas según el proyecto.</div></div>
       </div>
@@ -677,7 +630,7 @@
     <div class="field">
       <label class="lbl">¿En cuánto tiempo lo necesitas?</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiempo" value="Urgente (1-2 semanas)"/><span class="check-item-label">Urgente</span><span class="ptag">+20%</span></div><div class="opt-desc">1-2 semanas. Se prioriza tu proyecto y se trabaja en horario extendido. Costo +20%.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiempo" value="Urgente (1-2 semanas)"/><span class="check-item-label">Urgente</span></div><div class="opt-desc">1-2 semanas. Se prioriza tu proyecto y se trabaja en horario extendido. Costo +20%.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiempo" value="Normal (1 mes)"/><span class="check-item-label">Normal (1 mes)</span></div><div class="opt-desc">Tiempo estándar de desarrollo. Incluye revisiones y ajustes sin costo extra.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="tiempo" value="Sin prisa (2+ meses)"/><span class="check-item-label">Sin prisa</span></div><div class="opt-desc">Más de 2 meses. Permite una planificación más detallada y tranquila.</div></div>
       </div>
@@ -729,7 +682,7 @@
     <div class="field">
       <label class="lbl">¿Categorías de productos?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="categorias" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$50k</span></div><div class="opt-desc">Agrupa productos por tipo: Ropa, Accesorios, Calzado. Mejora la navegación.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="categorias" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Agrupa productos por tipo: Ropa, Accesorios, Calzado. Mejora la navegación.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="categorias" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Todos los productos en una sola lista sin agrupación por tipo.</div></div>
       </div>
       <input type="text" name="categorias_descripcion" placeholder="Describe las categorías: Ropa, Accesorios, Calzado…" style="margin-top:8px"/>
@@ -737,20 +690,20 @@
     <div class="field">
       <label class="lbl">Filtros de búsqueda</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Precio"/><span class="check-item-label">Precio</span><span class="ptag">+$25k</span></div><div class="opt-desc">Slider de rango de precios para filtrar productos por presupuesto.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Categoría"/><span class="check-item-label">Categoría</span><span class="ptag">+$18k</span></div><div class="opt-desc">Filtro por categoría o tipo de producto. Facilita la búsqueda.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Popularidad"/><span class="check-item-label">Popularidad</span><span class="ptag">+$20k</span></div><div class="opt-desc">Ordena los productos por número de ventas o visualizaciones.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Calificación"/><span class="check-item-label">Calificación</span><span class="ptag">+$20k</span></div><div class="opt-desc">Filtra por estrellas de valoración de los clientes.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Talla"/><span class="check-item-label">Talla</span><span class="ptag">+$20k</span></div><div class="opt-desc">Filtra productos por talla. Útil para ropa, calzado o accesorios.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Color"/><span class="check-item-label">Color</span><span class="ptag">+$20k</span></div><div class="opt-desc">Selector visual de colores para filtrar variantes del producto.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Disponibilidad"/><span class="check-item-label">Disponibilidad</span><span class="ptag">+$16k</span></div><div class="opt-desc">Muestra solo productos en stock. Oculta los agotados.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Descuento"/><span class="check-item-label">Descuento</span><span class="ptag">+$16k</span></div><div class="opt-desc">Filtra solo los productos con algún tipo de oferta o descuento activo.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Precio"/><span class="check-item-label">Precio</span></div><div class="opt-desc">Slider de rango de precios para filtrar productos por presupuesto.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Categoría"/><span class="check-item-label">Categoría</span></div><div class="opt-desc">Filtro por categoría o tipo de producto. Facilita la búsqueda.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Popularidad"/><span class="check-item-label">Popularidad</span></div><div class="opt-desc">Ordena los productos por número de ventas o visualizaciones.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Calificación"/><span class="check-item-label">Calificación</span></div><div class="opt-desc">Filtra por estrellas de valoración de los clientes.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Talla"/><span class="check-item-label">Talla</span></div><div class="opt-desc">Filtra productos por talla. Útil para ropa, calzado o accesorios.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Color"/><span class="check-item-label">Color</span></div><div class="opt-desc">Selector visual de colores para filtrar variantes del producto.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Disponibilidad"/><span class="check-item-label">Disponibilidad</span></div><div class="opt-desc">Muestra solo productos en stock. Oculta los agotados.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="filtros" value="Descuento"/><span class="check-item-label">Descuento</span></div><div class="opt-desc">Filtra solo los productos con algún tipo de oferta o descuento activo.</div></div>
       </div>
     </div>
     <div class="field">
       <label class="lbl">¿Productos destacados en inicio?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="productos_destacados" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$32k</span></div><div class="opt-desc">Sección especial en el inicio con los productos más vendidos o marcados como destacados.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="productos_destacados" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Sección especial en el inicio con los productos más vendidos o marcados como destacados.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="productos_destacados" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin sección de destacados. El inicio muestra el contenido estándar.</div></div>
       </div>
     </div>
@@ -775,7 +728,7 @@
     <div class="field">
       <label class="lbl">¿Quieres carrusel de imágenes?</label>
       <div class="check-grid" style="grid-template-columns:1fr 1fr">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel" value="Sí"/><span class="check-item-label">Sí</span><span class="ptag">+$80k</span></div><div class="opt-desc">Slider de imágenes o banners con flechas de navegación y puntos indicadores.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel" value="Sí"/><span class="check-item-label">Sí</span></div><div class="opt-desc">Slider de imágenes o banners con flechas de navegación y puntos indicadores.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel" value="No"/><span class="check-item-label">No</span></div><div class="opt-desc">Sin carrusel. Se usa una imagen o banner estático en el hero.</div></div>
       </div>
     </div>
@@ -816,9 +769,9 @@
     <div class="field">
       <label class="lbl">Botones de acción y autoplay</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_botones" value="Sí"/><span class="check-item-label">Con botones</span><span class="ptag">+$18k</span></div><div class="opt-desc">Botón tipo "Ver oferta" o "Comprar" dentro de cada slide del carrusel.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_botones" value="Sí"/><span class="check-item-label">Con botones</span></div><div class="opt-desc">Botón tipo "Ver oferta" o "Comprar" dentro de cada slide del carrusel.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_botones" value="No"/><span class="check-item-label">Sin botones</span></div><div class="opt-desc">Solo imágenes o texto, sin botones de acción dentro del carrusel.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_autoplay" value="Sí"/><span class="check-item-label">Autoplay</span><span class="ptag">+$15k</span></div><div class="opt-desc">El carrusel avanza solo cada pocos segundos sin que el usuario lo toque.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_autoplay" value="Sí"/><span class="check-item-label">Autoplay</span></div><div class="opt-desc">El carrusel avanza solo cada pocos segundos sin que el usuario lo toque.</div></div>
         <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="radio" name="carrusel_autoplay" value="No"/><span class="check-item-label">Manual</span></div><div class="opt-desc">El carrusel solo avanza cuando el usuario presiona las flechas o swipe.</div></div>
       </div>
     </div>
@@ -835,10 +788,10 @@
     <div class="field">
       <label class="lbl">¿Por dónde notificar novedades a tus clientes?</label>
       <div class="check-grid">
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="Correo electrónico"/><span class="check-item-label">Email (SMTP)</span><span class="ptag">+$65k</span></div><div class="opt-desc">Envía correos automáticos de confirmación, ofertas y novedades. Requiere servidor SMTP.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="WhatsApp"/><span class="check-item-label">WhatsApp API</span><span class="ptag">+$50k</span></div><div class="opt-desc">Mensajes de WhatsApp automáticos con confirmaciones de pedido y novedades.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="Notificaciones web push"/><span class="check-item-label">Push web</span><span class="ptag">+$90k</span></div><div class="opt-desc">Notificaciones del navegador aunque el usuario no esté en la página. Como una app.</div></div>
-        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="SMS"/><span class="check-item-label">SMS</span><span class="ptag">+$80k</span></div><div class="opt-desc">Mensajes de texto al celular del cliente para confirmaciones o alertas urgentes.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="Correo electrónico"/><span class="check-item-label">Email (SMTP)</span></div><div class="opt-desc">Envía correos automáticos de confirmación, ofertas y novedades. Requiere servidor SMTP.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="WhatsApp"/><span class="check-item-label">WhatsApp API</span></div><div class="opt-desc">Mensajes de WhatsApp automáticos con confirmaciones de pedido y novedades.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="Notificaciones web push"/><span class="check-item-label">Push web</span></div><div class="opt-desc">Notificaciones del navegador aunque el usuario no esté en la página. Como una app.</div></div>
+        <div class="check-item" onclick="selectCheck(this)"><div class="check-item-row"><input type="checkbox" name="notificaciones" value="SMS"/><span class="check-item-label">SMS</span></div><div class="opt-desc">Mensajes de texto al celular del cliente para confirmaciones o alertas urgentes.</div></div>
       </div>
       <input type="text" name="notificaciones_otras" placeholder="Otro canal…" style="margin-top:8px"/>
     </div>
@@ -859,49 +812,15 @@
 </div>
 
 <!-- ESPACIO SUBMIT -->
-<div style="text-align:center;padding:12px 0 20px">
-  <p style="color:var(--muted);font-size:.74rem">Usa <strong style="color:var(--green)">💰 Calcular</strong> para ver el precio antes de enviar</p>
-</div>
+
 
 </form>
 </div>
 
-<!-- ════ FLOATING BAR ════ -->
-<div class="price-float">
-  <div>
-    <div class="pf-label">Estimado</div>
-    <div>
-      <span class="pf-original" id="pfOriginal" style="display:none"></span>
-      <span class="pf-total" id="pfTotal">$150.000</span>
-      <span class="pf-discount-tag" id="pfDiscountTag" style="display:none"></span>
-    </div>
-    <div style="font-size:.65rem;color:var(--muted)" id="pfCount">Base del proyecto</div>
-  </div>
-  <div class="pf-buttons">
-    <button class="btn-calc" onclick="showCalc()">💰 Calcular</button>
-    <button class="btn-submit-float" id="submitBtn" onclick="submitForm()">Enviar →</button>
-  </div>
-</div>
-
-<!-- ════ CALC MODAL (bottom sheet) ════ -->
-<div class="overlay" id="calcOverlay" onclick="closeOverlay(event,'calcOverlay')">
-  <div class="calc-sheet" onclick="e=>e.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="calc-head">
-      <div>
-        <h2>💰 Estimación del Proyecto</h2>
-        <p id="calcSubhead">Desglose de tu selección actual</p>
-      </div>
-      <button class="btn-xsheet" onclick="document.getElementById('calcOverlay').classList.remove('open')">✕</button>
-    </div>
-    <div class="calc-scroll" id="calcBody"></div>
-    <div class="calc-foot">
-      <div class="calc-totals" id="calcTotals"></div>
-      <div id="budgetStatus"></div>
-      <p class="calc-note">* Estimación orientativa en COP. El precio final puede variar según revisiones y acuerdos. Urgente aplica +20%.</p>
-      <button class="btn-close-sheet" onclick="document.getElementById('calcOverlay').classList.remove('open')">Cerrar y continuar →</button>
-    </div>
-  </div>
+<!-- SUBMIT BUTTON -->
+<div style="text-align:center;padding:20px 0 40px">
+  <button type="button" class="btn-submit-main" id="submitBtn" onclick="submitForm()">Enviar Brief →</button>
+  <p style="color:var(--muted);font-size:.74rem;margin-top:10px">Tu información se guarda de forma segura. Te contactaremos pronto.</p>
 </div>
 
 <!-- TOAST -->
@@ -1015,7 +934,6 @@ function selectBiz(el) {
   currentDiscountPct = parseFloat(el.dataset.discount);
   document.getElementById('hTipoNegocio').value = currentBizType;
   document.getElementById('hDescuento').value = currentDiscountPct;
-  updateLive();
 }
 
 // ══════ CALC ══════════════════════════════════════════
@@ -1062,101 +980,29 @@ function calcTotal() {
 function fmtCOP(n) { return '$' + Math.round(n).toLocaleString('es-CO'); }
 
 function updateLive() {
-  const { subtotal, items } = calcTotal();
-  const el = document.getElementById('pfTotal');
-  const elOrig = document.getElementById('pfOriginal');
-  const elTag = document.getElementById('pfDiscountTag');
+  const { total, items } = calcTotal();
+  document.getElementById('hPrecio').value = total;
+  document.getElementById('hDesglose').value = JSON.stringify(items);
+} = calcTotal();
+  const el =
+  const elOrig =
+  const elTag =
   // Siempre muestra el subtotal sin descuento hasta que el usuario calcule
   el.textContent = fmtCOP(subtotal);
   el.style.color = 'var(--green)';
   elOrig.style.display = 'none';
   elTag.style.display = 'none';
-  document.getElementById('pfCount').textContent = items.length
     ? `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}`
     : 'Base del proyecto';
   document.getElementById('hPrecio').value = calcTotal().total; // guarda el total CON descuento
   document.getElementById('hDesglose').value = JSON.stringify(items);
 }
 
-function showCalc() {
-  const { items, subtotal, discount, total, surcharge } = calcTotal();
-  const cats = {};
-  items.forEach(i => { if (!cats[i.cat]) cats[i.cat]=[]; cats[i.cat].push(i); });
 
-  let body = `<div class="calc-row calc-row-base"><div class="calc-row-label">⚙️ Configuración base</div><div class="calc-row-price">${fmtCOP(BASE)}</div></div>`;
-  if (!items.length) {
-    body += '<div class="calc-empty-msg">Selecciona funciones para ver el desglose.</div>';
-  } else {
-    for (const cat in cats) {
-      body += `<div class="calc-cat">— ${cat} —</div>`;
-      cats[cat].forEach(item => {
-        body += `<div class="calc-row">
-          <div class="calc-row-label">${item.label}</div>
-          <div class="calc-row-price">${fmtCOP(item.precio)}</div>
-          <button class="btn-remove" title="Quitar" onclick="removeItem('${item.key}','${item.value.replace(/'/g,"\\'")}')">✕</button>
-        </div>`;
-      });
-    }
-  }
-  document.getElementById('calcBody').innerHTML = body;
 
-  // Totals — descuento solo visible aquí
-  let totalsHtml = `<div class="calc-total-row"><div class="calc-total-label">Subtotal</div><div class="calc-total-val">${fmtCOP(subtotal + discount)}</div></div>`;
-  if (surcharge) totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Cargo urgencia (+20%)</div><div class="calc-total-val" style="color:var(--yellow)">+${fmtCOP(surcharge)}</div></div>`;
-  if (discount > 0) {
-    totalsHtml += `<div class="calc-total-row"><div class="calc-total-label">Descuento ${currentBizType}</div><div class="calc-total-val" style="color:var(--green)">-${fmtCOP(discount)}</div></div>`;
-  }
-  totalsHtml += `<div class="calc-final-row"><div class="calc-final-label">Total a pagar</div><div class="calc-final-val">${fmtCOP(total)}</div></div>`;
-  document.getElementById('calcTotals').innerHTML = totalsHtml;
 
-  // Actualizar barra flotante con precio final + descuento visible
-  const pfEl   = document.getElementById('pfTotal');
-  const pfOrig = document.getElementById('pfOriginal');
-  const pfTag  = document.getElementById('pfDiscountTag');
-  pfEl.textContent = fmtCOP(total);
-  if (discount > 0) {
-    pfOrig.style.display = '';
-    pfOrig.textContent   = fmtCOP(subtotal + discount);
-    pfTag.style.display  = '';
-    pfTag.textContent    = `Descuento aplicado`;
-    pfEl.style.color     = 'var(--green)';
-  }
 
-  // Budget status
-  const presEl = document.querySelector('[name="presupuesto"]:checked');
-  let statusHtml = '<div class="budget-status bs-none">💡 Selecciona un presupuesto para ver si estás en rango.</div>';
-  if (presEl) {
-    const range = BUDGET_RANGES[presEl.value];
-    if (range) {
-      if (total < range[0])      statusHtml = `<div class="budget-status bs-ok">✅ Estás <strong>por debajo</strong> de tu presupuesto. Puedes añadir más funciones.</div>`;
-      else if (total <= range[1]) statusHtml = `<div class="budget-status bs-ok">✅ Tu estimado encaja <strong>perfectamente</strong> dentro de tu presupuesto.</div>`;
-      else if (total <= range[1]*1.2) statusHtml = `<div class="budget-status bs-near">⚠️ Estás <strong>ligeramente encima</strong>. Considera quitar alguna función.</div>`;
-      else statusHtml = `<div class="budget-status bs-over">🔴 Tu estimado <strong>supera</strong> tu presupuesto. Usa ✕ para quitar funciones.</div>`;
-    }
-  }
-  document.getElementById('budgetStatus').innerHTML = statusHtml;
-  document.getElementById('calcSubhead').textContent = discount > 0
-    ? `Con descuento para ${currentBizType} aplicado`
-    : `${items.length} función${items.length!==1?'es':''} seleccionada${items.length!==1?'s':''}`;
 
-  document.getElementById('calcOverlay').classList.add('open');
-}
-
-function removeItem(fieldName, value) {
-  const form = document.getElementById('mainForm');
-  form.querySelectorAll(`[name="${fieldName}"]`).forEach(inp => {
-    if (inp.value === value) {
-      inp.checked = false;
-      inp.closest('.check-item')?.classList.remove('checked');
-    }
-  });
-  showCalc(); // re-render
-  updateLive();
-}
-
-function closeOverlay(e, id) {
-  if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('open');
-}
 
 // ══════ BUSINESS TYPE ════════════════════════════════
 
@@ -1174,7 +1020,6 @@ function selectCheck(item) {
     inp.checked = !inp.checked;
     item.classList.toggle('checked', inp.checked);
   }
-  updateLive();
   updateProgress();
 }
 
@@ -1199,7 +1044,7 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = pct+'%';
   document.getElementById('progressLabel').textContent = pct+'% completado';
 }
-document.getElementById('mainForm').addEventListener('input', () => { updateLive(); updateProgress(); });
+document.getElementById('mainForm').addEventListener('input', updateProgress);
 
 // ══════ FILE INPUTS ══════════════════════════════════
 [['boceto-input','boceto-names'],['logo-input','logo-names']].forEach(([id,nid]) => {
@@ -1275,7 +1120,6 @@ loadCustomQuestions();
 // ══════ SUBMIT ════════════════════════════════════════
 async function submitForm() {
   if (!validateForm()) return;
-  updateLive();
   const btn=document.getElementById('submitBtn');
   btn.disabled=true; btn.textContent='Enviando…';
   const fd=new FormData(document.getElementById('mainForm'));
@@ -1331,7 +1175,6 @@ window.addEventListener('appinstalled', () => {
 });
 
 // Init
-updateLive();
 </script>
 </body>
 </html>
