@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desarrollo Web · Servicios Profesionales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white: #fafaf8;
+    --off-white: #f2f0eb;
+    --ink: #1a1a18;
+    --ink-light: #4a4a47;
+    --ink-faint: #9a9a96;
+    --accent: #c8a96e;
+    --accent-light: #e8d8b8;
+    --accent-dark: #a08040;
+    --border: #e0ddd6;
+    --wa: #25d366;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─────────────────────────────── */
+  .hero {
+    padding: 0 clamp(1.5rem, 6vw, 5rem);
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -15%;
+    width: 55vw;
+    height: 55vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent-dark); }
+
+  .hero-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5rem 0 4.5rem;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-body h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-body h1 em {
+    font-style: italic;
+    color: var(--accent-dark);
+  }
+
+  .hero-body p {
+    font-size: 1rem;
+    color: var(--ink-light);
+    max-width: 48ch;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-dark);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--ink);
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .hero-cta:hover { background: var(--accent-dark); transform: translateY(-2px); }
+
+  /* ─── SECTION ─────────────────────────── */
+  section {
+    padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 5rem);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent-dark); }
+
+  .section-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    color: var(--border);
+    line-height: 1;
+  }
+
+  /* ─── FILTERS ─────────────────────────── */
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.45rem 1.1rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+
+  /* ─── CARDS ───────────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .card {
+    background: var(--white);
+    cursor: pointer;
+    transition: background 0.25s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover { background: var(--off-white); }
+
+  /* Preview image area */
+  .card-preview {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .card-preview svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-content {
+    padding: 1.5rem 1.75rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .card-cat {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-dark);
+    font-weight: 400;
+  }
+
+  .card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .card p {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--border);
+    color: var(--ink-faint);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .btn-preview {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-preview:hover {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+
+  .btn-wa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    flex: 2;
+    padding: 0.6rem 0.8rem;
+    background: var(--wa);
+    color: white;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+    font-weight: 500;
+  }
+
+  .btn-wa:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ─── MODAL ───────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,24,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--white);
+    width: 100%;
+    max-width: 820px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-header {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .modal-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border);
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--ink-light);
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+  .modal-img {
+    height: 240px;
+    margin: 1.5rem 2rem;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .modal-img svg { width: 100%; height: 100%; }
+
+  .modal-body { padding: 0 2rem 2rem; }
+
+  .modal-desc {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .feat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .feat-item::before { content: '→'; color: var(--accent-dark); font-size: 0.75rem; }
+
+  .modal-cta { display: flex; gap: 0.75rem; }
+
+  .modal-wa {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--wa);
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .modal-wa:hover { opacity: 0.85; }
+
+  .modal-info {
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ─── FOOTER ──────────────────────────── */
+  footer {
+    padding: 2rem clamp(1.5rem, 6vw, 5rem);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer p { font-size: 0.75rem; color: var(--ink-faint); letter-spacing: 0.06em; }
+
+  /* ─── ANIMATIONS ──────────────────────── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fade-in 0.6s ease forwards;
+  }
+
+  @keyframes fade-in { to { opacity: 1; transform: translateY(0); } }
+
+  .cards-grid .card {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fade-in 0.5s ease forwards;
+  }
+
+  .cards-grid .card:nth-child(1)  { animation-delay: 0.05s; }
+  .cards-grid .card:nth-child(2)  { animation-delay: 0.10s; }
+  .cards-grid .card:nth-child(3)  { animation-delay: 0.15s; }
+  .cards-grid .card:nth-child(4)  { animation-delay: 0.20s; }
+  .cards-grid .card:nth-child(5)  { animation-delay: 0.25s; }
+  .cards-grid .card:nth-child(6)  { animation-delay: 0.30s; }
+  .cards-grid .card:nth-child(7)  { animation-delay: 0.35s; }
+  .cards-grid .card:nth-child(8)  { animation-delay: 0.40s; }
+  .cards-grid .card:nth-child(9)  { animation-delay: 0.45s; }
+  .cards-grid .card:nth-child(10) { animation-delay: 0.50s; }
+  .cards-grid .card:nth-child(11) { animation-delay: 0.55s; }
+  .cards-grid .card:nth-child(12) { animation-delay: 0.60s; }
+
+  .card[data-hidden="true"] { display: none; }
+
+  /* WA float */
+  .wa-float {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 500;
+    width: 56px;
+    height: 56px;
+    background: var(--wa);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    text-decoration: none;
+    transition: transform 0.2s;
+    animation: pulse 2.5s ease infinite;
+  }
+
+  .wa-float:hover { transform: scale(1.1); }
+
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+    50%      { box-shadow: 0 4px 32px rgba(37,211,102,0.7); }
+  }
+
+  @media (max-width: 768px) {
+    nav { flex-direction: column; gap: 1rem; }
+    .nav-links { flex-wrap: wrap; justify-content: center; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .modal-features { grid-template-columns: 1fr; }
+    .modal-cta { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ─────────────────────────────────────── -->
+<div class="hero">
+  <nav>
+    <a href="#" class="nav-logo">Páginas Web</a>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-body fade-in">
+    <a href="https://wa.me/573166219962?text=Hola!%20Vi%20tu%20portafolio%20y%20me%20interesa%20hablar%20sobre%20mi%20proyecto%20web%20%F0%9F%92%BB" class="hero-cta" target="_blank">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Cotizar Proyecto
+    </a>
+  </div>
+</div>
+
+<!-- ─── SERVICIOS ─────────────────────────────────── -->
+<section id="servicios">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Lo que ofrezco</span>
+      <h2 class="section-title">Tipos de <em>servicio</em></h2>
+    </div>
+    <span class="section-count" id="countDisplay">12</span>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCards('all',this)">Todos</button>
+    <button class="filter-btn" onclick="filterCards('estatico',this)">Estático</button>
+    <button class="filter-btn" onclick="filterCards('dinamico',this)">Con Base de Datos</button>
+    <button class="filter-btn" onclick="filterCards('software',this)">Software</button>
+    <button class="filter-btn" onclick="filterCards('soporte',this)">Soporte</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+
+    <!-- 0 · LANDING PAGE -->
+    <div class="card" data-cat="estatico" onclick="openModal(0)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f0f7ff"/>
+          <!-- browser chrome -->
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#d0dbe8" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#e8f0f8"/>
+          <rect x="20" y="28" width="280" height="8" fill="#e8f0f8"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/>
+          <circle cx="45" cy="25" r="4" fill="#ffbd2e"/>
+          <circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <rect x="72" y="20" width="160" height="10" rx="3" fill="white"/>
+          <!-- hero -->
+          <rect x="28" y="44" width="264" height="52" rx="2" fill="#3b82f6"/>
+          <rect x="90" y="55" width="140" height="10" rx="2" fill="rgba(255,255,255,0.9)"/>
+          <rect x="110" y="70" width="100" height="7" rx="2" fill="rgba(255,255,255,0.5)"/>
+          <rect x="128" y="82" width="64" height="9" rx="2" fill="white"/>
+          <!-- cards row -->
+          <rect x="28" y="104" width="80" height="36" rx="2" fill="#e8f0f8" stroke="#d0dbe8" stroke-width="0.5"/>
+          <rect x="120" y="104" width="80" height="36" rx="2" fill="#e8f0f8" stroke="#d0dbe8" stroke-width="0.5"/>
+          <rect x="212" y="104" width="80" height="36" rx="2" fill="#e8f0f8" stroke="#d0dbe8" stroke-width="0.5"/>
+          <rect x="36" y="111" width="48" height="5" rx="1" fill="#b0c4d8"/>
+          <rect x="36" y="120" width="36" height="4" rx="1" fill="#d0dbe8"/>
+          <rect x="128" y="111" width="48" height="5" rx="1" fill="#b0c4d8"/>
+          <rect x="128" y="120" width="36" height="4" rx="1" fill="#d0dbe8"/>
+          <rect x="220" y="111" width="48" height="5" rx="1" fill="#b0c4d8"/>
+          <rect x="220" y="120" width="36" height="4" rx="1" fill="#d0dbe8"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Estático</span>
+        <h3>Landing Page</h3>
+        <p>Página de aterrizaje de alto impacto para presentar tu negocio, producto o servicio con diseño atractivo.</p>
+        <div class="card-tags"><span class="tag">HTML/CSS</span><span class="tag">Sin BD</span><span class="tag">Rápido</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(0)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Me%20interesa%20una%20Landing%20Page." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1 · PORTAFOLIO -->
+    <div class="card" data-cat="estatico" onclick="openModal(1)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#fdf6ee"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#e8d8b0" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#f5ead0"/>
+          <rect x="20" y="28" width="280" height="8" fill="#f5ead0"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/><circle cx="45" cy="25" r="4" fill="#ffbd2e"/><circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <!-- avatar + name -->
+          <circle cx="100" cy="66" r="18" fill="#e8d8b0"/>
+          <circle cx="100" cy="60" r="7" fill="#c8a86e"/>
+          <ellipse cx="100" cy="78" rx="12" ry="7" fill="#c8a86e"/>
+          <rect x="126" y="55" width="80" height="8" rx="2" fill="#c8a86e" opacity="0.7"/>
+          <rect x="126" y="68" width="55" height="5" rx="1" fill="#e8d8b0"/>
+          <rect x="126" y="78" width="100" height="5" rx="1" fill="#ede0c4"/>
+          <!-- project grid -->
+          <rect x="28" y="96" width="58" height="42" rx="2" fill="#f5ead0" stroke="#e8d8b0" stroke-width="0.5"/>
+          <rect x="94" y="96" width="58" height="42" rx="2" fill="#f5ead0" stroke="#e8d8b0" stroke-width="0.5"/>
+          <rect x="160" y="96" width="58" height="42" rx="2" fill="#c8a86e" opacity="0.3" stroke="#e8d8b0" stroke-width="0.5"/>
+          <rect x="226" y="96" width="66" height="42" rx="2" fill="#f5ead0" stroke="#e8d8b0" stroke-width="0.5"/>
+          <rect x="34" y="108" width="46" height="4" rx="1" fill="#c8a86e" opacity="0.6"/>
+          <rect x="34" y="116" width="30" height="3" rx="1" fill="#e8d8b0"/>
+          <rect x="100" y="108" width="46" height="4" rx="1" fill="#c8a86e" opacity="0.6"/>
+          <rect x="100" y="116" width="30" height="3" rx="1" fill="#e8d8b0"/>
+          <rect x="166" y="108" width="46" height="4" rx="1" fill="#c8a86e" opacity="0.6"/>
+          <rect x="232" y="108" width="46" height="4" rx="1" fill="#c8a86e" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Estático</span>
+        <h3>Portafolio Personal</h3>
+        <p>Muestra tu trabajo, habilidades y logros con una página personal elegante que cause primera impresión.</p>
+        <div class="card-tags"><span class="tag">Profesional</span><span class="tag">Responsivo</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(1)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Quiero%20un%20portafolio%20personal." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 · EMPRESARIAL -->
+    <div class="card" data-cat="estatico" onclick="openModal(2)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f0fdf4"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#b8e0c8" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#d4f0e0"/>
+          <rect x="20" y="28" width="280" height="8" fill="#d4f0e0"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/><circle cx="45" cy="25" r="4" fill="#ffbd2e"/><circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <!-- navbar links -->
+          <rect x="72" y="20" width="120" height="10" rx="3" fill="white"/>
+          <rect x="200" y="20" width="30" height="10" rx="2" fill="#22c55e"/>
+          <!-- hero banner -->
+          <rect x="28" y="44" width="264" height="44" rx="2" fill="#16a34a"/>
+          <!-- building icon -->
+          <rect x="44" y="52" width="16" height="28" rx="1" fill="rgba(255,255,255,0.3)"/>
+          <rect x="48" y="56" width="4" height="4" rx="0.5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="54" y="56" width="4" height="4" rx="0.5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="48" y="63" width="4" height="4" rx="0.5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="54" y="63" width="4" height="4" rx="0.5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="72" y="54" width="100" height="7" rx="2" fill="rgba(255,255,255,0.9)"/>
+          <rect x="72" y="65" width="70" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+          <!-- services row -->
+          <rect x="28" y="96" width="62" height="42" rx="2" fill="#f0fdf4" stroke="#b8e0c8" stroke-width="0.5"/>
+          <rect x="98" y="96" width="62" height="42" rx="2" fill="#f0fdf4" stroke="#b8e0c8" stroke-width="0.5"/>
+          <rect x="168" y="96" width="62" height="42" rx="2" fill="#f0fdf4" stroke="#b8e0c8" stroke-width="0.5"/>
+          <rect x="238" y="96" width="54" height="42" rx="2" fill="#f0fdf4" stroke="#b8e0c8" stroke-width="0.5"/>
+          <rect x="36" y="108" width="40" height="5" rx="1" fill="#16a34a" opacity="0.6"/>
+          <rect x="36" y="117" width="28" height="3" rx="1" fill="#b8e0c8"/>
+          <rect x="106" y="108" width="40" height="5" rx="1" fill="#16a34a" opacity="0.6"/>
+          <rect x="176" y="108" width="40" height="5" rx="1" fill="#16a34a" opacity="0.6"/>
+          <rect x="244" y="108" width="36" height="5" rx="1" fill="#16a34a" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Estático</span>
+        <h3>Página Empresarial</h3>
+        <p>Presencia digital para tu empresa o negocio con servicios, equipo, contacto y galería de proyectos.</p>
+        <div class="card-tags"><span class="tag">SEO</span><span class="tag">Multi-sección</span><span class="tag">Mapa</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(2)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Necesito%20una%20p%C3%A1gina%20empresarial." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 · TIENDA -->
+    <div class="card" data-cat="dinamico" onclick="openModal(3)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#fff1f2"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#fecdd3" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#fde8ea"/>
+          <rect x="20" y="28" width="280" height="8" fill="#fde8ea"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/><circle cx="45" cy="25" r="4" fill="#ffbd2e"/><circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <rect x="72" y="20" width="120" height="10" rx="3" fill="white"/>
+          <!-- cart icon -->
+          <circle cx="288" cy="25" r="7" fill="#ef4444"/>
+          <text x="288" y="29" font-size="8" text-anchor="middle" fill="white">3</text>
+          <!-- product grid -->
+          <rect x="28" y="44" width="58" height="68" rx="2" fill="#fde8ea" stroke="#fecdd3" stroke-width="0.5"/>
+          <rect x="94" y="44" width="58" height="68" rx="2" fill="#fde8ea" stroke="#fecdd3" stroke-width="0.5"/>
+          <rect x="160" y="44" width="58" height="68" rx="2" fill="#ef4444" opacity="0.15" stroke="#fecdd3" stroke-width="0.5"/>
+          <rect x="226" y="44" width="66" height="68" rx="2" fill="#fde8ea" stroke="#fecdd3" stroke-width="0.5"/>
+          <!-- product images placeholder -->
+          <rect x="32" y="48" width="50" height="34" rx="1" fill="#fecdd3"/>
+          <rect x="98" y="48" width="50" height="34" rx="1" fill="#fecdd3"/>
+          <rect x="164" y="48" width="50" height="34" rx="1" fill="#ef4444" opacity="0.3"/>
+          <rect x="230" y="48" width="58" height="34" rx="1" fill="#fecdd3"/>
+          <rect x="32" y="87" width="40" height="4" rx="1" fill="#b0b0b0"/>
+          <rect x="32" y="95" width="30" height="5" rx="1" fill="#ef4444" opacity="0.7"/>
+          <rect x="32" y="104" width="50" height="6" rx="1" fill="#ef4444"/>
+          <rect x="98" y="87" width="40" height="4" rx="1" fill="#b0b0b0"/>
+          <rect x="98" y="95" width="30" height="5" rx="1" fill="#ef4444" opacity="0.7"/>
+          <rect x="98" y="104" width="50" height="6" rx="1" fill="#ef4444"/>
+          <rect x="164" y="87" width="40" height="4" rx="1" fill="#b0b0b0"/>
+          <rect x="164" y="104" width="50" height="6" rx="1" fill="#ef4444"/>
+          <rect x="230" y="87" width="48" height="4" rx="1" fill="#b0b0b0"/>
+          <rect x="230" y="104" width="58" height="6" rx="1" fill="#ef4444"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Con Base de Datos</span>
+        <h3>Tienda en Línea</h3>
+        <p>E-commerce completo con catálogo, carrito, pagos, gestión de pedidos e inventario y panel admin.</p>
+        <div class="card-tags"><span class="tag">Pagos</span><span class="tag">Admin</span><span class="tag">Inventario</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(3)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Me%20interesa%20una%20tienda%20en%20l%C3%ADnea." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 · RESERVAS -->
+    <div class="card" data-cat="dinamico" onclick="openModal(4)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f5f3ff"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#ddd6fe" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#ede9fe"/>
+          <rect x="20" y="28" width="280" height="8" fill="#ede9fe"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/><circle cx="45" cy="25" r="4" fill="#ffbd2e"/><circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <!-- calendar -->
+          <rect x="28" y="44" width="170" height="102" rx="3" fill="#faf8ff" stroke="#ddd6fe" stroke-width="1"/>
+          <rect x="28" y="44" width="170" height="18" rx="3" fill="#8b5cf6"/>
+          <rect x="28" y="55" width="170" height="7" fill="#8b5cf6"/>
+          <rect x="38" y="49" width="60" height="6" rx="1" fill="rgba(255,255,255,0.9)"/>
+          <!-- days header -->
+          <rect x="34" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <rect x="58" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <rect x="82" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <rect x="106" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <rect x="130" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <rect x="154" y="67" width="18" height="5" rx="1" fill="#ddd6fe"/>
+          <!-- day cells -->
+          <rect x="34" y="76" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="58" y="76" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="82" y="76" width="18" height="14" rx="1" fill="#8b5cf6"/>
+          <rect x="106" y="76" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="130" y="76" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="154" y="76" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="34" y="94" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="58" y="94" width="18" height="14" rx="1" fill="#8b5cf6" opacity="0.5"/>
+          <rect x="82" y="94" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="106" y="94" width="18" height="14" rx="1" fill="#8b5cf6"/>
+          <rect x="130" y="94" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="154" y="94" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="34" y="112" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="58" y="112" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <rect x="82" y="112" width="18" height="14" rx="1" fill="#8b5cf6" opacity="0.3"/>
+          <rect x="106" y="112" width="18" height="14" rx="1" fill="#ede9fe"/>
+          <!-- booking panel -->
+          <rect x="206" y="44" width="94" height="102" rx="3" fill="#faf8ff" stroke="#ddd6fe" stroke-width="1"/>
+          <rect x="214" y="54" width="78" height="6" rx="1" fill="#8b5cf6" opacity="0.6"/>
+          <rect x="214" y="64" width="60" height="4" rx="1" fill="#ddd6fe"/>
+          <rect x="214" y="74" width="78" height="20" rx="2" fill="#ede9fe"/>
+          <rect x="214" y="98" width="78" height="20" rx="2" fill="#ede9fe"/>
+          <rect x="214" y="122" width="78" height="14" rx="2" fill="#8b5cf6"/>
+          <rect x="226" y="127" width="54" height="4" rx="1" fill="rgba(255,255,255,0.8)"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Con Base de Datos</span>
+        <h3>Sistema de Reservas</h3>
+        <p>Reserva de citas, turnos o espacios en línea con calendarios, notificaciones y disponibilidad en tiempo real.</p>
+        <div class="card-tags"><span class="tag">Calendario</span><span class="tag">Notificaciones</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(4)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Necesito%20un%20sistema%20de%20reservas." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 · DASHBOARD -->
+    <div class="card" data-cat="dinamico" onclick="openModal(5)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#eff6ff"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#bfdbfe" stroke-width="1"/>
+          <!-- sidebar -->
+          <rect x="20" y="14" width="52" height="132" rx="4" fill="#1e40af"/>
+          <rect x="20" y="28" width="52" height="118" fill="#1e40af"/>
+          <circle cx="46" cy="30" r="8" fill="rgba(255,255,255,0.2)"/>
+          <rect x="30" y="48" width="32" height="5" rx="1" fill="rgba(255,255,255,0.7)"/>
+          <rect x="30" y="58" width="32" height="5" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <rect x="30" y="68" width="32" height="5" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <rect x="30" y="78" width="32" height="5" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <rect x="30" y="88" width="32" height="5" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <!-- stat cards -->
+          <rect x="80" y="20" width="52" height="28" rx="2" fill="#dbeafe" stroke="#bfdbfe" stroke-width="0.5"/>
+          <rect x="138" y="20" width="52" height="28" rx="2" fill="#dbeafe" stroke="#bfdbfe" stroke-width="0.5"/>
+          <rect x="196" y="20" width="52" height="28" rx="2" fill="#dbeafe" stroke="#bfdbfe" stroke-width="0.5"/>
+          <rect x="254" y="20" width="38" height="28" rx="2" fill="#3b82f6" opacity="0.8"/>
+          <rect x="84" y="25" width="30" height="4" rx="1" fill="#93c5fd"/>
+          <rect x="84" y="33" width="20" height="7" rx="1" fill="#1d4ed8"/>
+          <rect x="142" y="25" width="30" height="4" rx="1" fill="#93c5fd"/>
+          <rect x="142" y="33" width="20" height="7" rx="1" fill="#1d4ed8"/>
+          <rect x="200" y="25" width="30" height="4" rx="1" fill="#93c5fd"/>
+          <rect x="200" y="33" width="20" height="7" rx="1" fill="#1d4ed8"/>
+          <!-- bar chart -->
+          <rect x="80" y="56" width="120" height="82" rx="2" fill="#f8faff" stroke="#bfdbfe" stroke-width="0.5"/>
+          <rect x="88" y="62" width="40" height="4" rx="1" fill="#bfdbfe"/>
+          <rect x="93" y="96" width="8" height="30" rx="1" fill="#3b82f6"/>
+          <rect x="105" y="86" width="8" height="40" rx="1" fill="#3b82f6"/>
+          <rect x="117" y="76" width="8" height="50" rx="1" fill="#1d4ed8"/>
+          <rect x="129" y="90" width="8" height="36" rx="1" fill="#3b82f6"/>
+          <rect x="141" y="80" width="8" height="46" rx="1" fill="#3b82f6"/>
+          <rect x="153" y="70" width="8" height="56" rx="1" fill="#1d4ed8"/>
+          <rect x="165" y="82" width="8" height="44" rx="1" fill="#3b82f6"/>
+          <rect x="177" y="88" width="8" height="38" rx="1" fill="#3b82f6"/>
+          <!-- pie chart -->
+          <rect x="208" y="56" width="84" height="82" rx="2" fill="#f8faff" stroke="#bfdbfe" stroke-width="0.5"/>
+          <circle cx="250" cy="97" r="22" fill="none" stroke="#bfdbfe" stroke-width="14"/>
+          <circle cx="250" cy="97" r="22" fill="none" stroke="#3b82f6" stroke-width="14" stroke-dasharray="50 138" stroke-dashoffset="0"/>
+          <circle cx="250" cy="97" r="22" fill="none" stroke="#1d4ed8" stroke-width="14" stroke-dasharray="35 138" stroke-dashoffset="-50"/>
+          <circle cx="250" cy="97" r="22" fill="none" stroke="#93c5fd" stroke-width="14" stroke-dasharray="53 138" stroke-dashoffset="-85"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Con Base de Datos</span>
+        <h3>Panel Administrativo</h3>
+        <p>Dashboard centralizado con estadísticas, gestión de usuarios, reportes y métricas en tiempo real.</p>
+        <div class="card-tags"><span class="tag">Dashboard</span><span class="tag">Roles</span><span class="tag">Reportes</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(5)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Necesito%20un%20panel%20administrativo." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 · SISTEMA GESTION -->
+    <div class="card" data-cat="software" onclick="openModal(6)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f8fafc"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+          <!-- gears -->
+          <circle cx="100" cy="80" r="30" fill="none" stroke="#64748b" stroke-width="3" opacity="0.3"/>
+          <circle cx="100" cy="80" r="20" fill="none" stroke="#475569" stroke-width="3" opacity="0.5"/>
+          <circle cx="100" cy="80" r="10" fill="#94a3b8" opacity="0.7"/>
+          <!-- gear teeth big -->
+          <rect x="96" y="44" width="8" height="10" rx="2" fill="#64748b" opacity="0.5"/>
+          <rect x="96" y="106" width="8" height="10" rx="2" fill="#64748b" opacity="0.5"/>
+          <rect x="64" y="76" width="10" height="8" rx="2" fill="#64748b" opacity="0.5"/>
+          <rect x="126" y="76" width="10" height="8" rx="2" fill="#64748b" opacity="0.5"/>
+          <rect x="70" y="53" width="8" height="10" rx="2" fill="#64748b" opacity="0.4" transform="rotate(-45 74 58)"/>
+          <rect x="118" y="53" width="8" height="10" rx="2" fill="#64748b" opacity="0.4" transform="rotate(45 122 58)"/>
+          <rect x="70" y="96" width="8" height="10" rx="2" fill="#64748b" opacity="0.4" transform="rotate(45 74 101)"/>
+          <rect x="118" y="96" width="8" height="10" rx="2" fill="#64748b" opacity="0.4" transform="rotate(-45 122 101)"/>
+          <!-- small gear -->
+          <circle cx="152" cy="56" r="16" fill="none" stroke="#94a3b8" stroke-width="2" opacity="0.6"/>
+          <circle cx="152" cy="56" r="8" fill="#cbd5e1" opacity="0.8"/>
+          <rect x="149" y="36" width="6" height="7" rx="1" fill="#94a3b8" opacity="0.6"/>
+          <rect x="149" y="69" width="6" height="7" rx="1" fill="#94a3b8" opacity="0.6"/>
+          <rect x="132" y="53" width="7" height="6" rx="1" fill="#94a3b8" opacity="0.6"/>
+          <rect x="165" y="53" width="7" height="6" rx="1" fill="#94a3b8" opacity="0.6"/>
+          <!-- info panel -->
+          <rect x="176" y="44" width="116" height="102" rx="3" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="0.5"/>
+          <rect x="184" y="54" width="60" height="5" rx="1" fill="#475569" opacity="0.7"/>
+          <rect x="184" y="64" width="100" height="3" rx="1" fill="#cbd5e1"/>
+          <rect x="184" y="70" width="80" height="3" rx="1" fill="#cbd5e1"/>
+          <rect x="184" y="82" width="100" height="12" rx="2" fill="#e2e8f0"/>
+          <rect x="184" y="98" width="100" height="12" rx="2" fill="#e2e8f0"/>
+          <rect x="184" y="114" width="100" height="12" rx="2" fill="#e2e8f0"/>
+          <rect x="184" y="130" width="56" height="8" rx="2" fill="#475569"/>
+          <rect x="190" y="133" width="36" height="3" rx="1" fill="rgba(255,255,255,0.7)"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Software</span>
+        <h3>Sistema de Gestión</h3>
+        <p>Software personalizado para gestionar inventarios, ventas, clientes o procesos internos de tu empresa.</p>
+        <div class="card-tags"><span class="tag">Personalizado</span><span class="tag">Escalable</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(6)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Quiero%20un%20sistema%20de%20gesti%C3%B3n%20personalizado." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 · CRM -->
+    <div class="card" data-cat="software" onclick="openModal(7)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#fff7ed"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#fed7aa" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="18" rx="4" fill="#ffedd5"/>
+          <rect x="20" y="24" width="280" height="8" fill="#ffedd5"/>
+          <circle cx="33" cy="23" r="4" fill="#ff6058"/><circle cx="45" cy="23" r="4" fill="#ffbd2e"/><circle cx="57" cy="23" r="4" fill="#27c93f"/>
+          <!-- kanban columns -->
+          <rect x="28" y="36" width="58" height="102" rx="2" fill="#fff7ed" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="94" y="36" width="58" height="102" rx="2" fill="#fff7ed" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="160" y="36" width="58" height="102" rx="2" fill="#fff7ed" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="226" y="36" width="66" height="102" rx="2" fill="#fff7ed" stroke="#fed7aa" stroke-width="0.5"/>
+          <!-- column headers -->
+          <rect x="32" y="40" width="50" height="8" rx="1" fill="#fb923c" opacity="0.6"/>
+          <rect x="98" y="40" width="50" height="8" rx="1" fill="#f97316" opacity="0.6"/>
+          <rect x="164" y="40" width="50" height="8" rx="1" fill="#ea580c" opacity="0.6"/>
+          <rect x="230" y="40" width="58" height="8" rx="1" fill="#9a3412" opacity="0.5"/>
+          <!-- kanban cards -->
+          <rect x="32" y="54" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="32" y="82" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="32" y="110" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="98" y="54" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="98" y="82" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="164" y="54" width="50" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <rect x="230" y="54" width="58" height="24" rx="2" fill="white" stroke="#fed7aa" stroke-width="0.5"/>
+          <!-- card content -->
+          <rect x="36" y="58" width="38" height="3" rx="1" fill="#94a3b8"/>
+          <rect x="36" y="64" width="28" height="3" rx="1" fill="#fed7aa"/>
+          <circle cx="38" cy="72" r="3" fill="#fb923c"/>
+          <rect x="36" y="86" width="38" height="3" rx="1" fill="#94a3b8"/>
+          <rect x="36" y="92" width="28" height="3" rx="1" fill="#fed7aa"/>
+          <rect x="102" y="58" width="38" height="3" rx="1" fill="#94a3b8"/>
+          <rect x="102" y="64" width="28" height="3" rx="1" fill="#fed7aa"/>
+          <rect x="168" y="58" width="38" height="3" rx="1" fill="#94a3b8"/>
+          <rect x="234" y="58" width="42" height="3" rx="1" fill="#94a3b8"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Software</span>
+        <h3>CRM a Medida</h3>
+        <p>Gestión de clientes, seguimiento de ventas, pipeline y reportes adaptados a tu flujo de trabajo.</p>
+        <div class="card-tags"><span class="tag">Ventas</span><span class="tag">Clientes</span><span class="tag">Pipeline</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(7)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Necesito%20un%20CRM%20personalizado." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 · PWA -->
+    <div class="card" data-cat="software" onclick="openModal(8)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f0fdf4"/>
+          <!-- phone left -->
+          <rect x="60" y="20" width="70" height="120" rx="10" fill="#1a1a18"/>
+          <rect x="64" y="32" width="62" height="98" rx="4" fill="#10b981"/>
+          <circle cx="95" cy="26" r="3" fill="#333"/>
+          <rect x="64" y="32" width="62" height="14" fill="#059669"/>
+          <rect x="70" y="36" width="30" height="4" rx="1" fill="rgba(255,255,255,0.8)"/>
+          <rect x="68" y="52" width="56" height="10" rx="2" fill="rgba(255,255,255,0.2)"/>
+          <rect x="68" y="66" width="56" height="10" rx="2" fill="rgba(255,255,255,0.2)"/>
+          <rect x="68" y="80" width="56" height="10" rx="2" fill="rgba(255,255,255,0.2)"/>
+          <rect x="68" y="96" width="56" height="8" rx="2" fill="rgba(255,255,255,0.4)"/>
+          <rect x="68" y="108" width="28" height="8" rx="2" fill="rgba(255,255,255,0.15)"/>
+          <rect x="100" y="108" width="24" height="8" rx="2" fill="rgba(255,255,255,0.15)"/>
+          <rect x="78" y="122" width="34" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
+          <!-- phone right slightly behind -->
+          <rect x="180" y="28" width="70" height="116" rx="10" fill="#2d2d2b"/>
+          <rect x="184" y="40" width="62" height="94" rx="4" fill="#d1fae5"/>
+          <circle cx="215" cy="34" r="3" fill="#444"/>
+          <rect x="184" y="40" width="62" height="14" fill="#6ee7b7"/>
+          <rect x="190" y="44" width="30" height="4" rx="1" fill="rgba(0,0,0,0.3)"/>
+          <rect x="188" y="60" width="56" height="28" rx="2" fill="#a7f3d0"/>
+          <rect x="188" y="92" width="26" height="8" rx="2" fill="#10b981"/>
+          <rect x="218" y="92" width="26" height="8" rx="2" fill="#d1fae5" stroke="#6ee7b7" stroke-width="0.5"/>
+          <rect x="188" y="104" width="56" height="4" rx="1" fill="#a7f3d0"/>
+          <rect x="188" y="112" width="40" height="4" rx="1" fill="#a7f3d0"/>
+          <!-- install badge -->
+          <rect x="118" y="64" width="56" height="22" rx="4" fill="#10b981" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.15))"/>
+          <rect x="124" y="70" width="44" height="4" rx="1" fill="white" opacity="0.9"/>
+          <rect x="130" y="77" width="32" height="3" rx="1" fill="white" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Software</span>
+        <h3>App Web Progresiva</h3>
+        <p>Aplicación web instalable que funciona como app nativa en móviles, con notificaciones push y modo offline.</p>
+        <div class="card-tags"><span class="tag">PWA</span><span class="tag">Móvil</span><span class="tag">Offline</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(8)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Me%20interesa%20una%20App%20Web%20Progresiva%20(PWA)." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 · REPARAR -->
+    <div class="card" data-cat="soporte" onclick="openModal(9)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#fff1f2"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#fecdd3" stroke-width="1"/>
+          <rect x="20" y="14" width="280" height="22" rx="4" fill="#fee2e2"/>
+          <rect x="20" y="28" width="280" height="8" fill="#fee2e2"/>
+          <circle cx="33" cy="25" r="4" fill="#ff6058"/><circle cx="45" cy="25" r="4" fill="#ffbd2e"/><circle cx="57" cy="25" r="4" fill="#27c93f"/>
+          <!-- broken page -->
+          <rect x="40" y="50" width="110" height="90" rx="3" fill="#fef2f2" stroke="#fecdd3" stroke-width="1"/>
+          <rect x="48" y="58" width="80" height="6" rx="1" fill="#fecdd3"/>
+          <rect x="48" y="68" width="60" height="4" rx="1" fill="#fed7d7"/>
+          <!-- error x -->
+          <line x1="68" y1="84" x2="92" y2="108" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+          <line x1="92" y1="84" x2="68" y2="108" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="80" cy="96" r="18" fill="none" stroke="#ef4444" stroke-width="2" opacity="0.4"/>
+          <rect x="104" y="84" width="38" height="4" rx="1" fill="#fecdd3"/>
+          <rect x="104" y="92" width="28" height="4" rx="1" fill="#fecdd3"/>
+          <rect x="104" y="100" width="34" height="4" rx="1" fill="#fecdd3"/>
+          <!-- wrench -->
+          <rect x="168" y="50" width="124" height="90" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+          <rect x="176" y="58" width="80" height="6" rx="1" fill="#bbf7d0"/>
+          <!-- wrench shape -->
+          <path d="M210 100 L230 80 Q240 70 248 78 L240 86 Q244 90 240 94 L232 94 Z" fill="#16a34a" opacity="0.7"/>
+          <circle cx="248" cy="82" r="10" fill="none" stroke="#16a34a" stroke-width="3" opacity="0.6"/>
+          <!-- checkmarks -->
+          <rect x="176" y="120" width="8" height="8" rx="1" fill="#16a34a" opacity="0.7"/>
+          <rect x="188" y="120" width="60" height="4" rx="1" fill="#bbf7d0"/>
+          <rect x="188" y="127" width="40" height="3" rx="1" fill="#d1fae5"/>
+          <!-- arrow between -->
+          <path d="M155 92 L168 92" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,2" marker-end="url(#arr)"/>
+          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 Z" fill="#94a3b8"/></marker></defs>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Soporte</span>
+        <h3>Reparar tu Página</h3>
+        <p>¿Tu página tiene errores o está caída? La diagnostico, reparo y dejo funcionando perfectamente.</p>
+        <div class="card-tags"><span class="tag">Bugs</span><span class="tag">Errores</span><span class="tag">Urgente</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(9)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Mi%20p%C3%A1gina%20tiene%20problemas%20y%20necesito%20que%20la%20reparen%20urgente." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 · SEO -->
+    <div class="card" data-cat="soporte" onclick="openModal(10)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#fefce8"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#fde68a" stroke-width="1"/>
+          <!-- speedometer -->
+          <circle cx="120" cy="95" r="55" fill="none" stroke="#fde68a" stroke-width="2" opacity="0.5"/>
+          <path d="M65 95 A55 55 0 0 1 175 95" fill="none" stroke="#fde68a" stroke-width="10" stroke-linecap="round"/>
+          <path d="M65 95 A55 55 0 0 1 100 53" fill="none" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+          <path d="M100 53 A55 55 0 0 1 140 43" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round"/>
+          <path d="M140 43 A55 55 0 0 1 175 95" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" opacity="0.5"/>
+          <!-- needle -->
+          <line x1="120" y1="95" x2="110" y2="52" stroke="#1a1a18" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="120" cy="95" r="6" fill="#1a1a18"/>
+          <!-- score -->
+          <text x="120" y="120" font-family="serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#059669">92</text>
+          <text x="120" y="132" font-family="sans-serif" font-size="7" text-anchor="middle" fill="#94a3b8">RENDIMIENTO</text>
+          <!-- metrics -->
+          <rect x="186" y="30" width="106" height="112" rx="3" fill="#fefce8" stroke="#fde68a" stroke-width="0.5"/>
+          <rect x="194" y="38" width="50" height="5" rx="1" fill="#92400e" opacity="0.5"/>
+          <rect x="194" y="50" width="90" height="8" rx="1" fill="#fde68a"/>
+          <rect x="194" y="50" width="80" height="8" rx="1" fill="#f59e0b" opacity="0.7"/>
+          <rect x="194" y="62" width="90" height="8" rx="1" fill="#fde68a"/>
+          <rect x="194" y="62" width="85" height="8" rx="1" fill="#10b981" opacity="0.6"/>
+          <rect x="194" y="74" width="90" height="8" rx="1" fill="#fde68a"/>
+          <rect x="194" y="74" width="70" height="8" rx="1" fill="#f59e0b" opacity="0.7"/>
+          <rect x="194" y="86" width="90" height="8" rx="1" fill="#fde68a"/>
+          <rect x="194" y="86" width="88" height="8" rx="1" fill="#10b981" opacity="0.6"/>
+          <!-- rocket -->
+          <path d="M230 118 L238 104 L246 118 Z" fill="#eab308" opacity="0.8"/>
+          <ellipse cx="238" cy="106" rx="5" ry="9" fill="#fbbf24"/>
+          <rect x="236" y="116" width="4" height="6" rx="1" fill="#f59e0b"/>
+          <path d="M228 118 L234 112" stroke="#f59e0b" stroke-width="1.5"/>
+          <path d="M248 118 L242 112" stroke="#f59e0b" stroke-width="1.5"/>
+          <circle cx="238" cy="105" r="3" fill="white" opacity="0.7"/>
+          <text x="194" y="138" font-family="sans-serif" font-size="6" fill="#92400e" opacity="0.7">SEO · VELOCIDAD · CORE WEB VITALS</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Soporte</span>
+        <h3>Optimización & SEO</h3>
+        <p>Mejoro la velocidad, el posicionamiento en Google y la experiencia de usuario de tu página actual.</p>
+        <div class="card-tags"><span class="tag">SEO</span><span class="tag">Velocidad</span><span class="tag">Google</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(10)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Quiero%20optimizar%20mi%20p%C3%A1gina%20para%20mejorar%20el%20SEO%20y%20velocidad." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 · MIGRACION -->
+    <div class="card" data-cat="soporte" onclick="openModal(11)">
+      <div class="card-preview">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="160" fill="#f5f3ff"/>
+          <rect x="20" y="14" width="280" height="132" rx="4" fill="white" stroke="#ddd6fe" stroke-width="1"/>
+          <!-- old site (left, grayscale) -->
+          <rect x="30" y="30" width="100" height="116" rx="3" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1" opacity="0.8"/>
+          <rect x="30" y="30" width="100" height="20" rx="3" fill="#94a3b8"/>
+          <rect x="30" y="42" width="100" height="8" fill="#94a3b8"/>
+          <rect x="38" y="58" width="84" height="20" rx="1" fill="#e2e8f0"/>
+          <rect x="38" y="82" width="60" height="5" rx="1" fill="#cbd5e1"/>
+          <rect x="38" y="90" width="80" height="4" rx="1" fill="#e2e8f0"/>
+          <rect x="38" y="97" width="70" height="4" rx="1" fill="#e2e8f0"/>
+          <rect x="38" y="108" width="40" height="4" rx="1" fill="#cbd5e1"/>
+          <rect x="38" y="116" width="84" height="4" rx="1" fill="#e2e8f0"/>
+          <rect x="38" y="124" width="55" height="4" rx="1" fill="#e2e8f0"/>
+          <text x="80" y="48" font-family="sans-serif" font-size="6" fill="white" text-anchor="middle" opacity="0.8">ANTIGUO</text>
+          <!-- arrow -->
+          <path d="M136 80 L182 80" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="4,3"/>
+          <polygon points="182,75 192,80 182,85" fill="#7c3aed"/>
+          <!-- new site (right, colorful) -->
+          <rect x="196" y="30" width="106" height="116" rx="3" fill="white" stroke="#ddd6fe" stroke-width="1"/>
+          <rect x="196" y="30" width="106" height="20" rx="3" fill="#7c3aed"/>
+          <rect x="196" y="42" width="106" height="8" fill="#6d28d9"/>
+          <text x="249" y="44" font-family="sans-serif" font-size="6" fill="white" text-anchor="middle">NUEVO DISEÑO</text>
+          <rect x="204" y="58" width="90" height="24" rx="2" fill="#ede9fe"/>
+          <rect x="208" y="63" width="50" height="6" rx="1" fill="#7c3aed" opacity="0.7"/>
+          <rect x="208" y="72" width="36" height="4" rx="1" fill="#c4b5fd"/>
+          <rect x="204" y="86" width="42" height="20" rx="2" fill="#ddd6fe"/>
+          <rect x="250" y="86" width="44" height="20" rx="2" fill="#ede9fe"/>
+          <rect x="208" y="91" width="30" height="4" rx="1" fill="#7c3aed" opacity="0.5"/>
+          <rect x="208" y="98" width="22" height="3" rx="1" fill="#c4b5fd"/>
+          <rect x="204" y="110" width="90" height="8" rx="2" fill="#7c3aed" opacity="0.8"/>
+          <rect x="218" y="113" width="62" height="3" rx="1" fill="rgba(255,255,255,0.7)"/>
+          <rect x="204" y="122" width="90" height="4" rx="1" fill="#ede9fe"/>
+          <rect x="204" y="130" width="60" height="4" rx="1" fill="#ddd6fe"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="card-cat">Soporte</span>
+        <h3>Migración & Rediseño</h3>
+        <p>Actualizo tu página antigua a tecnologías modernas con nuevo diseño, conservando todo tu contenido.</p>
+        <div class="card-tags"><span class="tag">Modernización</span><span class="tag">Rediseño</span></div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-preview" onclick="openModal(11)">Ver detalle</button>
+          <a class="btn-wa" href="https://wa.me/573166219962?text=Hola!%20Tengo%20una%20p%C3%A1gina%20antigua%20y%20quiero%20actualizarla." target="_blank">
+            <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Cotizar
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────── -->
+<footer id="contacto">
+  <p>© 2026 Páginas Web · +57 316 621 9962</p>
+  <p>Desarrollo Web Profesional · Full Stack</p>
+</footer>
+
+<!-- ─── WA FLOAT ───────────────────────────────────── -->
+<a class="wa-float" href="https://wa.me/573166219962?text=Hola!%20Quiero%20hablar%20sobre%20un%20proyecto%20web." target="_blank" title="Contáctame por WhatsApp">
+  <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- ─── MODAL ───────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-body">
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-cta">
+        <a id="modalWa" class="modal-wa" href="#" target="_blank">
+          <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Cotizar este servicio
+        </a>
+        <div class="modal-info">📍 Colombia · 24h respuesta</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const services = [
+  { title:"Landing Page", desc:"Una landing page es la carta de presentación digital de tu negocio o producto. Diseñada para convertir visitantes en clientes, con secciones estratégicamente organizadas: hero impactante, propuesta de valor, testimonios, llamadas a la acción y formulario de contacto.", features:["Diseño 100% personalizado","Optimizada para móviles","Carga ultra rápida","Formulario de contacto","Integración Google Analytics","Certificado SSL incluido","Dominio y hosting asesorado","Entrega en 5-7 días"], waMsg:"Hola!%20Me%20interesa%20una%20Landing%20Page%20profesional.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%20y%20costos%3F" },
+  { title:"Portafolio Personal", desc:"Tu presencia digital profesional. Un portafolio bien diseñado abre puertas en el mundo laboral. Muestra tus proyectos, habilidades, experiencia y logros con una narrativa visual coherente que refleje tu identidad profesional.", features:["Galería de proyectos interactiva","Sección de habilidades","CV descargable","Blog integrado (opcional)","Formulario de contacto","Diseño único y memorable","Animaciones sutiles","Multiidioma (opcional)"], waMsg:"Hola!%20Quiero%20un%20portafolio%20personal%20profesional.%20%C2%BFCu%C3%A1nto%20cuesta%20y%20cu%C3%A1nto%20demora%3F" },
+  { title:"Página Empresarial", desc:"Presencia digital completa para tu empresa o negocio. Desde restaurantes hasta consultoras, toda empresa necesita una página que transmita confianza y facilite que los clientes te encuentren y te contacten.", features:["Múltiples secciones (6-10)","Mapa de ubicación","Galería de fotos","Integración WhatsApp","Formulario de cotización","Optimización SEO local","Diseño responsivo","Panel de edición básico"], waMsg:"Hola!%20Necesito%20una%20p%C3%A1gina%20web%20empresarial%20para%20mi%20negocio." },
+  { title:"Tienda en Línea", desc:"E-commerce completo para vender tus productos 24/7. Con catálogo filtrable, carrito, integración de pasarelas de pago (PSE, Nequi, Bancolombia), gestión de pedidos e inventario, y panel administrativo.", features:["Catálogo de productos","Carrito y checkout","PSE / Nequi / Efecty","Gestión de inventario","Panel de pedidos","Notificaciones WhatsApp","Variantes de productos","Reportes de ventas"], waMsg:"Hola!%20Quiero%20crear%20una%20tienda%20en%20l%C3%ADnea.%20%C2%BFQu%C3%A9%20incluye%20y%20cu%C3%A1nto%20cuesta%3F" },
+  { title:"Sistema de Reservas", desc:"¿Tienes un salón, consultorio, restaurante o servicio? Un sistema de reservas online elimina las llamadas telefónicas, reduce no-shows con recordatorios automáticos y optimiza tu agenda completamente.", features:["Calendario de disponibilidad","Reserva online 24/7","Recordatorios automáticos","Gestión de clientes","Panel del administrador","Pagos anticipados (opcional)","Multi-servicio y personal","Integración Google Calendar"], waMsg:"Hola!%20Necesito%20un%20sistema%20de%20reservas%20en%20l%C3%ADnea%20para%20mi%20negocio." },
+  { title:"Panel Administrativo", desc:"Dashboard centralizado para gestionar todos los datos de tu negocio. Desde métricas en tiempo real hasta reportes exportables, con control de acceso por roles para que cada persona vea solo lo que le corresponde.", features:["Estadísticas en tiempo real","Gestión de usuarios y roles","Reportes exportables (PDF/Excel)","Módulos personalizados","Notificaciones internas","Log de actividad","API REST incluida","Acceso multi-dispositivo"], waMsg:"Hola!%20Quiero%20un%20panel%20administrativo%20personalizado.%20%C2%BFPuedes%20darme%20m%C3%A1s%20detalles%3F" },
+  { title:"Sistema de Gestión", desc:"Software hecho a medida para automatizar los procesos internos de tu empresa. Inventarios, ventas, facturación, RRHH — cualquier flujo de trabajo puede digitalizarse y hacerse más eficiente.", features:["Análisis del proceso actual","Diseño de flujo personalizado","Base de datos robusta","Reportes y métricas","Capacitación del equipo","Soporte post-entrega","Actualizaciones futuras","Documentación incluida"], waMsg:"Hola!%20Necesito%20un%20sistema%20de%20gesti%C3%B3n%20a%20medida%20para%20mi%20empresa." },
+  { title:"CRM a Medida", desc:"Un CRM diseñado para tu proceso de ventas, no uno genérico que tengas que adaptar. Gestiona contactos, oportunidades, actividades y cierra más negocios con menos esfuerzo y más visibilidad sobre tu equipo.", features:["Pipeline de ventas visual","Gestión de contactos/leads","Seguimiento de actividades","Cotizaciones y propuestas","Reportes de desempeño","Integración Email/WhatsApp","Recordatorios automáticos","App móvil (opcional)"], waMsg:"Hola!%20Me%20interesa%20un%20CRM%20personalizado%20para%20mi%20equipo%20comercial." },
+  { title:"App Web Progresiva (PWA)", desc:"Una PWA es lo mejor de dos mundos: apariencia y funcionalidad de app nativa pero distribuida como página web. No requiere descarga, funciona offline y puede enviar notificaciones push.", features:["Instalable desde el navegador","Funciona sin internet","Notificaciones push","Carga instantánea","Sincronización en fondo","Ícono en pantalla de inicio","Multiplataforma iOS/Android","Sin costos de App Store"], waMsg:"Hola!%20Quiero%20desarrollar%20una%20App%20Web%20Progresiva%20(PWA).%20%C2%BFCu%C3%A1nto%20cuesta%3F" },
+  { title:"Reparar tu Página", desc:"¿Tu página dejó de funcionar, tiene errores visuales, el formulario no envía o la hackearon? Diagnostico el problema, te doy un presupuesto claro y lo resuelvo en el menor tiempo posible. Atención urgente disponible.", features:["Diagnóstico gratuito","Corrección de errores","Recuperación si fue hackeada","Actualización de CMS/plugins","Backup antes de intervenir","Reporte de cambios realizados","Garantía de 30 días","Soporte urgente disponible"], waMsg:"Hola!%20Necesito%20ayuda%20urgente%2C%20mi%20p%C3%A1gina%20web%20tiene%20problemas%20y%20necesito%20que%20la%20reparen." },
+  { title:"Optimización & SEO", desc:"¿Tu página carga lento o no aparece en Google? La optimizo técnicamente para mejorar su velocidad (Core Web Vitals), posicionamiento orgánico en buscadores y experiencia de usuario.", features:["Auditoría técnica completa","Optimización de velocidad","SEO on-page","Optimización de imágenes","Estructura de URLs limpia","Meta tags y Schema","Google Search Console","Informe de resultados"], waMsg:"Hola!%20Quiero%20mejorar%20el%20SEO%20y%20la%20velocidad%20de%20mi%20p%C3%A1gina%20web." },
+  { title:"Migración & Rediseño", desc:"Tu página se ve anticuada o está en una plataforma difícil de mantener. La migro a tecnología moderna, conservando todo tu contenido y mejorando el diseño, la velocidad y la experiencia de usuario.", features:["Análisis del sitio actual","Preservación del contenido","Diseño moderno y fresco","Migración sin downtime","Redirecciones SEO","Pruebas exhaustivas","Capacitación en nueva plataforma","Soporte 60 días post-migración"], waMsg:"Hola!%20Tengo%20una%20p%C3%A1gina%20web%20antigua%20y%20quiero%20actualizarla%20o%20redise%C3%B1arla." }
+];
+
+function openModal(idx) {
+  const s = services[idx];
+  const card = document.querySelectorAll('.card')[idx];
+  const previewSvg = card.querySelector('.card-preview').innerHTML;
+
+  document.getElementById('modalTitle').textContent = s.title;
+  document.getElementById('modalDesc').textContent = s.desc;
+  document.getElementById('modalWa').href = `https://wa.me/573166219962?text=${s.waMsg}`;
+  document.getElementById('modalImg').innerHTML = previewSvg;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(c => {
+    c.setAttribute('data-hidden', (cat !== 'all' && c.dataset.cat !== cat) ? 'true' : 'false');
+  });
+  document.getElementById('countDisplay').textContent =
+    document.querySelectorAll('.card[data-hidden="false"], .card:not([data-hidden])').length;
+}
+</script>
+</body>
+</html>
