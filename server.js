@@ -123,6 +123,30 @@ async function initDB() {
   await sql`ALTER TABLE briefs_web ADD COLUMN IF NOT EXISTS precio_calculado TEXT`;
   await sql`ALTER TABLE briefs_web ADD COLUMN IF NOT EXISTS desglose_precios TEXT`;
 
+  // ── STALK. TABLES ─────────────────────────────────
+  await sql`
+    CREATE TABLE IF NOT EXISTS stalk_users (
+      id        SERIAL PRIMARY KEY,
+      nombre    TEXT NOT NULL,
+      numero    TEXT NOT NULL UNIQUE,
+      ambiente  TEXT,
+      password  TEXT NOT NULL,
+      role      TEXT DEFAULT 'user',
+      foto      TEXT,
+      creado_en TIMESTAMPTZ DEFAULT NOW()
+    )`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS stalk_orders (
+      id        SERIAL PRIMARY KEY,
+      user_id   INT REFERENCES stalk_users(id) ON DELETE SET NULL,
+      tipo      TEXT NOT NULL,
+      specs     JSONB DEFAULT '{}',
+      price     INT DEFAULT 0,
+      total     INT DEFAULT 0,
+      status    TEXT DEFAULT 'pending',
+      creado_en TIMESTAMPTZ DEFAULT NOW()
+    )`;
+
   await sql`
     CREATE TABLE IF NOT EXISTS preguntas_custom (
       id        SERIAL PRIMARY KEY,
@@ -328,6 +352,105 @@ app.post('/api/admin/test-push', auth, async (_req, res) => {
 });
 
 app.get('/admin', (_,res) => res.sendFile(path.join(__dirname,'admin.html')));
+
+// ══ STALK. ROUTES ════════════════════════════════════
+app.get('/stalk', (_,res) => res.sendFile(path.join(__dirname,'stalk.html')));
+app.get('/stalk.html', (_,res) => res.sendFile(path.join(__dirname,'stalk.html')));
+
+// ── Stalk users API ──────────────────────────────────
+app.post('/api/stalk/register', async (req,res) => {
+  const {nombre,numero,ambiente,password} = req.body;
+  if(!nombre||!numero||!ambiente||!password)
+    return res.status(400).json({error:'Faltan campos obligatorios.'});
+  if(password.length<6)
+    return res.status(400).json({error:'Contraseña mínimo 6 caracteres.'});
+  try {
+    const existing = await sql`SELECT id FROM stalk_users WHERE numero=${numero}`;
+    if(existing.length) return res.status(409).json({error:'Número ya registrado.'});
+    const r = await sql`
+      INSERT INTO stalk_users (nombre,numero,ambiente,password,role)
+      VALUES (${nombre},${numero},${ambiente},${password},'user')
+      RETURNING id,nombre,numero,ambiente,role,creado_en`;
+    res.status(201).json({user:r[0]});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.post('/api/stalk/login', async (req,res) => {
+  const {usuario,password} = req.body;
+  if(!usuario||!password) return res.status(400).json({error:'Faltan campos.'});
+  try {
+    const r = await sql`SELECT * FROM stalk_users WHERE (nombre=${usuario} OR numero=${usuario}) AND password=${password}`;
+    if(!r.length) return res.status(401).json({error:'Credenciales incorrectas.'});
+    const {password:_,...user} = r[0];
+    const token = jwt.sign({userId:user.id,role:user.role},JWT_SECRET,{expiresIn:'7d'});
+    res.json({user,token});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.get('/api/stalk/users', auth, async (_,res) => {
+  try { res.json(await sql`SELECT id,nombre,numero,ambiente,role,foto,creado_en FROM stalk_users ORDER BY creado_en DESC`); }
+  catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.patch('/api/stalk/users/:id/role', auth, async (req,res) => {
+  try {
+    const r = await sql`UPDATE stalk_users SET role=${req.body.role} WHERE id=${req.params.id} RETURNING id,role`;
+    res.json(r[0]);
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.patch('/api/stalk/users/:id/foto', async (req,res) => {
+  try {
+    await sql`UPDATE stalk_users SET foto=${req.body.foto} WHERE id=${req.params.id}`;
+    res.json({ok:true});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.delete('/api/stalk/users/:id', auth, async (req,res) => {
+  try {
+    await sql`DELETE FROM stalk_orders WHERE user_id=${req.params.id}`;
+    await sql`DELETE FROM stalk_users WHERE id=${req.params.id}`;
+    res.json({ok:true});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+// ── Stalk orders API ─────────────────────────────────
+app.post('/api/stalk/orders', async (req,res) => {
+  const {userId,tipo,specs,price,total} = req.body;
+  if(!userId||!tipo||!specs) return res.status(400).json({error:'Faltan datos.'});
+  try {
+    const r = await sql`
+      INSERT INTO stalk_orders (user_id,tipo,specs,price,total,status)
+      VALUES (${userId},${tipo},${JSON.stringify(specs)},${price},${total},'pending')
+      RETURNING *`;
+    await sendPushToAdmin({title:`🛒 Nuevo pedido stalk. — ${tipo}`,body:`Usuario ${userId} · $${total} COP`,icon:'/icon-192.png'});
+    res.status(201).json({order:r[0]});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.get('/api/stalk/orders', auth, async (_,res) => {
+  try { res.json(await sql`
+    SELECT o.*, u.nombre as user_nombre FROM stalk_orders o
+    LEFT JOIN stalk_users u ON u.id=o.user_id ORDER BY o.creado_en DESC`);
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.get('/api/stalk/orders/user/:userId', async (req,res) => {
+  try { res.json(await sql`SELECT * FROM stalk_orders WHERE user_id=${req.params.userId} ORDER BY creado_en DESC`); }
+  catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.patch('/api/stalk/orders/:id/status', auth, async (req,res) => {
+  try {
+    const r = await sql`UPDATE stalk_orders SET status=${req.body.status} WHERE id=${req.params.id} RETURNING *`;
+    res.json(r[0]);
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.delete('/api/stalk/orders/:id', auth, async (req,res) => {
+  try { await sql`DELETE FROM stalk_orders WHERE id=${req.params.id}`; res.json({ok:true}); }
+  catch(e){ res.status(500).json({error:e.message}); }
+});
 
 // ── INICIAR ───────────────────────────────────────────
 initDB().then(() => {

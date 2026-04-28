@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>stalk. — personalización brutal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050505;--surface:#0d0d0d;--card:#111;--border:#1e1e1e;
+  --purple:#9b00ff;--purple2:#bf5fff;--acid:#b8ff00;
+  --white:#fff;--muted:#555;--red:#ff3333;--green:#00ff88;
+  --r:6px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--purple);border-radius:2px}
+
+/* ── NOISE OVERLAY ── */
+body::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000}
+
+/* ── NAVBAR ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 24px;gap:0}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;color:var(--white);cursor:pointer;margin-right:32px;position:relative}
+.nav-logo::after{content:'®';font-size:10px;position:absolute;top:4px;right:-14px;color:var(--purple)}
+.nav-tabs{display:flex;gap:0;flex:1}
+.nav-tab{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:20px 20px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;color:var(--muted)}
+.nav-tab:hover{color:var(--white)}
+.nav-tab.active{color:var(--acid);border-bottom-color:var(--acid)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.btn-nav{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 16px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;border-radius:var(--r);letter-spacing:.05em;transition:all .2s}
+.btn-nav:hover{border-color:var(--purple);color:var(--white)}
+.btn-nav.primary{background:var(--purple);border-color:var(--purple);color:var(--white)}
+.btn-nav.primary:hover{background:var(--purple2)}
+.avatar-btn{width:34px;height:34px;border-radius:50%;background:var(--purple);border:2px solid var(--purple2);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:14px;font-family:'Bebas Neue',sans-serif}
+.avatar-btn img{width:100%;height:100%;object-fit:cover}
+
+/* ── VIEWS ── */
+.view{display:none;padding-top:60px;min-height:100vh}
+.view.active{display:block}
+
+/* ════════════ HOME ════════════ */
+#view-home{background:var(--bg)}
+.hero-home{position:relative;padding:80px 40px 60px;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-home::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(155,0,255,.15),transparent 70%)}
+.hero-home::after{content:'STALK';font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,20vw,280px);color:transparent;-webkit-text-stroke:1px rgba(155,0,255,.12);position:absolute;right:-20px;top:50%;transform:translateY(-50%);letter-spacing:-5px;pointer-events:none}
+.hero-tag{display:inline-block;background:rgba(155,0,255,.15);border:1px solid rgba(155,0,255,.4);color:var(--purple2);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;border-radius:2px;margin-bottom:20px}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(50px,10vw,120px);line-height:.9;letter-spacing:-1px;margin-bottom:20px}
+.hero-h1 span{color:var(--purple);display:block}
+.hero-sub{font-size:14px;color:var(--muted);max-width:400px;line-height:1.7;font-weight:300}
+.hero-ctas{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.btn-cta{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:12px 28px;border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;border-radius:2px}
+.btn-cta.solid{background:var(--purple);color:var(--white)}
+.btn-cta.solid:hover{background:var(--purple2);transform:translateY(-2px)}
+.btn-cta.outline{background:none;color:var(--white);border:1px solid var(--border)}
+.btn-cta.outline:hover{border-color:var(--purple2);color:var(--purple2)}
+
+/* Product grid */
+.products-section{padding:60px 40px}
+.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,56px);letter-spacing:1px;margin-bottom:40px}
+.section-title span{color:var(--purple)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;border:1px solid var(--border)}
+.product-card{background:var(--surface);padding:32px;position:relative;overflow:hidden;cursor:pointer;transition:background .2s}
+.product-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(155,0,255,.08),transparent 70%);opacity:0;transition:opacity .3s}
+.product-card:hover{background:var(--card)}
+.product-card:hover::before{opacity:1}
+.product-card:hover .pc-arrow{transform:rotate(-45deg)}
+.pc-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.pc-visual{width:100%;aspect-ratio:1;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:2px;color:var(--purple);background:var(--bg);position:relative;overflow:hidden}
+.pc-visual-sticker{background:linear-gradient(135deg,#0a0a0a 0%,#150a20 100%)}
+.pc-visual-sticker::after{content:'';position:absolute;width:120px;height:120px;border-radius:50%;border:3px solid var(--purple);opacity:.3}
+.pc-visual-poster{background:linear-gradient(135deg,#0a0a0a,#0a1a0a)}
+.pc-visual-boton{background:linear-gradient(135deg,#0a0a0a,#1a0a0a)}
+.pc-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:8px}
+.pc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.pc-prices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.price-tag{background:rgba(155,0,255,.1);border:1px solid rgba(155,0,255,.2);color:var(--purple2);font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:2px}
+.pc-btn{width:100%;padding:12px;background:var(--purple);color:var(--white);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
+.pc-btn:hover{background:var(--purple2)}
+.pc-arrow{position:absolute;top:20px;right:20px;font-size:18px;color:var(--muted);transition:transform .2s}
+
+/* ════════════ MODAL AUTH ════════════ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);width:100%;max-width:420px;padding:40px;position:relative}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:all .2s}
+.modal-close:hover{color:var(--white);background:var(--border)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:28px}
+.tab-switcher{display:flex;border:1px solid var(--border);border-radius:var(--r);margin-bottom:24px;overflow:hidden}
+.tab-sw{flex:1;padding:8px;background:none;border:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.05em}
+.tab-sw.active{background:var(--purple);color:var(--white)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-family:'Space Mono',monospace}
+.field input,.field select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:14px;padding:10px 12px;transition:border-color .2s;outline:none}
+.field input:focus,.field select:focus{border-color:var(--purple)}
+.field select option{background:var(--surface)}
+.btn-submit{width:100%;padding:13px;background:var(--purple);color:var(--white);font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:var(--r);margin-top:8px;transition:all .2s}
+.btn-submit:hover{background:var(--purple2)}
+.msg{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:4px;display:none}
+.msg.error{background:rgba(255,51,51,.1);border:1px solid var(--red);color:var(--red);display:block}
+.msg.success{background:rgba(0,255,136,.1);border:1px solid var(--green);color:var(--green);display:block}
+
+/* ════════════ EDITOR SHARED ════════════ */
+.editor-view{display:none;padding-top:60px;min-height:100vh}
+.editor-view.active{display:flex;flex-direction:column}
+.editor-header{border-bottom:1px solid var(--border);padding:24px 40px;background:var(--surface)}
+.editor-header h2{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:3px}
+.editor-header p{font-size:12px;color:var(--muted);margin-top:4px}
+.editor-layout{display:grid;grid-template-columns:340px 1fr;flex:1;min-height:calc(100vh - 140px)}
+.editor-sidebar{background:var(--surface);border-right:1px solid var(--border);padding:24px;overflow-y:auto;max-height:calc(100vh - 140px)}
+.editor-canvas-area{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;position:relative;overflow:hidden}
+.editor-canvas-area::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(155,0,255,.05),transparent 70%)}
+
+/* Sidebar controls */
+.ctrl-section{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.ctrl-section:last-child{border-bottom:none;margin-bottom:0}
+.ctrl-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ctrl-label::before{content:'';width:8px;height:8px;background:var(--purple);border-radius:50%;flex-shrink:0}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden}
+.upload-zone:hover{border-color:var(--purple);background:rgba(155,0,255,.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-icon{font-size:28px;margin-bottom:8px;color:var(--muted)}
+.upload-text{font-size:12px;color:var(--muted)}
+.upload-text strong{color:var(--purple2)}
+.color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0}
+.color-swatch.active{border-color:var(--white);transform:scale(1.15)}
+.color-picker-wrap{display:flex;align-items:center;gap:8px;margin-top:8px}
+.color-picker-wrap input[type=color]{width:36px;height:36px;border:1px solid var(--border);border-radius:50%;background:none;cursor:pointer;padding:2px}
+.color-picker-wrap span{font-size:12px;color:var(--muted);font-family:'Space Mono',monospace}
+.slider-wrap{display:flex;align-items:center;gap:12px}
+.slider-wrap input[type=range]{flex:1;accent-color:var(--purple);height:4px;cursor:pointer}
+.slider-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--purple2);min-width:48px;text-align:right}
+.toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.toggle-opt{padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);font-size:11px;cursor:pointer;text-align:center;font-family:'Space Mono',monospace;transition:all .2s;color:var(--muted)}
+.toggle-opt.active{background:rgba(155,0,255,.15);border-color:var(--purple);color:var(--purple2)}
+.price-display{background:rgba(155,0,255,.08);border:1px solid rgba(155,0,255,.2);border-radius:var(--r);padding:16px;text-align:center;margin-bottom:16px}
+.price-display .price-label{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.price-display .price-amount{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--acid);letter-spacing:2px}
+.price-display .price-unit{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
+.btn-order{width:100%;padding:14px;background:var(--acid);color:var(--bg);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;border:none;cursor:pointer;border-radius:var(--r);transition:all .2s}
+.btn-order:hover{background:var(--purple);color:var(--white)}
+.btn-order:disabled{opacity:.4;cursor:not-allowed}
+
+/* Canvas wrapper */
+.canvas-wrapper{position:relative;transform-style:preserve-3d;transition:transform .1s}
+.canvas-wrapper canvas{border-radius:4px;box-shadow:0 20px 60px rgba(155,0,255,.3)}
+.canvas-wrapper.boton-mode canvas{border-radius:50%!important}
+.view-controls{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+.view-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;padding:6px 12px;cursor:pointer;border-radius:var(--r);transition:all .2s;letter-spacing:.05em}
+.view-btn:hover{border-color:var(--purple);color:var(--white)}
+.view-btn.active{border-color:var(--purple);color:var(--purple2);background:rgba(155,0,255,.08)}
+.canvas-hint{font-size:11px;color:var(--muted);margin-top:12px;font-family:'Space Mono',monospace;letter-spacing:.05em;text-align:center}
+
+/* Size cards */
+.size-cards{display:flex;flex-direction:column;gap:6px}
+.size-card{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .2s}
+.size-card:hover{border-color:var(--purple2)}
+.size-card.active{border-color:var(--purple);background:rgba(155,0,255,.1)}
+.size-card-name{font-size:13px;font-weight:700}
+.size-card-dim{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+.size-card-price{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--acid)}
+
+/* ════════════ PROFILE ════════════ */
+#view-profile{background:var(--bg)}
+.profile-header{padding:60px 40px 40px;background:linear-gradient(180deg,rgba(155,0,255,.08) 0%,transparent 100%);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.profile-avatar{width:100px;height:100px;border-radius:50%;border:3px solid var(--purple);overflow:hidden;cursor:pointer;position:relative;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--purple2)}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.profile-avatar-edit{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.profile-avatar:hover .profile-avatar-edit{display:flex}
+.profile-avatar input{display:none}
+.profile-info h2{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;line-height:1}
+.profile-info p{font-size:13px;color:var(--muted);margin-top:4px}
+.profile-badge{display:inline-block;background:rgba(155,0,255,.15);border:1px solid rgba(155,0,255,.3);color:var(--purple2);font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+.profile-body{padding:40px}
+.orders-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.orders-header h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px}
+.orders-tabs{display:flex;gap:4px}
+.order-tab{padding:6px 14px;background:none;border:1px solid var(--border);color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;border-radius:var(--r);transition:all .2s;letter-spacing:.05em}
+.order-tab.active{background:var(--purple);border-color:var(--purple);color:var(--white)}
+.orders-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.order-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden}
+.order-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)}
+.order-card-type{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:8px}
+.order-card-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:4px}
+.order-card-spec{font-size:11px;color:var(--muted);line-height:1.5}
+.order-card-price{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--acid);margin-top:12px}
+.order-card-status{position:absolute;top:12px;right:12px;font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:2px}
+.status-pending{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
+.status-done{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--green)}
+.empty-orders{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-orders .empty-icon{font-size:48px;margin-bottom:12px;opacity:.3}
+.empty-orders p{font-size:13px;line-height:1.6}
+
+/* ════════════ ADMIN ════════════ */
+#view-admin{background:var(--bg)}
+.admin-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px)}
+.admin-sidebar{background:var(--surface);border-right:1px solid var(--border);padding:24px 0}
+.admin-menu-item{display:flex;align-items:center;gap:12px;padding:12px 24px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.05em;text-transform:uppercase}
+.admin-menu-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
+.admin-menu-item.active{color:var(--purple2);background:rgba(155,0,255,.08);border-right:2px solid var(--purple)}
+.admin-menu-icon{font-size:14px}
+.admin-main{padding:32px;overflow-y:auto}
+.admin-title{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:3px;margin-bottom:4px}
+.admin-sub{font-size:12px;color:var(--muted);margin-bottom:32px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.stat-card .stat-label{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+.stat-card .stat-value{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white)}
+.stat-card .stat-sub{font-size:11px;color:var(--purple2);margin-top:2px}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{background:var(--surface);padding:10px 12px;text-align:left;font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:1px solid var(--border)}
+.data-table td{padding:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:hover td{background:rgba(155,0,255,.03)}
+.badge{display:inline-block;padding:2px 8px;border-radius:2px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase}
+.badge-admin{background:rgba(155,0,255,.2);border:1px solid rgba(155,0,255,.4);color:var(--purple2)}
+.badge-user{background:rgba(85,85,85,.2);border:1px solid var(--border);color:var(--muted)}
+.badge-sticker{background:rgba(184,255,0,.1);border:1px solid rgba(184,255,0,.3);color:var(--acid)}
+.badge-poster{background:rgba(155,0,255,.1);border:1px solid rgba(155,0,255,.3);color:var(--purple2)}
+.badge-boton{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--green)}
+.action-btn{padding:4px 10px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;cursor:pointer;border-radius:3px;transition:all .2s;margin-right:4px;text-transform:uppercase;letter-spacing:.05em}
+.action-btn:hover{border-color:var(--purple2);color:var(--white)}
+.action-btn.danger:hover{border-color:var(--red);color:var(--red)}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.search-bar{display:flex;gap:8px;margin-bottom:20px}
+.search-bar input{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--white);padding:8px 12px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:13px;outline:none}
+.search-bar input:focus{border-color:var(--purple)}
+
+/* Order detail modal */
+.order-detail{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.order-detail.open{display:flex}
+.order-detail-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);width:100%;max-width:560px;max-height:80vh;overflow-y:auto;padding:32px;position:relative}
+.order-detail-card h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:16px}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.detail-val{font-size:13px;font-weight:500}
+
+/* Notification toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 20px;font-size:13px;z-index:99999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:300px;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+.toast-icon{font-size:16px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .editor-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .editor-sidebar{max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+  .admin-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .admin-sidebar{padding:12px 0;display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .admin-menu-item{white-space:nowrap;border-right:none!important}
+  nav{padding:0 16px}
+  .hero-home{padding:50px 20px 40px}
+  .products-section{padding:40px 20px}
+  .profile-header{padding:40px 20px 30px}
+  .profile-body{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <div class="nav-logo" onclick="showView('home')">stalk.</div>
+  <div class="nav-tabs">
+    <button class="nav-tab" onclick="showView('stickers')">Stickers</button>
+    <button class="nav-tab" onclick="showView('posters')">Posters</button>
+    <button class="nav-tab" onclick="showView('botones')">Botones</button>
+  </div>
+  <div class="nav-right" id="navRight">
+    <button class="btn-nav" onclick="openAuth('login')">Iniciar sesión</button>
+    <button class="btn-nav primary" onclick="openAuth('register')">Registrarse</button>
+  </div>
+</nav>
+
+<!-- ════════════ AUTH MODAL ════════════ -->
+<div class="modal-backdrop" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-title" id="authTitle">LOGIN</div>
+    <div class="modal-sub" id="authSub">Bienvenido de vuelta a stalk.</div>
+    <div class="tab-switcher">
+      <button class="tab-sw active" id="tabLogin" onclick="switchTab('login')">Iniciar sesión</button>
+      <button class="tab-sw" id="tabRegister" onclick="switchTab('register')">Registrarse</button>
+    </div>
+    <!-- Login form -->
+    <div id="formLogin">
+      <div class="field"><label>Nombre de usuario</label><input type="text" id="li-user" placeholder="nombre o número"/></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="li-pass" placeholder="••••••••"/></div>
+      <button class="btn-submit" onclick="doLogin()">ENTRAR</button>
+    </div>
+    <!-- Register form -->
+    <div id="formRegister" style="display:none">
+      <div class="field"><label>Nombre completo <span style="color:var(--purple)">*</span></label><input type="text" id="reg-nombre" placeholder="Tu nombre"/></div>
+      <div class="field"><label>Número de teléfono <span style="color:var(--purple)">*</span></label><input type="tel" id="reg-numero" placeholder="+57 300 000 0000"/></div>
+      <div class="field">
+        <label>Ambiente / Vibe <span style="color:var(--purple)">*</span></label>
+        <select id="reg-ambiente">
+          <option value="">Selecciona tu ambiente...</option>
+          <option value="underground">Underground / Urbano</option>
+          <option value="streetwear">Streetwear / Moda</option>
+          <option value="arte">Arte / Diseño</option>
+          <option value="musica">Música / Eventos</option>
+          <option value="gaming">Gaming / Geek</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="field"><label>Contraseña <span style="color:var(--purple)">*</span></label><input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/></div>
+      <button class="btn-submit" onclick="doRegister()">CREAR CUENTA</button>
+    </div>
+    <div class="msg" id="authMsg"></div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW HOME ════════════ -->
+<div class="view active" id="view-home">
+  <div class="hero-home">
+    <div class="hero-tag">— Personalización brutal —</div>
+    <h1 class="hero-h1">HAZLO<span>TUYO.</span></h1>
+    <p class="hero-sub">Stickers, posters y botones personalizados. Diseña, visualiza en tiempo real, y pide directo. Sin complicaciones.</p>
+    <div class="hero-ctas">
+      <button class="btn-cta solid" onclick="showView('stickers')">Crear sticker</button>
+      <button class="btn-cta outline" onclick="showView('posters')">Ver posters</button>
+    </div>
+  </div>
+  <div class="products-section">
+    <div class="section-label">— catálogo —</div>
+    <h2 class="section-title">QUÉ <span>PUEDES</span> PEDIR</h2>
+    <div class="products-grid">
+      <!-- Sticker -->
+      <div class="product-card" onclick="showView('stickers')">
+        <div class="pc-arrow">↗</div>
+        <div class="pc-tag">01 — personalizable</div>
+        <div class="pc-visual pc-visual-sticker">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="60" height="60" rx="30" stroke="#9b00ff" stroke-width="3"/>
+            <rect x="20" y="20" width="40" height="40" rx="20" fill="#9b00ff" opacity="0.3"/>
+            <circle cx="40" cy="40" r="12" fill="#9b00ff"/>
+          </svg>
+        </div>
+        <div class="pc-name">STICKERS</div>
+        <div class="pc-desc">Personalizados con tu imagen, color y tamaño. Impermeables, ultra-adhesivos.</div>
+        <div class="pc-prices">
+          <span class="price-tag">≤6cm · $500</span>
+          <span class="price-tag">7-9cm · $1.000</span>
+          <span class="price-tag">≥10cm · $2.000</span>
+        </div>
+        <button class="pc-btn">Diseñar ahora →</button>
+      </div>
+      <!-- Poster -->
+      <div class="product-card" onclick="showView('posters')">
+        <div class="pc-arrow">↗</div>
+        <div class="pc-tag">02 — alta resolución</div>
+        <div class="pc-visual pc-visual-poster">
+          <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="52" height="72" rx="3" stroke="#9b00ff" stroke-width="2.5"/>
+            <rect x="10" y="14" width="40" height="5" rx="2" fill="#9b00ff" opacity="0.5"/>
+            <rect x="10" y="24" width="30" height="3" rx="1.5" fill="#555"/>
+            <rect x="10" y="32" width="35" height="3" rx="1.5" fill="#555"/>
+            <rect x="10" y="44" width="40" height="22" rx="2" fill="#9b00ff" opacity="0.15"/>
+          </svg>
+        </div>
+        <div class="pc-name">POSTERS</div>
+        <div class="pc-desc">Impresión de alta calidad. Tamaño carta hasta poster XL. Acabado mate o brillante.</div>
+        <div class="pc-prices">
+          <span class="price-tag">Carta · $5.000</span>
+          <span class="price-tag">Poster · $10.000</span>
+          <span class="price-tag">XL · $20.000</span>
+        </div>
+        <button class="pc-btn">Diseñar ahora →</button>
+      </div>
+      <!-- Botones -->
+      <div class="product-card" onclick="showView('botones')">
+        <div class="pc-arrow">↗</div>
+        <div class="pc-tag">03 — pin metálico</div>
+        <div class="pc-visual pc-visual-boton">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="34" stroke="#9b00ff" stroke-width="3"/>
+            <circle cx="40" cy="40" r="28" fill="#9b00ff" opacity="0.15"/>
+            <circle cx="40" cy="40" r="18" fill="#9b00ff" opacity="0.4"/>
+            <circle cx="40" cy="40" r="6" fill="#9b00ff"/>
+          </svg>
+        </div>
+        <div class="pc-name">BOTONES</div>
+        <div class="pc-desc">Pin metálico redondo con tu diseño. Perfecto para ropa, mochilas, accesorios.</div>
+        <div class="pc-prices">
+          <span class="price-tag">3cm · $800</span>
+          <span class="price-tag">5cm · $1.500</span>
+          <span class="price-tag">7cm · $2.500</span>
+        </div>
+        <button class="pc-btn">Diseñar ahora →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ EDITOR STICKERS ════════════ -->
+<div class="view" id="view-stickers">
+  <div class="editor-header">
+    <h2>STICKERS</h2>
+    <p>Sube tu imagen, personaliza, y pide en segundos.</p>
+  </div>
+  <div class="editor-layout">
+    <!-- Sidebar -->
+    <div class="editor-sidebar">
+      <div class="ctrl-section">
+        <div class="ctrl-label">Imagen</div>
+        <div class="upload-zone" id="stickerUpload">
+          <input type="file" accept="image/*" onchange="loadEditorImage('sticker',event)"/>
+          <div class="upload-icon">🖼</div>
+          <div class="upload-text"><strong>Haz clic</strong> o arrastra tu imagen</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Color de fondo / tinte</div>
+        <div class="color-row" id="stickerColors">
+          <div class="color-swatch active" style="background:#9b00ff" data-color="#9b00ff" onclick="setEditorColor('sticker',this)"></div>
+          <div class="color-swatch" style="background:#b8ff00" data-color="#b8ff00" onclick="setEditorColor('sticker',this)"></div>
+          <div class="color-swatch" style="background:#ff3366" data-color="#ff3366" onclick="setEditorColor('sticker',this)"></div>
+          <div class="color-swatch" style="background:#00d4ff" data-color="#00d4ff" onclick="setEditorColor('sticker',this)"></div>
+          <div class="color-swatch" style="background:#fff" data-color="#fff" onclick="setEditorColor('sticker',this)"></div>
+          <div class="color-swatch" style="background:#111" data-color="#111" onclick="setEditorColor('sticker',this)"></div>
+        </div>
+        <div class="color-picker-wrap">
+          <input type="color" value="#9b00ff" id="stickerColorPicker" oninput="setEditorColorCustom('sticker',this.value)"/>
+          <span>Color personalizado</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Tamaño</div>
+        <div class="size-cards" id="stickerSizes">
+          <div class="size-card active" data-size="6" data-price="500" onclick="selectSize('sticker',this)">
+            <div><div class="size-card-name">Pequeño</div><div class="size-card-dim">≤ 6 cm</div></div>
+            <div class="size-card-price">$500</div>
+          </div>
+          <div class="size-card" data-size="8" data-price="1000" onclick="selectSize('sticker',this)">
+            <div><div class="size-card-name">Mediano</div><div class="size-card-dim">7–9 cm</div></div>
+            <div class="size-card-price">$1.000</div>
+          </div>
+          <div class="size-card" data-size="12" data-price="2000" onclick="selectSize('sticker',this)">
+            <div><div class="size-card-name">Grande</div><div class="size-card-dim">≥ 10 cm</div></div>
+            <div class="size-card-price">$2.000</div>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Escala visual</div>
+        <div class="slider-wrap">
+          <input type="range" min="60" max="160" value="100" id="stickerScale" oninput="setScale('sticker',this.value)"/>
+          <span class="slider-val" id="stickerScaleVal">100%</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Opacidad imagen</div>
+        <div class="slider-wrap">
+          <input type="range" min="20" max="100" value="100" id="stickerOpacity" oninput="setOpacity('sticker',this.value)"/>
+          <span class="slider-val" id="stickerOpacityVal">100%</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Acabado</div>
+        <div class="toggle-grid">
+          <div class="toggle-opt active" onclick="setFinish('sticker','mate',this)">Mate</div>
+          <div class="toggle-opt" onclick="setFinish('sticker','brillante',this)">Brillante</div>
+          <div class="toggle-opt" onclick="setFinish('sticker','troquelado',this)">Troquelado</div>
+          <div class="toggle-opt" onclick="setFinish('sticker','normal',this)">Normal</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Cantidad</div>
+        <div class="slider-wrap">
+          <input type="range" min="1" max="50" value="1" id="stickerQty" oninput="setQty('sticker',this.value)"/>
+          <span class="slider-val" id="stickerQtyVal">×1</span>
+        </div>
+      </div>
+      <!-- Price + order -->
+      <div class="price-display">
+        <div class="price-label">Total a pagar</div>
+        <div class="price-amount" id="stickerPrice">$500</div>
+        <div class="price-unit">COP / unidad</div>
+      </div>
+      <button class="btn-order" id="stickerOrderBtn" onclick="placeOrder('sticker')">PEDIR AHORA</button>
+    </div>
+    <!-- Canvas area -->
+    <div class="editor-canvas-area">
+      <div class="canvas-wrapper" id="stickerCanvasWrapper">
+        <canvas id="stickerCanvas" width="300" height="300"></canvas>
+      </div>
+      <div class="view-controls">
+        <button class="view-btn active" onclick="setView('sticker','flat',this)">Plano</button>
+        <button class="view-btn" onclick="setView('sticker','tilt',this)">Inclinado</button>
+        <button class="view-btn" onclick="setView('sticker','rotate',this)">Rotar 3D</button>
+        <button class="view-btn" onclick="setView('sticker','flip',this)">Girar</button>
+      </div>
+      <div class="canvas-hint">← arrastra para rotar • scroll para zoom</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ EDITOR POSTERS ════════════ -->
+<div class="view" id="view-posters">
+  <div class="editor-header">
+    <h2>POSTERS</h2>
+    <p>Alta resolución. Desde tamaño carta hasta XL.</p>
+  </div>
+  <div class="editor-layout">
+    <div class="editor-sidebar">
+      <div class="ctrl-section">
+        <div class="ctrl-label">Imagen / arte</div>
+        <div class="upload-zone">
+          <input type="file" accept="image/*" onchange="loadEditorImage('poster',event)"/>
+          <div class="upload-icon">🖼</div>
+          <div class="upload-text"><strong>Sube tu diseño</strong> o foto</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Tinte / color de fondo</div>
+        <div class="color-row" id="posterColors">
+          <div class="color-swatch active" style="background:#9b00ff" data-color="#9b00ff" onclick="setEditorColor('poster',this)"></div>
+          <div class="color-swatch" style="background:#050505" data-color="#050505" onclick="setEditorColor('poster',this)"></div>
+          <div class="color-swatch" style="background:#b8ff00" data-color="#b8ff00" onclick="setEditorColor('poster',this)"></div>
+          <div class="color-swatch" style="background:#ff3366" data-color="#ff3366" onclick="setEditorColor('poster',this)"></div>
+          <div class="color-swatch" style="background:#fff" data-color="#fff" onclick="setEditorColor('poster',this)"></div>
+        </div>
+        <div class="color-picker-wrap">
+          <input type="color" value="#9b00ff" id="posterColorPicker" oninput="setEditorColorCustom('poster',this.value)"/>
+          <span>Color personalizado</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Tamaño</div>
+        <div class="size-cards" id="posterSizes">
+          <div class="size-card active" data-size="carta" data-price="5000" onclick="selectSize('poster',this)">
+            <div><div class="size-card-name">Carta</div><div class="size-card-dim">21.6 × 27.9 cm</div></div>
+            <div class="size-card-price">$5.000</div>
+          </div>
+          <div class="size-card" data-size="poster" data-price="10000" onclick="selectSize('poster',this)">
+            <div><div class="size-card-name">Poster</div><div class="size-card-dim">30 × 45 cm</div></div>
+            <div class="size-card-price">$10.000</div>
+          </div>
+          <div class="size-card" data-size="xl" data-price="20000" onclick="selectSize('poster',this)">
+            <div><div class="size-card-name">XL Grande</div><div class="size-card-dim">50 × 70 cm</div></div>
+            <div class="size-card-price">$20.000</div>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Orientación</div>
+        <div class="toggle-grid">
+          <div class="toggle-opt active" onclick="setPosterOrientation('vertical',this)">Vertical</div>
+          <div class="toggle-opt" onclick="setPosterOrientation('horizontal',this)">Horizontal</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Acabado</div>
+        <div class="toggle-grid">
+          <div class="toggle-opt active" onclick="setFinish('poster','mate',this)">Mate</div>
+          <div class="toggle-opt" onclick="setFinish('poster','brillante',this)">Brillante</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Escala imagen</div>
+        <div class="slider-wrap">
+          <input type="range" min="50" max="160" value="100" id="posterScale" oninput="setScale('poster',this.value)"/>
+          <span class="slider-val" id="posterScaleVal">100%</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Cantidad</div>
+        <div class="slider-wrap">
+          <input type="range" min="1" max="20" value="1" id="posterQty" oninput="setQty('poster',this.value)"/>
+          <span class="slider-val" id="posterQtyVal">×1</span>
+        </div>
+      </div>
+      <div class="price-display">
+        <div class="price-label">Total a pagar</div>
+        <div class="price-amount" id="posterPrice">$5.000</div>
+        <div class="price-unit">COP / unidad</div>
+      </div>
+      <button class="btn-order" onclick="placeOrder('poster')">PEDIR AHORA</button>
+    </div>
+    <div class="editor-canvas-area">
+      <div class="canvas-wrapper" id="posterCanvasWrapper">
+        <canvas id="posterCanvas" width="240" height="320"></canvas>
+      </div>
+      <div class="view-controls">
+        <button class="view-btn active" onclick="setView('poster','flat',this)">Plano</button>
+        <button class="view-btn" onclick="setView('poster','tilt',this)">Inclinado</button>
+        <button class="view-btn" onclick="setView('poster','rotate',this)">Rotar 3D</button>
+      </div>
+      <div class="canvas-hint">← arrastra para rotar • scroll para zoom</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ EDITOR BOTONES ════════════ -->
+<div class="view" id="view-botones">
+  <div class="editor-header">
+    <h2>BOTONES</h2>
+    <p>Pin metálico redondo. Mueve y ajusta tu diseño libremente.</p>
+  </div>
+  <div class="editor-layout">
+    <div class="editor-sidebar">
+      <div class="ctrl-section">
+        <div class="ctrl-label">Imagen</div>
+        <div class="upload-zone">
+          <input type="file" accept="image/*" onchange="loadEditorImage('boton',event)"/>
+          <div class="upload-icon">📌</div>
+          <div class="upload-text"><strong>Sube tu imagen</strong> — se ajusta al círculo</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Color de fondo</div>
+        <div class="color-row" id="botonColors">
+          <div class="color-swatch active" style="background:#9b00ff" data-color="#9b00ff" onclick="setEditorColor('boton',this)"></div>
+          <div class="color-swatch" style="background:#050505" data-color="#050505" onclick="setEditorColor('boton',this)"></div>
+          <div class="color-swatch" style="background:#b8ff00" data-color="#b8ff00" onclick="setEditorColor('boton',this)"></div>
+          <div class="color-swatch" style="background:#ff3366" data-color="#ff3366" onclick="setEditorColor('boton',this)"></div>
+          <div class="color-swatch" style="background:#fff" data-color="#fff" onclick="setEditorColor('boton',this)"></div>
+          <div class="color-swatch" style="background:#222" data-color="#222" onclick="setEditorColor('boton',this)"></div>
+        </div>
+        <div class="color-picker-wrap">
+          <input type="color" value="#9b00ff" id="botonColorPicker" oninput="setEditorColorCustom('boton',this.value)"/>
+          <span>Color personalizado</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Tamaño</div>
+        <div class="size-cards" id="botonSizes">
+          <div class="size-card active" data-size="3" data-price="800" onclick="selectSize('boton',this)">
+            <div><div class="size-card-name">Pequeño</div><div class="size-card-dim">3 cm diámetro</div></div>
+            <div class="size-card-price">$800</div>
+          </div>
+          <div class="size-card" data-size="5" data-price="1500" onclick="selectSize('boton',this)">
+            <div><div class="size-card-name">Mediano</div><div class="size-card-dim">5 cm diámetro</div></div>
+            <div class="size-card-price">$1.500</div>
+          </div>
+          <div class="size-card" data-size="7" data-price="2500" onclick="selectSize('boton',this)">
+            <div><div class="size-card-name">Grande</div><div class="size-card-dim">7 cm diámetro</div></div>
+            <div class="size-card-price">$2.500</div>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Escala imagen</div>
+        <div class="slider-wrap">
+          <input type="range" min="30" max="150" value="90" id="botonScale" oninput="setScale('boton',this.value)"/>
+          <span class="slider-val" id="botonScaleVal">90%</span>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Posición imagen (arrastra en preview)</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:4px">X: <span id="botonPosX">0</span>px &nbsp; Y: <span id="botonPosY">0</span>px</div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Borde metálico</div>
+        <div class="toggle-grid">
+          <div class="toggle-opt active" onclick="setBotonBorder('plata',this)">Plata</div>
+          <div class="toggle-opt" onclick="setBotonBorder('oro',this)">Oro</div>
+          <div class="toggle-opt" onclick="setBotonBorder('negro',this)">Negro</div>
+          <div class="toggle-opt" onclick="setBotonBorder('none',this)">Sin borde</div>
+        </div>
+      </div>
+      <div class="ctrl-section">
+        <div class="ctrl-label">Cantidad</div>
+        <div class="slider-wrap">
+          <input type="range" min="1" max="50" value="1" id="botonQty" oninput="setQty('boton',this.value)"/>
+          <span class="slider-val" id="botonQtyVal">×1</span>
+        </div>
+      </div>
+      <div class="price-display">
+        <div class="price-label">Total a pagar</div>
+        <div class="price-amount" id="botonPrice">$800</div>
+        <div class="price-unit">COP / unidad</div>
+      </div>
+      <button class="btn-order" onclick="placeOrder('boton')">PEDIR AHORA</button>
+    </div>
+    <div class="editor-canvas-area" style="cursor:grab">
+      <div class="canvas-wrapper boton-mode" id="botonCanvasWrapper">
+        <canvas id="botonCanvas" width="280" height="280" style="cursor:grab" id="botonCanvas"></canvas>
+      </div>
+      <div class="view-controls">
+        <button class="view-btn active" onclick="setView('boton','flat',this)">Plano</button>
+        <button class="view-btn" onclick="setView('boton','tilt',this)">Inclinado</button>
+        <button class="view-btn" onclick="setView('boton','spin',this)">Girar</button>
+      </div>
+      <div class="canvas-hint">← arrastra la imagen para reposicionar</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW PROFILE ════════════ -->
+<div class="view" id="view-profile">
+  <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatarWrap">
+      <span id="profileAvatarInitial">?</span>
+      <img src="" id="profileAvatarImg" style="display:none"/>
+      <div class="profile-avatar-edit">✏</div>
+      <input type="file" accept="image/*" id="profileAvatarInput" onchange="changeProfilePhoto(event)"/>
+    </div>
+    <div class="profile-info">
+      <h2 id="profileName">NOMBRE</h2>
+      <p id="profileAmbiente"></p>
+      <div class="profile-badge" id="profileRole">USER</div>
+    </div>
+  </div>
+  <div class="profile-body">
+    <div class="orders-header">
+      <h3>MIS PEDIDOS</h3>
+      <div class="orders-tabs">
+        <button class="order-tab active" onclick="filterOrders('all',this)">Todos</button>
+        <button class="order-tab" onclick="filterOrders('sticker',this)">Stickers</button>
+        <button class="order-tab" onclick="filterOrders('poster',this)">Posters</button>
+        <button class="order-tab" onclick="filterOrders('boton',this)">Botones</button>
+      </div>
+    </div>
+    <div class="orders-grid" id="ordersGrid">
+      <div class="empty-orders" style="grid-column:1/-1">
+        <div class="empty-icon">📦</div>
+        <p>No tienes pedidos aún.<br/>Diseña algo brutal arriba.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW ADMIN ════════════ -->
+<div class="view" id="view-admin">
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <div class="admin-menu-item active" onclick="adminSection('dashboard',this)"><span class="admin-menu-icon">◉</span>Dashboard</div>
+      <div class="admin-menu-item" onclick="adminSection('users',this)"><span class="admin-menu-icon">◈</span>Usuarios</div>
+      <div class="admin-menu-item" onclick="adminSection('orders',this)"><span class="admin-menu-icon">◆</span>Pedidos</div>
+    </div>
+    <div class="admin-main">
+      <!-- Dashboard -->
+      <div class="admin-section active" id="asec-dashboard">
+        <div class="admin-title">ADMIN PANEL</div>
+        <div class="admin-sub">Vista general del sistema stalk.</div>
+        <div class="stats-grid" id="adminStats"></div>
+      </div>
+      <!-- Users -->
+      <div class="admin-section" id="asec-users">
+        <div class="admin-title">USUARIOS</div>
+        <div class="admin-sub">Gestión completa de cuentas.</div>
+        <div class="search-bar"><input type="text" placeholder="Buscar por nombre o número..." id="userSearch" oninput="renderAdminUsers()"/></div>
+        <div id="adminUsersTable"></div>
+      </div>
+      <!-- Orders -->
+      <div class="admin-section" id="asec-orders">
+        <div class="admin-title">PEDIDOS</div>
+        <div class="admin-sub">Todos los pedidos recibidos.</div>
+        <div class="search-bar"><input type="text" placeholder="Buscar por usuario o tipo..." id="orderSearch" oninput="renderAdminOrders()"/></div>
+        <div id="adminOrdersTable"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ORDER DETAIL MODAL ════════════ -->
+<div class="order-detail" id="orderDetailModal">
+  <div class="order-detail-card">
+    <button class="modal-close" onclick="document.getElementById('orderDetailModal').classList.remove('open')" style="position:absolute;top:12px;right:12px">✕</button>
+    <h3>DETALLE PEDIDO</h3>
+    <div id="orderDetailContent"></div>
+  </div>
+</div>
+
+<!-- ════════════ TOAST ════════════ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✓</span>
+  <span id="toastMsg">Mensaje</span>
+</div>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script>
+// ══════ DATA LAYER (localStorage) ══════
+const DB = {
+  getUsers(){ try{ return JSON.parse(localStorage.getItem('stalk_users')||'[]')}catch{return[]} },
+  saveUsers(u){ localStorage.setItem('stalk_users',JSON.stringify(u)) },
+  getOrders(){ try{ return JSON.parse(localStorage.getItem('stalk_orders')||'[]')}catch{return[]} },
+  saveOrders(o){ localStorage.setItem('stalk_orders',JSON.stringify(o)) },
+  getCurrentUser(){ try{ return JSON.parse(localStorage.getItem('stalk_current')||'null')}catch{return null} },
+  setCurrentUser(u){ localStorage.setItem('stalk_current', u ? JSON.stringify(u) : 'null') },
+  nextId(arr){ return arr.length ? Math.max(...arr.map(x=>x.id||0))+1 : 1 }
+};
+
+// Seed admin if none
+(function(){
+  let users = DB.getUsers();
+  if(!users.find(u=>u.role==='admin')){
+    users.push({id:1,nombre:'Admin',numero:'000',ambiente:'underground',password:'admin123',role:'admin',foto:null,createdAt:new Date().toISOString()});
+    DB.saveUsers(users);
+  }
+})();
+
+// ══════ STATE ══════
+const editorState = {
+  sticker:{ color:'#9b00ff', scale:100, opacity:100, size:6, price:500, qty:1, finish:'mate', img:null, imgX:0, imgY:0 },
+  poster: { color:'#9b00ff', scale:100, opacity:100, size:'carta', price:5000, qty:1, finish:'mate', orientation:'vertical', img:null },
+  boton:  { color:'#9b00ff', scale:90, opacity:100, size:3, price:800, qty:1, border:'plata', img:null, imgX:0, imgY:0 }
+};
+let botonDragging = false, botonDragStart = {x:0,y:0};
+let rotationIntervals = {};
+
+// ══════ VIEWS ══════
+function showView(name){
+  document.querySelectorAll('.view,.editor-view').forEach(v=>v.classList.remove('active'));
+  const v = document.getElementById('view-'+name);
+  if(v){ v.classList.add('active'); drawCanvas(name==='stickers'?'sticker':name==='posters'?'poster':name==='botones'?'boton':null); }
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>{
+    t.classList.toggle('active',(['stickers','posters','botones'][i])===name);
+  });
+  if(name==='profile') renderProfile();
+  if(name==='admin'){ checkAdmin(); renderAdminDashboard(); }
+}
+
+function checkAdmin(){
+  const u = DB.getCurrentUser();
+  if(!u || u.role!=='admin'){ showView('home'); showToast('Acceso solo para admins','error'); }
+}
+
+// ══════ AUTH ══════
+function openAuth(tab){ document.getElementById('authModal').classList.add('open'); switchTab(tab); }
+function closeAuth(){ document.getElementById('authModal').classList.remove('open'); }
+
+function switchTab(tab){
+  document.getElementById('formLogin').style.display = tab==='login'?'block':'none';
+  document.getElementById('formRegister').style.display = tab==='register'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active',tab==='register');
+  document.getElementById('authTitle').textContent = tab==='login'?'LOGIN':'REGISTRO';
+  document.getElementById('authSub').textContent = tab==='login'?'Bienvenido de vuelta a stalk.':'Crea tu cuenta y empieza a pedir.';
+  clearMsg();
+}
+
+function showMsg(text,type='error'){ const m=document.getElementById('authMsg'); m.textContent=text; m.className='msg '+type; }
+function clearMsg(){ const m=document.getElementById('authMsg'); m.className='msg'; m.textContent=''; }
+
+function doLogin(){
+  const user = document.getElementById('li-user').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  if(!user||!pass){ showMsg('Completa todos los campos'); return; }
+  const users = DB.getUsers();
+  const found = users.find(u=>(u.nombre.toLowerCase()===user.toLowerCase()||u.numero===user)&&u.password===pass);
+  if(!found){ showMsg('Usuario o contraseña incorrectos'); return; }
+  DB.setCurrentUser(found);
+  closeAuth();
+  updateNavUI();
+  showToast(`Bienvenido ${found.nombre} 🤘`,'success');
+}
+
+function doRegister(){
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const numero = document.getElementById('reg-numero').value.trim();
+  const ambiente = document.getElementById('reg-ambiente').value;
+  const pass = document.getElementById('reg-pass').value;
+  if(!nombre||!numero||!ambiente||!pass){ showMsg('Completa todos los campos'); return; }
+  if(pass.length<6){ showMsg('La contraseña debe tener al menos 6 caracteres'); return; }
+  const users = DB.getUsers();
+  if(users.find(u=>u.numero===numero)){ showMsg('Ese número ya está registrado'); return; }
+  const newUser = { id:DB.nextId(users), nombre, numero, ambiente, password:pass, role:'user', foto:null, createdAt:new Date().toISOString() };
+  users.push(newUser);
+  DB.saveUsers(users);
+  DB.setCurrentUser(newUser);
+  closeAuth();
+  updateNavUI();
+  showToast(`¡Cuenta creada! Bienvenido ${nombre} 🔥`,'success');
+}
+
+function doLogout(){
+  DB.setCurrentUser(null);
+  updateNavUI();
+  showView('home');
+  showToast('Sesión cerrada');
+}
+
+function updateNavUI(){
+  const u = DB.getCurrentUser();
+  const nr = document.getElementById('navRight');
+  if(u){
+    nr.innerHTML = `
+      ${u.role==='admin'?`<button class="btn-nav" onclick="showView('admin')">⚙ Admin</button>`:''}
+      <div class="avatar-btn" onclick="showView('profile')" title="${u.nombre}">
+        ${u.foto?`<img src="${u.foto}"/>`:(u.nombre[0]||'?').toUpperCase()}
+      </div>
+      <button class="btn-nav" onclick="doLogout()">Salir</button>
+    `;
+  } else {
+    nr.innerHTML = `<button class="btn-nav" onclick="openAuth('login')">Iniciar sesión</button><button class="btn-nav primary" onclick="openAuth('register')">Registrarse</button>`;
+  }
+}
+
+// ══════ CANVAS DRAWING ══════
+function drawCanvas(type){
+  if(!type) return;
+  const map = {sticker:{id:'stickerCanvas',size:300},poster:{id:'posterCanvas',size:null},boton:{id:'botonCanvas',size:280}};
+  const cfg = map[type];
+  const canvas = document.getElementById(cfg.id);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const s = editorState[type];
+
+  if(type==='poster'){
+    const orient = s.orientation||'vertical';
+    canvas.width = orient==='vertical'?240:320;
+    canvas.height = orient==='vertical'?320:240;
+  }
+
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  if(type==='boton'){
+    // Circular clip
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(W/2,H/2,W/2-4,0,Math.PI*2);
+    ctx.clip();
+    ctx.fillStyle = s.color;
+    ctx.fillRect(0,0,W,H);
+    if(s.img){
+      const scale=(s.scale/100)*(Math.min(W,H));
+      const iw=scale, ih=scale;
+      const ix=(W-iw)/2+s.imgX, iy=(H-ih)/2+s.imgY;
+      ctx.globalAlpha = s.opacity/100;
+      ctx.drawImage(s.img,ix,iy,iw,ih);
+      ctx.globalAlpha=1;
+    } else {
+      ctx.fillStyle='rgba(255,255,255,0.08)';
+      ctx.font=`bold ${W*0.18}px Bebas Neue, sans-serif`;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('stalk.',W/2,H/2);
+    }
+    ctx.restore();
+    // Metal border
+    const borderColors = {plata:'#c0c0c0',oro:'#ffd700',negro:'#111',none:'transparent'};
+    const bc = borderColors[s.border||'plata'];
+    if(bc!=='transparent'){
+      ctx.beginPath();
+      ctx.arc(W/2,H/2,W/2-2,0,Math.PI*2);
+      ctx.strokeStyle=bc;
+      ctx.lineWidth=4;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(W/2,H/2,W/2-6,0,Math.PI*2);
+      ctx.strokeStyle=bc+'44';
+      ctx.lineWidth=2;
+      ctx.stroke();
+    }
+  } else {
+    // Sticker / Poster
+    if(type==='sticker'){
+      ctx.save();
+      roundRect(ctx,0,0,W,H,W*0.08);
+      ctx.clip();
+    }
+    ctx.fillStyle = s.color;
+    ctx.fillRect(0,0,W,H);
+    // Noise texture subtle
+    for(let i=0;i<80;i++){
+      ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.015})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,2,2);
+    }
+    if(s.img){
+      const scale=s.scale/100;
+      const iw=W*scale, ih=H*scale;
+      const ix=(W-iw)/2, iy=(H-ih)/2;
+      ctx.globalAlpha = s.opacity/100;
+      ctx.drawImage(s.img,ix,iy,iw,ih);
+      ctx.globalAlpha=1;
+    } else {
+      ctx.fillStyle='rgba(255,255,255,0.06)';
+      ctx.font=`bold ${W*0.22}px Bebas Neue, sans-serif`;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('stalk.',W/2,H/2);
+    }
+    if(type==='sticker') ctx.restore();
+    // Sticker white border
+    if(type==='sticker'){
+      ctx.save();
+      roundRect(ctx,3,3,W-6,H-6,W*0.06);
+      ctx.strokeStyle='rgba(255,255,255,0.3)';
+      ctx.lineWidth=3;
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// ══════ EDITOR CONTROLS ══════
+function loadEditorImage(type, event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => { editorState[type].img = img; editorState[type].imgX=0; editorState[type].imgY=0; drawCanvas(type); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setEditorColor(type, el){
+  document.querySelectorAll(`#${type}Colors .color-swatch`).forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  editorState[type].color = el.dataset.color;
+  drawCanvas(type);
+}
+
+function setEditorColorCustom(type, val){
+  editorState[type].color = val;
+  document.querySelectorAll(`#${type}Colors .color-swatch`).forEach(s=>s.classList.remove('active'));
+  drawCanvas(type);
+}
+
+function setScale(type, val){
+  editorState[type].scale = +val;
+  document.getElementById(type+'ScaleVal').textContent = val+'%';
+  drawCanvas(type);
+  if(type==='boton'){ document.getElementById('botonPosX').textContent=editorState.boton.imgX; document.getElementById('botonPosY').textContent=editorState.boton.imgY; }
+}
+
+function setOpacity(type, val){
+  editorState[type].opacity = +val;
+  document.getElementById(type+'OpacityVal').textContent = val+'%';
+  drawCanvas(type);
+}
+
+function setQty(type, val){
+  editorState[type].qty = +val;
+  document.getElementById(type+'QtyVal').textContent = '×'+val;
+  updatePrice(type);
+}
+
+function setFinish(type, finish, el){
+  editorState[type].finish = finish;
+  el.closest('.toggle-grid').querySelectorAll('.toggle-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setPosterOrientation(orient, el){
+  editorState.poster.orientation = orient;
+  el.closest('.toggle-grid').querySelectorAll('.toggle-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  drawCanvas('poster');
+}
+
+function setBotonBorder(border, el){
+  editorState.boton.border = border;
+  el.closest('.toggle-grid').querySelectorAll('.toggle-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  drawCanvas('boton');
+}
+
+function selectSize(type, el){
+  el.closest('.size-cards').querySelectorAll('.size-card').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  editorState[type].size = el.dataset.size;
+  editorState[type].price = +el.dataset.price;
+  updatePrice(type);
+  drawCanvas(type);
+}
+
+function updatePrice(type){
+  const s = editorState[type];
+  const total = s.price * s.qty;
+  const el = document.getElementById(type+'Price');
+  if(el) el.textContent = '$'+total.toLocaleString('es-CO');
+}
+
+// ══════ 3D VIEW CONTROLS ══════
+function setView(type, view, btn){
+  const wrapper = document.getElementById(type+'CanvasWrapper');
+  btn.closest('.view-controls').querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(rotationIntervals[type]){ clearInterval(rotationIntervals[type]); rotationIntervals[type]=null; }
+  wrapper.style.transition = 'transform .5s ease';
+  if(view==='flat') wrapper.style.transform='perspective(600px) rotateY(0deg) rotateX(0deg)';
+  else if(view==='tilt') wrapper.style.transform='perspective(600px) rotateY(20deg) rotateX(10deg)';
+  else if(view==='flip') wrapper.style.transform='perspective(600px) rotateY(180deg)';
+  else if(view==='rotate'||view==='spin'){
+    let angle=0;
+    rotationIntervals[type] = setInterval(()=>{
+      angle+=1;
+      wrapper.style.transform=`perspective(600px) rotateY(${angle}deg)`;
+      wrapper.style.transition='none';
+    },16);
+  }
+}
+
+// ══════ BOTON DRAG ══════
+document.getElementById('botonCanvas').addEventListener('mousedown', e=>{
+  botonDragging=true;
+  botonDragStart={x:e.clientX-editorState.boton.imgX,y:e.clientY-editorState.boton.imgY};
+  e.target.style.cursor='grabbing';
+});
+document.addEventListener('mousemove', e=>{
+  if(!botonDragging) return;
+  editorState.boton.imgX = e.clientX-botonDragStart.x;
+  editorState.boton.imgY = e.clientY-botonDragStart.y;
+  document.getElementById('botonPosX').textContent=editorState.boton.imgX;
+  document.getElementById('botonPosY').textContent=editorState.boton.imgY;
+  drawCanvas('boton');
+});
+document.addEventListener('mouseup', ()=>{ botonDragging=false; const c=document.getElementById('botonCanvas'); if(c) c.style.cursor='grab'; });
+
+// Touch drag for boton
+document.getElementById('botonCanvas').addEventListener('touchstart', e=>{
+  const t=e.touches[0];
+  botonDragging=true;
+  botonDragStart={x:t.clientX-editorState.boton.imgX,y:t.clientY-editorState.boton.imgY};
+  e.preventDefault();
+},{passive:false});
+document.addEventListener('touchmove', e=>{
+  if(!botonDragging) return;
+  const t=e.touches[0];
+  editorState.boton.imgX=t.clientX-botonDragStart.x;
+  editorState.boton.imgY=t.clientY-botonDragStart.y;
+  drawCanvas('boton');
+  e.preventDefault();
+},{passive:false});
+document.addEventListener('touchend',()=>botonDragging=false);
+
+// ══════ ORDER ══════
+function placeOrder(type){
+  const u = DB.getCurrentUser();
+  if(!u){ openAuth('login'); showToast('Inicia sesión para pedir','error'); return; }
+  const s = editorState[type];
+  const order = {
+    id: DB.nextId(DB.getOrders()),
+    userId: u.id,
+    userName: u.nombre,
+    tipo: type,
+    specs: {
+      color: s.color,
+      size: s.size,
+      finish: s.finish||'—',
+      scale: s.scale+'%',
+      qty: s.qty,
+      orientation: s.orientation||null,
+      border: s.border||null,
+      hasImage: !!s.img,
+      imgPreview: s.img ? document.getElementById(type+'Canvas').toDataURL('image/jpeg',0.4) : null
+    },
+    price: s.price,
+    total: s.price*s.qty,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  const orders = DB.getOrders();
+  orders.push(order);
+  DB.saveOrders(orders);
+  showToast(`✅ Pedido #${order.id} enviado — $${order.total.toLocaleString('es-CO')} COP`,'success');
+  // Optionally go to profile
+  setTimeout(()=>showView('profile'),800);
+}
+
+// ══════ PROFILE ══════
+function renderProfile(){
+  const u = DB.getCurrentUser();
+  if(!u){ showView('home'); return; }
+  document.getElementById('profileName').textContent = u.nombre.toUpperCase();
+  document.getElementById('profileAmbiente').textContent = u.numero + ' · ' + (u.ambiente||'');
+  document.getElementById('profileRole').textContent = u.role.toUpperCase();
+  document.getElementById('profileAvatarInitial').textContent = (u.nombre[0]||'?').toUpperCase();
+  const img = document.getElementById('profileAvatarImg');
+  if(u.foto){ img.src=u.foto; img.style.display='block'; document.getElementById('profileAvatarInitial').style.display='none'; }
+  else { img.style.display='none'; document.getElementById('profileAvatarInitial').style.display='block'; }
+  filterOrders('all', document.querySelector('.order-tab.active'));
+}
+
+function filterOrders(filter, btn){
+  if(btn){ document.querySelectorAll('.order-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); }
+  const u = DB.getCurrentUser();
+  if(!u) return;
+  const all = DB.getOrders().filter(o=>o.userId===u.id);
+  const filtered = filter==='all' ? all : all.filter(o=>o.tipo===filter);
+  const grid = document.getElementById('ordersGrid');
+  if(!filtered.length){
+    grid.innerHTML=`<div class="empty-orders" style="grid-column:1/-1"><div class="empty-icon">📦</div><p>No hay pedidos en esta categoría.</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(o=>`
+    <div class="order-card">
+      <span class="order-card-status ${o.status==='done'?'status-done':'status-pending'}">${o.status==='done'?'Listo':'En proceso'}</span>
+      <div class="order-card-type">${o.tipo.toUpperCase()}</div>
+      <div class="order-card-name">PEDIDO #${o.id}</div>
+      <div class="order-card-spec">
+        Tamaño: ${o.specs.size} &nbsp;·&nbsp; Cantidad: ×${o.specs.qty}<br/>
+        Acabado: ${o.specs.finish} &nbsp;·&nbsp; ${o.specs.hasImage?'Con imagen':'Sin imagen'}
+      </div>
+      <div class="order-card-price">$${o.total.toLocaleString('es-CO')}</div>
+    </div>
+  `).join('');
+}
+
+function changeProfilePhoto(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const u = DB.getCurrentUser();
+    u.foto = e.target.result;
+    // Update in users array
+    const users = DB.getUsers();
+    const idx = users.findIndex(x=>x.id===u.id);
+    if(idx>=0){ users[idx].foto=e.target.result; DB.saveUsers(users); }
+    DB.setCurrentUser(u);
+    updateNavUI();
+    renderProfile();
+  };
+  reader.readAsDataURL(file);
+}
+document.getElementById('profileAvatarWrap').addEventListener('click',()=>document.getElementById('profileAvatarInput').click());
+
+// ══════ ADMIN ══════
+function adminSection(sec, el){
+  document.querySelectorAll('.admin-menu-item').forEach(m=>m.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('asec-'+sec).classList.add('active');
+  if(sec==='dashboard') renderAdminDashboard();
+  if(sec==='users') renderAdminUsers();
+  if(sec==='orders') renderAdminOrders();
+}
+
+function renderAdminDashboard(){
+  const users = DB.getUsers();
+  const orders = DB.getOrders();
+  const revenue = orders.reduce((sum,o)=>sum+o.total,0);
+  const stickers = orders.filter(o=>o.tipo==='sticker').length;
+  const posters = orders.filter(o=>o.tipo==='poster').length;
+  const botones = orders.filter(o=>o.tipo==='boton').length;
+  document.getElementById('adminStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Usuarios</div><div class="stat-value">${users.length}</div><div class="stat-sub">registrados</div></div>
+    <div class="stat-card"><div class="stat-label">Pedidos</div><div class="stat-value">${orders.length}</div><div class="stat-sub">totales</div></div>
+    <div class="stat-card"><div class="stat-label">Ingresos</div><div class="stat-value">$${(revenue/1000).toFixed(0)}K</div><div class="stat-sub">COP</div></div>
+    <div class="stat-card"><div class="stat-label">Stickers</div><div class="stat-value">${stickers}</div><div class="stat-sub">pedidos</div></div>
+    <div class="stat-card"><div class="stat-label">Posters</div><div class="stat-value">${posters}</div><div class="stat-sub">pedidos</div></div>
+    <div class="stat-card"><div class="stat-label">Botones</div><div class="stat-value">${botones}</div><div class="stat-sub">pedidos</div></div>
+  `;
+}
+
+function renderAdminUsers(){
+  const q = (document.getElementById('userSearch')?.value||'').toLowerCase();
+  const users = DB.getUsers().filter(u=>!q||(u.nombre.toLowerCase().includes(q)||u.numero.includes(q)));
+  const el = document.getElementById('adminUsersTable');
+  if(!users.length){ el.innerHTML='<p style="color:var(--muted);font-size:13px;padding:20px 0">No hay usuarios.</p>'; return; }
+  el.innerHTML = `<table class="data-table">
+    <thead><tr><th>ID</th><th>Nombre</th><th>Número</th><th>Ambiente</th><th>Rol</th><th>Pedidos</th><th>Acciones</th></tr></thead>
+    <tbody>
+    ${users.map(u=>{
+      const orders = DB.getOrders().filter(o=>o.userId===u.id).length;
+      return `<tr>
+        <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:10px">#${u.id}</td>
+        <td><strong>${u.nombre}</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:11px">${u.numero}</td>
+        <td style="color:var(--muted);font-size:12px">${u.ambiente||'—'}</td>
+        <td><span class="badge ${u.role==='admin'?'badge-admin':'badge-user'}">${u.role}</span></td>
+        <td style="font-family:'Space Mono',monospace;font-size:11px">${orders}</td>
+        <td>
+          ${u.role!=='admin'?`<button class="action-btn" onclick="setAdmin(${u.id},true)">+ Admin</button>`:`<button class="action-btn" onclick="setAdmin(${u.id},false)">- Admin</button>`}
+          <button class="action-btn danger" onclick="deleteUser(${u.id})">Eliminar</button>
+        </td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderAdminOrders(){
+  const q = (document.getElementById('orderSearch')?.value||'').toLowerCase();
+  const orders = DB.getOrders().filter(o=>!q||(o.userName.toLowerCase().includes(q)||o.tipo.includes(q)));
+  const el = document.getElementById('adminOrdersTable');
+  if(!orders.length){ el.innerHTML='<p style="color:var(--muted);font-size:13px;padding:20px 0">No hay pedidos.</p>'; return; }
+  el.innerHTML = `<table class="data-table">
+    <thead><tr><th>ID</th><th>Usuario</th><th>Tipo</th><th>Tamaño</th><th>Qty</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+    <tbody>
+    ${orders.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(o=>`<tr>
+      <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)">#${o.id}</td>
+      <td>${o.userName}</td>
+      <td><span class="badge badge-${o.tipo}">${o.tipo.toUpperCase()}</span></td>
+      <td style="font-size:11px">${o.specs.size}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:11px">×${o.specs.qty}</td>
+      <td style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--acid)">$${o.total.toLocaleString('es-CO')}</td>
+      <td><span class="badge ${o.status==='done'?'badge-sticker':'badge-user'}">${o.status==='done'?'LISTO':'PENDIENTE'}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${new Date(o.createdAt).toLocaleDateString('es-CO')}</td>
+      <td>
+        <button class="action-btn" onclick="viewOrder(${o.id})">Ver</button>
+        <button class="action-btn" onclick="toggleOrderStatus(${o.id})">${o.status==='done'?'Reabrir':'Completar'}</button>
+        <button class="action-btn danger" onclick="deleteOrder(${o.id})">✕</button>
+      </td>
+    </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function setAdmin(userId, makeAdmin){
+  const users = DB.getUsers();
+  const idx = users.findIndex(u=>u.id===userId);
+  if(idx<0) return;
+  users[idx].role = makeAdmin?'admin':'user';
+  DB.saveUsers(users);
+  renderAdminUsers();
+  showToast(makeAdmin?'Admin asignado':'Admin removido','success');
+}
+
+function deleteUser(userId){
+  if(!confirm('¿Eliminar este usuario y sus pedidos?')) return;
+  let users = DB.getUsers().filter(u=>u.id!==userId);
+  let orders = DB.getOrders().filter(o=>o.userId!==userId);
+  DB.saveUsers(users);
+  DB.saveOrders(orders);
+  renderAdminUsers();
+  renderAdminDashboard();
+  showToast('Usuario eliminado');
+}
+
+function viewOrder(orderId){
+  const o = DB.getOrders().find(x=>x.id===orderId);
+  if(!o) return;
+  const c = document.getElementById('orderDetailContent');
+  c.innerHTML = `
+    ${o.specs.imgPreview?`<img src="${o.specs.imgPreview}" style="width:100%;border-radius:6px;margin-bottom:16px;max-height:200px;object-fit:contain;background:#111"/>`:'' }
+    ${[
+      ['ID','#'+o.id],['Usuario',o.userName],['Tipo',o.tipo.toUpperCase()],
+      ['Tamaño',o.specs.size],['Color',`<span style="display:inline-block;width:16px;height:16px;background:${o.specs.color};border-radius:50%;vertical-align:middle;margin-right:6px;border:1px solid #333"></span>${o.specs.color}`],
+      ['Acabado',o.specs.finish],['Escala',o.specs.scale],['Cantidad','×'+o.specs.qty],
+      ['Precio unit.','$'+o.price.toLocaleString('es-CO')],['TOTAL','$'+o.total.toLocaleString('es-CO')+' COP'],
+      ['Estado',o.status.toUpperCase()],['Fecha',new Date(o.createdAt).toLocaleString('es-CO')]
+    ].map(([k,v])=>`<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`).join('')}
+  `;
+  document.getElementById('orderDetailModal').classList.add('open');
+}
+
+function toggleOrderStatus(orderId){
+  const orders = DB.getOrders();
+  const idx = orders.findIndex(o=>o.id===orderId);
+  if(idx<0) return;
+  orders[idx].status = orders[idx].status==='done'?'pending':'done';
+  DB.saveOrders(orders);
+  renderAdminOrders();
+  showToast('Estado actualizado','success');
+}
+
+function deleteOrder(orderId){
+  if(!confirm('¿Eliminar este pedido?')) return;
+  DB.saveOrders(DB.getOrders().filter(o=>o.id!==orderId));
+  renderAdminOrders();
+  renderAdminDashboard();
+  showToast('Pedido eliminado');
+}
+
+// ══════ TOAST ══════
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  const icon = {success:'✓',error:'✕','':'◆'}[type]||'◆';
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon;
+  t.className = 'toast show '+(type||'');
+  clearTimeout(t._to);
+  t._to = setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════ INIT ══════
+(function init(){
+  updateNavUI();
+  // Draw initial canvases
+  ['sticker','poster','boton'].forEach(type=>{
+    const map = {sticker:'stickerCanvas',poster:'posterCanvas',boton:'botonCanvas'};
+    setTimeout(()=>drawCanvas(type),50);
+  });
+  // Keyboard shortcut close modals
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){
+      document.getElementById('authModal').classList.remove('open');
+      document.getElementById('orderDetailModal').classList.remove('open');
+    }
+  });
+  // Click outside to close auth modal
+  document.getElementById('authModal').addEventListener('click',function(e){
+    if(e.target===this) closeAuth();
+  });
+})();
+</script>
+</body>
+</html>
